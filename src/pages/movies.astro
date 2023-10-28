@@ -1,0 +1,29 @@
+---
+import { movieBase } from "../airtable/data";
+import { BASES } from "../airtable/constants";
+import { type MovieReview } from "../airtable/types";
+
+const movies = await movieBase
+  .table("Watches")
+  .select({
+    maxRecords: 5,
+    view: BASES.movies.tables.watches.views.watchedMovies,
+    fields: [...Object.values(BASES.movies.tables.watches.fields)],
+    returnFieldsByFieldId: true,
+  })
+  .all();
+
+const rawReviews = movies.map((m) => m.fields) as MovieReview[];
+console.log("title!", rawReviews[0][BASES.movies.tables.watches.fields.title]);
+---
+
+<pre>
+  {JSON.stringify(rawReviews, null, 2)}
+</pre>
+
+<style>
+  pre {
+    max-width: 800px;
+    overflow-x: scroll;
+  }
+</style>
