@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "david-reviews",
+  "type": "module",
+  "version": "0.0.1",
+  "dependencies": {
+    "@astrojs/check": "0.2.1",
+    "astro": "3.4.0",
+    "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "vitest": "0.34.6",
+    "just-install": "1.0.11"
+  }
+}
