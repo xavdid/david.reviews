@@ -1,0 +1,42 @@
+---
+type Props = {
+  active: "games" | "movies" | "books";
+};
+
+const { active } = Astro.props;
+
+const sharedStyles = ["ml-4", "p-2", "text-xl", "hover:text-white"];
+const hoverBg = (color: string) => `hover:bg-${color}`;
+---
+
+<nav class="flex items-center border-b-2 border-sky-500">
+  <h2 class="py-1 pl-2 text-2xl">
+    <a class="hover:underline" href="/">david.reviews</a>:
+  </h2>
+
+  <a
+    href="/games"
+    class:list={[
+      sharedStyles,
+      hoverBg("blue-600"),
+      { "shadow-insetGame": active === "games" },
+    ]}>games</a
+  >
+  <a
+    href="/movies"
+    class:list={[
+      sharedStyles,
+      hoverBg("red-600"),
+      { "shadow-insetMovie": active === "movies" },
+    ]}>movies</a
+  >
+  <a
+    href="/books"
+    class:list={[
+      sharedStyles,
+      hoverBg("emerald-600"),
+      { "shadow-insetBook": active === "books" },
+    ]}>books</a
+  >
+  <!-- <input class="ml-4 bg-black text-white" type="text" /> -->
+</nav>
