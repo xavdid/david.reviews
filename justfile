@@ -15,6 +15,10 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 [no-exit-message]
 @validate:
 	astro check
+# broken until ~ prettier 3.1 is out
+# https://github.com/prettier/prettier/issues/15079
+# prettier --check .
+
 # don't need to test, since the only test so far is for an unused function
 # just test
 # eslint?
