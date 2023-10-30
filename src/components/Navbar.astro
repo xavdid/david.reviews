@@ -1,12 +1,16 @@
 ---
+import GameIcon from "./icons/game.astro";
+import MovieIcon from "./icons/movie.astro";
+import BookIcon from "./icons/book.astro";
+
 type Props = {
-  active: "games" | "movies" | "books";
+  active?: "games" | "movies" | "books";
 };
 
 const { active } = Astro.props;
 
-const sharedStyles = ["ml-4", "p-2", "text-xl", "hover:text-white"];
-const hoverBg = (color: string) => `hover:bg-${color}`;
+const navStyles = ["ml-4", "p-2", "text-xl"];
+const iconStyles = "inline h-6 pr-1";
 ---
 
 <nav class="flex items-center border-b-2 border-sky-500">
@@ -17,26 +21,37 @@ const hoverBg = (color: string) => `hover:bg-${color}`;
   <a
     href="/games"
     class:list={[
-      sharedStyles,
-      hoverBg("blue-600"),
-      { "shadow-insetGame": active === "games" },
-    ]}>games</a
+      navStyles,
+      "fill-blue-600",
+      "hover:shadow-insetGame",
+      { "bg-blue-600 fill-white text-white": active === "games" },
+    ]}
+    ><GameIcon classes={[iconStyles]} />
+    <span class="inline pl-1">games</span></a
   >
   <a
     href="/movies"
     class:list={[
-      sharedStyles,
-      hoverBg("red-600"),
-      { "shadow-insetMovie": active === "movies" },
-    ]}>movies</a
+      navStyles,
+      "fill-red-600",
+      "hover:shadow-insetMovie",
+      {
+        "bg-red-600 fill-white text-white": active === "movies",
+      },
+    ]}
+    ><MovieIcon classes={iconStyles} />
+    <span class="inline pl-1">movies</span></a
   >
   <a
     href="/books"
     class:list={[
-      sharedStyles,
-      hoverBg("emerald-600"),
-      { "shadow-insetBook": active === "books" },
-    ]}>books</a
+      navStyles,
+      "fill-emerald-600",
+      "hover:shadow-insetBook",
+      { "bg-emerald-600 fill-white text-white": active === "books" },
+    ]}
+    ><BookIcon classes={iconStyles} />
+    <span class="inline pl-1">books</span></a
   >
   <!-- <input class="ml-4 bg-black text-white" type="text" /> -->
 </nav>

@@ -15,6 +15,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 [no-exit-message]
 @validate:
 	astro check
+# tsc --noEmit
 # broken until ~ prettier 3.1 is out
 # https://github.com/prettier/prettier/issues/15079
 # prettier --check .
