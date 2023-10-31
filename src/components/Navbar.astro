@@ -9,12 +9,12 @@ type Props = {
 
 const { active } = Astro.props;
 
-const navStyles = ["ml-4", "p-2", "text-xl"];
+const navStyles = ["ml-2", "p-1", "md:ml-4", "md:p-2", "text-l", "md:text-xl"];
 const iconStyles = "inline h-6 pr-1";
 ---
 
 <nav class="flex items-center border-b-2 border-sky-500">
-  <h2 class="py-1 pl-2 text-2xl">
+  <h2 class="pl-2 text-xl md:text-2xl">
     <a class="hover:underline" href="/">david.reviews</a>:
   </h2>
 

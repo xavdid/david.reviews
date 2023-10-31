@@ -1,0 +1,54 @@
+---
+import { Image } from "astro:assets";
+import StarEmpty from "../icons/star-empty.astro";
+import StarFilled from "../icons/star-filled.astro";
+import Movie from "../icons/movie.astro";
+
+type Props = {
+  title: string;
+  rating: number;
+  watchedOn: string;
+  posterUrl: string;
+  notes: string;
+};
+const { title, rating, watchedOn, posterUrl, notes } = Astro.props;
+const posterShrinkDimension = 4;
+---
+
+<div class="mb-2 flex rounded border-2 border-red-500">
+  <div class="p-2">
+    <Image
+      src={posterUrl}
+      alt={`poster for ${title}`}
+      height={750 / posterShrinkDimension}
+      width={500 / posterShrinkDimension}
+    />
+  </div>
+
+  <div class="flex w-full flex-col justify-between">
+    <h3 class="text-l border-b-2 border-l-2 border-red-500 pl-2 font-bold">
+      {title}
+    </h3>
+    <p class="px-4 py-2">
+      {notes ?? <em>no review</em>}
+    </p>
+    <div class="flex justify-between border-l-2 border-t-2 border-red-500 pl-2">
+      <div class="pt-1">
+        <span class="hidden md:inline">Watched on:{" "}</span>{watchedOn}
+      </div>
+      <div class="pt-[.15rem]">
+        {
+          Array.from({ length: rating }).map(() => (
+            <StarFilled classes="inline h-4" />
+          ))
+        }
+        {
+          Array.from({ length: 4 - rating }).map(() => (
+            <StarEmpty classes="inline h-4" />
+          ))
+        }
+      </div>
+      <Movie classes="h-8 fill-red-500 pr-1" />
+    </div>
+  </div>
+</div>

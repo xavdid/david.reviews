@@ -27,6 +27,8 @@ export const BASES = {
           notes: "fldHCPMRJrOOiZxca",
           movie: "fldhAqjnIaBR90xr1",
           poster: "flda3rt0LrVVid62H",
+          tmdbID: "fldquYvRJYLZhvfvA", // string[]
+          posterPath: "fldgUqyuGvEV9ESj8",
         },
         views: {
           watchedMovies: "viwovZ8M1YpRtgpFS",

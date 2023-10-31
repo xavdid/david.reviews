@@ -3,9 +3,10 @@ import Navbar from "../components/Navbar.astro";
 
 interface Props {
   title: string;
+  active?: "games" | "movies" | "books";
 }
 
-const { title } = Astro.props;
+const { title, active } = Astro.props;
 ---
 
 <!doctype html>
@@ -23,15 +24,9 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <Navbar active="books" />
-    <main>
+    <Navbar active={active || "games"} />
+    <main class="mx-auto max-w-[95%] md:max-w-xl">
       <slot />
     </main>
   </body>
 </html>
-<style is:global>
-  html {
-    font-family: system-ui, sans-serif;
-    /* background: #13151a; */
-  }
-</style>
