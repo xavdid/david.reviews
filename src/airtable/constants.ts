@@ -31,6 +31,7 @@ export const BASES = {
           posterPath: "fldgUqyuGvEV9ESj8",
           collections: "fldy9V32NQfusaaVP",
           award: "fldmW9FgOxwCcgmGE",
+          totalMovieWatches: "fldIcHiMwU6eMo3GG",
         },
         views: {
           watchedMovies: "viwovZ8M1YpRtgpFS",

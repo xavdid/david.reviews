@@ -5,18 +5,32 @@ import { type MovieReview } from "../airtable/types";
 import Layout from "../layouts/Layout.astro";
 import Moviebox from "../components/infoboxes/moviebox.astro";
 
+const fields = BASES.movies.tables.watches.fields;
 const movies = await movieBase
   .table("Watches")
   .select({
     maxRecords: 100,
     view: BASES.movies.tables.watches.views.watchedMovies,
-    fields: [...Object.values(BASES.movies.tables.watches.fields)],
+    fields: [...Object.values(fields)],
     returnFieldsByFieldId: true,
   })
   .all();
 
-const rawReviews = movies.map((m) => m.fields) as MovieReview[];
-const fields = BASES.movies.tables.watches.fields;
+const rawReviews = movies.map((m) => ({
+  recordId: m.id,
+  ...m.fields,
+})) as MovieReview[];
+const watchCounts: { [tmdbId: string]: number } = {};
+
+const reviews = rawReviews.map((review) => {
+  const thisWatchNum = watchCounts[review[fields.tmdbID][0]] ?? 0;
+  watchCounts[review[fields.tmdbID][0]] = thisWatchNum + 1;
+  return {
+    ...review,
+    numWatch: review[fields.totalMovieWatches] - thisWatchNum,
+  };
+});
+
 // height={review[fields.poster][0].height / 2}
 // width={review[fields.poster][0].width / 2}
 // src={`https://image.tmdb.org/t/p/w500${review[fields.posterPath]}`}
@@ -26,12 +40,13 @@ const fields = BASES.movies.tables.watches.fields;
 <Layout title="Movies!" active="movies">
   <h1 class="pb-3 pt-2 text-2xl">Recently Watched Movies</h1>
   <p class="pb-3">
-    There are {rawReviews.length} total reviews of N movies. Click on a movie to
-    see all of its reviews!
+    There are {reviews.length} total reviews of {
+      Object.keys(watchCounts).length
+    } movies. Click on a movie to see all of its reviews!
   </p>
 
   {
-    rawReviews.map((review) => (
+    reviews.map((review) => (
       <Moviebox
         title={review[fields.title]}
         rating={review[fields.rating]}
@@ -40,7 +55,13 @@ const fields = BASES.movies.tables.watches.fields;
           review[fields.posterPath]
         }`}
         notes={review[fields.notes]}
+        numWatch={review.numWatch}
+        isFirstWatch={review[fields.isFirstWatch] === 1}
       />
     ))
   }
+
+  <p>
+    * this is my first <em>logged</em> watch, but I had seen the movie before.
+  </p>
 </Layout>
