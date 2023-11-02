@@ -25,10 +25,12 @@ export const BASES = {
           isFirstWatch: "fldpSxAP9mpw0D7V6",
           rating: "fld120ruFVH8sml4B",
           notes: "fldHCPMRJrOOiZxca",
-          movie: "fldhAqjnIaBR90xr1",
-          poster: "flda3rt0LrVVid62H",
+          // movie: "fldhAqjnIaBR90xr1",
+          // poster: "flda3rt0LrVVid62H",
           tmdbID: "fldquYvRJYLZhvfvA", // string[]
           posterPath: "fldgUqyuGvEV9ESj8",
+          collections: "fldy9V32NQfusaaVP",
+          award: "fldmW9FgOxwCcgmGE",
         },
         views: {
           watchedMovies: "viwovZ8M1YpRtgpFS",

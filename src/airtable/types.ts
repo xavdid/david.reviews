@@ -1,9 +1,17 @@
 import { BASES } from "./constants";
 
 const watchesFields = BASES.movies.tables.watches.fields;
-type ValidFields = (typeof watchesFields)[keyof typeof watchesFields];
 
-export type MovieReview = {
-  // TODO: not knowing field names means I don't have compelx types here; everything isn't a string
-  [fieldId in ValidFields]: string;
+type FieldIds = (typeof watchesFields)[keyof typeof watchesFields];
+type NonStringFields = {
+  [watchesFields.rating]: number;
+  [watchesFields.isFirstWatch]: 0 | 1;
+  [watchesFields.tmdbID]: [string];
+  [watchesFields.collections]: string[];
+  [watchesFields.award]?: "gold" | "silver" | "bronze";
 };
+export type StringFields = {
+  [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
+};
+
+export type MovieReview = StringFields & NonStringFields;
