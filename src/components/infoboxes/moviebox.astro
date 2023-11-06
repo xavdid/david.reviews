@@ -12,10 +12,18 @@ type Props = {
   notes: string;
   numWatch: number;
   isFirstWatch: boolean;
+  tmdbId: string;
 };
-const { title, rating, watchedOn, posterUrl, notes, numWatch, isFirstWatch } =
-  Astro.props;
-const posterShrinkDimension = 4;
+const {
+  title,
+  rating,
+  watchedOn,
+  posterUrl,
+  notes,
+  numWatch,
+  isFirstWatch,
+  tmdbId,
+} = Astro.props;
 ---
 
 <div class="mb-6 flex rounded border-2 border-red-500">
@@ -23,14 +31,14 @@ const posterShrinkDimension = 4;
     <Image
       src={posterUrl}
       alt={`poster for ${title}`}
-      height={750 / posterShrinkDimension}
-      width={500 / posterShrinkDimension}
+      height={187.5}
+      width={125}
     />
   </div>
 
   <div class="flex w-full flex-col justify-between">
     <div class="flex justify-between border-b-2 border-l-2 border-red-500 pl-2">
-      <a href="/TKTK">
+      <a href={`/movies/${tmdbId}`}>
         <h3 class="text-l font-bold underline hover:bg-slate-300">
           {title}
         </h3></a

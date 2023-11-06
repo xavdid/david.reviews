@@ -1,9 +1,9 @@
 ---
-import { movieBase } from "../airtable/data";
-import { BASES } from "../airtable/constants";
-import { type MovieReview } from "../airtable/types";
-import Layout from "../layouts/Layout.astro";
-import Moviebox from "../components/infoboxes/moviebox.astro";
+import { movieBase } from "../../airtable/data";
+import { BASES } from "../../airtable/constants";
+import { type MovieReview } from "../../airtable/types";
+import Layout from "../../layouts/Layout.astro";
+import Moviebox from "../../components/infoboxes/moviebox.astro";
 
 const fields = BASES.movies.tables.watches.fields;
 const movies = await movieBase
@@ -51,12 +51,13 @@ const reviews = rawReviews.map((review) => {
         title={review[fields.title]}
         rating={review[fields.rating]}
         watchedOn={review[fields.dateWatched]}
-        posterUrl={`https://image.tmdb.org/t/p/w500${
+        posterUrl={`https://image.tmdb.org/t/p/w300${
           review[fields.posterPath]
         }`}
         notes={review[fields.notes]}
         numWatch={review.numWatch}
         isFirstWatch={review[fields.isFirstWatch] === 1}
+        tmdbId={review[fields.tmdbID][0]}
       />
     ))
   }

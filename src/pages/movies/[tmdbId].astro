@@ -1,0 +1,101 @@
+---
+import { movieBase } from "../../airtable/data";
+import { Image } from "astro:assets";
+import { BASES } from "../../airtable/constants";
+import { type MovieReview } from "../../airtable/types";
+import Layout from "../../layouts/Layout.astro";
+
+export type Params = {
+  tmdbId: string;
+};
+
+export type Props = {
+  title: string;
+  posterPath: string;
+  watches: Array<{
+    // numWatch: number;
+    notes: string;
+    watchedOn: string;
+    rating: number;
+  }>;
+};
+
+// own row for weird export reasons
+type Result = Promise<Array<{ params: Params; props: Props }>>;
+export const getStaticPaths = async (): Result => {
+  const fields = BASES.movies.tables.watches.fields;
+  const watches = await movieBase
+    .table("Watches")
+    .select({
+      maxRecords: 100,
+      view: BASES.movies.tables.watches.views.watchedMovies,
+      fields: [...Object.values(fields)],
+      returnFieldsByFieldId: true,
+    })
+    .all();
+
+  const rawReviews = watches.map((m) => ({
+    recordId: m.id,
+    ...m.fields,
+  })) as MovieReview[];
+
+  const movies = rawReviews.reduce<{ [tmdbId: string]: Props }>(
+    (result, review) => {
+      const tmdbId = review[fields.tmdbID][0];
+      const movie = result[tmdbId];
+      const miniReview: Props["watches"][number] = {
+        notes: review[fields.notes],
+        watchedOn: review[fields.dateWatched],
+        rating: review[fields.rating],
+      };
+
+      if (movie) {
+        movie.watches.push(miniReview);
+      } else {
+        result[tmdbId] = {
+          // tmdbId,
+          title: review[fields.title],
+          posterPath: review[fields.posterPath],
+          watches: [miniReview],
+        };
+      }
+
+      return result;
+    },
+    {},
+  );
+
+  // const movies: Record<string, number> = {};
+
+  return Object.entries(movies).map(([tmdbId, props]) => ({
+    params: { tmdbId },
+    props,
+  }));
+};
+
+const { title, watches, posterPath } = Astro.props;
+
+// const movieInfo = await
+---
+
+<Layout title="Movies!" active="movies">
+  <Image
+    src={`https://image.tmdb.org/t/p/w300${posterPath}`}
+    alt={`poster for ${title}`}
+    height={450 / 2}
+    width={300 / 2}
+  />
+  <h1 class="pt-2 text-2xl">{title}</h1>
+  <p>I've watched this {watches.length} time{watches.length > 1 && "s"}.</p>
+  <ol reversed class="list-decimal">
+    {
+      watches.map((watch) => (
+        <li>
+          <p>
+            ({watch.rating}/4) {watch.notes}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+</Layout>
