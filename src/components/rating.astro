@@ -1,0 +1,24 @@
+---
+import StarEmpty from "./icons/star-empty.astro";
+import StarFilled from "./icons/star-filled.astro";
+
+type Props = {
+  rating: number;
+  classes?: string[];
+};
+
+const { rating, classes = ["mb-[0.25em]", "h-4"] } = Astro.props;
+---
+
+<div>
+  {
+    Array.from({ length: rating }).map(() => (
+      <StarFilled classes={["inline", classes]} />
+    ))
+  }
+  {
+    Array.from({ length: 4 - rating }).map(() => (
+      <StarEmpty classes={["inline", classes]} />
+    ))
+  }
+</div>

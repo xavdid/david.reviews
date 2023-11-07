@@ -1,19 +1,22 @@
 ---
-import { movieBase } from "../../airtable/data";
 import { Image } from "astro:assets";
 import { BASES } from "../../airtable/constants";
-import { type MovieReview } from "../../airtable/types";
+import { movieBase } from "../../airtable/data";
+import type { MovieReview, Awards } from "../../airtable/types";
+import Reviewbox from "../../components/infoboxes/reviewbox.astro";
 import Layout from "../../layouts/Layout.astro";
 
-export type Params = {
+type Params = {
   tmdbId: string;
 };
 
-export type Props = {
+type Props = {
   title: string;
   posterPath: string;
+  collections?: string[];
+  award?: Awards;
+  awardYear?: number;
   watches: Array<{
-    // numWatch: number;
     notes: string;
     watchedOn: string;
     rating: number;
@@ -53,9 +56,11 @@ export const getStaticPaths = async (): Result => {
         movie.watches.push(miniReview);
       } else {
         result[tmdbId] = {
-          // tmdbId,
           title: review[fields.title],
           posterPath: review[fields.posterPath],
+          award: review[fields.award],
+          awardYear: review[fields.awardYear]?.[0],
+          collections: review[fields.collections],
           watches: [miniReview],
         };
       }
@@ -73,29 +78,74 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { title, watches, posterPath } = Astro.props;
-
-// const movieInfo = await
+const { title, watches, posterPath, award, awardYear, collections } =
+  Astro.props;
+if (Boolean(award) != Boolean(awardYear)) {
+  throw new Error(
+    `Single movie page for "${title}" has only one of award & awardYear`,
+  );
+}
 ---
 
 <Layout title="Movies!" active="movies">
-  <Image
-    src={`https://image.tmdb.org/t/p/w300${posterPath}`}
-    alt={`poster for ${title}`}
-    height={450 / 2}
-    width={300 / 2}
-  />
-  <h1 class="pt-2 text-2xl">{title}</h1>
-  <p>I've watched this {watches.length} time{watches.length > 1 && "s"}.</p>
-  <ol reversed class="list-decimal">
-    {
-      watches.map((watch) => (
-        <li>
-          <p>
-            ({watch.rating}/4) {watch.notes}
+  <div class="flex py-3">
+    <Image
+      src={`https://image.tmdb.org/t/p/w300${posterPath}`}
+      alt={`poster for ${title}`}
+      height={450 / 2}
+      width={300 / 2}
+      class="max-h-[225px] max-w-[150px]"
+    />
+    <div class="pl-3">
+      <h1 class="pt-2 text-2xl">{title}</h1>
+      <p class="">
+        I've watched this {watches.length} time{watches.length > 1 && "s"} and
+        given it an average score of {
+          watches.reduce((total, { rating }) => rating + total, 0) /
+            watches.length
+        } (<a
+          class="text-blue-500 underline hover:text-blue-600"
+          target="_blank"
+          rel="noopener"
+          href="https://xavd.id/blog/post/on-the-rating-of-media/">out of 4</a
+        >).
+      </p>
+      {
+        award && (
+          <p class="ml-[-8px] mt-2 rounded bg-red-50 p-2">
+            This movie won the {award} medal in my
+            {/* https://github.com/withastro/prettier-plugin-astro/issues/308 */}
+            {/* prettier-ignore */}
+            <a class="text-blue-500 underline hover:text-blue-600" target="_blank" rel="noopener" href="TKTK">{awardYear} Favorite Media of the Year</a>
+            lookback.
           </p>
-        </li>
-      ))
-    }
-  </ol>
+        )
+      }
+      {
+        collections && (
+          <div class="ml-[-8px] mt-2 rounded bg-red-50 p-2">
+            <p>This movie is part of the following collection(s):</p>
+            <ul class="pt-2">
+              {collections.map((collection) => (
+                <li class="pb-2 pl-2">
+                  <a
+                    class="rounded bg-blue-200 p-1 hover:bg-blue-300"
+                    href="TKTK"
+                  >
+                    {collection}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    watches.map((watch, index) => (
+      <Reviewbox {...watch} watchNumber={watches.length - index} />
+    ))
+  }
 </Layout>

@@ -1,9 +1,9 @@
 ---
-import { movieBase } from "../../airtable/data";
 import { BASES } from "../../airtable/constants";
+import { movieBase } from "../../airtable/data";
 import { type MovieReview } from "../../airtable/types";
-import Layout from "../../layouts/Layout.astro";
 import Moviebox from "../../components/infoboxes/moviebox.astro";
+import Layout from "../../layouts/Layout.astro";
 
 const fields = BASES.movies.tables.watches.fields;
 const movies = await movieBase
@@ -58,6 +58,8 @@ const reviews = rawReviews.map((review) => {
         numWatch={review.numWatch}
         isFirstWatch={review[fields.isFirstWatch] === 1}
         tmdbId={review[fields.tmdbID][0]}
+        award={review[fields.award]}
+        collections={review[fields.collections]}
       />
     ))
   }

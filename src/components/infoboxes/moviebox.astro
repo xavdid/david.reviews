@@ -1,8 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import StarEmpty from "../icons/star-empty.astro";
-import StarFilled from "../icons/star-filled.astro";
+
 import MovieIcon from "../icons/movie.astro";
+import Rating from "../rating.astro";
 
 type Props = {
   title: string;
@@ -13,6 +13,8 @@ type Props = {
   numWatch: number;
   isFirstWatch: boolean;
   tmdbId: string;
+  award?: string;
+  collections?: string[];
 };
 const {
   title,
@@ -23,10 +25,12 @@ const {
   numWatch,
   isFirstWatch,
   tmdbId,
+  award,
+  collections,
 } = Astro.props;
 ---
 
-<div class="mb-6 flex rounded border-2 border-red-500">
+<div class="mb-6 flex rounded border-2 border-red-500 even:bg-red-50">
   <div class="p-2">
     <Image
       src={posterUrl}
@@ -44,7 +48,13 @@ const {
         </h3></a
       >
       <div>
-        <div class="inline pr-2">🥇 🎃</div>
+        {award && <div class="inline pr-2">🥇</div>}
+        {
+          collections &&
+            collections.map((collection) => (
+              <div class="inline pr-2">{collection.split(" ")[0]}</div>
+            ))
+        }
         <MovieIcon classes="pb-[0.10em] inline h-6 fill-red-500 pr-1" />
       </div>
     </div>
@@ -56,18 +66,7 @@ const {
         <span class="hidden md:inline">Watched on:{" "}</span>{watchedOn}
       </div>
       <span>Watch #{numWatch}{numWatch === 1 && !isFirstWatch && "*"}</span>
-      <div class="">
-        {
-          Array.from({ length: rating }).map(() => (
-            <StarFilled classes="mb-[0.25em] inline h-4" />
-          ))
-        }
-        {
-          Array.from({ length: 4 - rating }).map(() => (
-            <StarEmpty classes="mb-[0.25em] inline h-4" />
-          ))
-        }
-      </div>
+      <Rating rating={rating} />
     </div>
   </div>
 </div>
