@@ -1,0 +1,30 @@
+---
+import { type AwardTier, medals } from "../airtable/common";
+export type Props = {
+  year: number;
+  tier: AwardTier;
+  anchor?: string;
+};
+
+const lookbacks: { [x: number]: string } = {
+  2022: "https://xavd.id/blog/post/favorite-media-2022/",
+  2021: "https://xavd.id/blog/post/favorite-media-2021/",
+  2020: "https://xavd.id/blog/post/favorite-media-2020/",
+  2019: "https://xavd.id/blog/post/my-favorite-media-of-the-year-2019-edition/",
+  2018: "https://xavd.id/blog/post/my-favorite-media-2018-edition/",
+  2017: "https://xavd.id/blog/post/a-few-more-favorites/",
+  2016: "https://xavd.id/blog/post/a-few-of-my-favorite-things/",
+};
+const buildAwardUrl = (year: number, anchor?: string) =>
+  `${lookbacks[year]}${anchor ?? ""}`;
+
+const { year, tier, anchor } = Astro.props;
+---
+
+This movie won the {medals[tier]}{tier} medal in my
+<a
+  class="text-blue-500 underline hover:text-blue-600"
+  target="_blank"
+  rel="noopener"
+  href={buildAwardUrl(year, anchor)}>{year} Media Yearly Review</a
+>.

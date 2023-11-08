@@ -1,9 +1,13 @@
 ---
 import { Image } from "astro:assets";
 
-import { type Awards, loadWatches, fields } from "../../airtable/movies";
+import { loadWatches, fields } from "../../airtable/movies";
 import Reviewbox from "../../components/infoboxes/reviewbox.astro";
 import Layout from "../../layouts/Layout.astro";
+import AwardLink, {
+  type Props as AwardProps,
+} from "../../components/AwardLink.astro";
+import type { Code } from "astro:components";
 
 type Params = {
   tmdbId: string;
@@ -13,8 +17,7 @@ type Props = {
   title: string;
   posterPath: string;
   collections?: string[];
-  award?: Awards;
-  awardYear?: number;
+  award?: AwardProps;
   watches: Array<{
     notes: string;
     watchedOn: string;
@@ -42,14 +45,23 @@ export const getStaticPaths = async (): Result => {
       if (movie) {
         movie.watches.push(miniReview);
       } else {
-        result[tmdbId] = {
+        const item: Props = {
           title: review[fields.title],
           posterPath: review[fields.posterPath],
-          award: review[fields.award],
-          awardYear: review[fields.awardYear]?.[0],
           collections: review[fields.collections],
           watches: [miniReview],
         };
+
+        if (review[fields.awardTier]) {
+          item.award = {
+            // this gets validated below
+            tier: review[fields.awardTier]![0],
+            year: review[fields.awardYear]![0],
+            anchor: review[fields.awardAnchor]?.[0],
+          };
+        }
+
+        result[tmdbId] = item;
       }
 
       return result;
@@ -63,11 +75,10 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { title, watches, posterPath, award, awardYear, collections } =
-  Astro.props;
-if (Boolean(award) != Boolean(awardYear)) {
+const { title, watches, posterPath, award, collections } = Astro.props;
+if (Boolean(award?.tier) != Boolean(award?.year)) {
   throw new Error(
-    `Single movie page for "${title}" has only one of award & awardYear`,
+    `Single movie page for "${title}" has only one of Award yier & tier.`,
   );
 }
 ---
@@ -95,20 +106,10 @@ if (Boolean(award) != Boolean(awardYear)) {
           href="https://xavd.id/blog/post/on-the-rating-of-media/">out of 4</a
         >).
       </p>
-      {
-        award && (
-          <p class="ml-[-8px] mt-2 rounded bg-red-50 p-2">
-            This movie won the {award} medal in my
-            {/* https://github.com/withastro/prettier-plugin-astro/issues/308 */}
-            {/* prettier-ignore */}
-            <a class="text-blue-500 underline hover:text-blue-600" target="_blank" rel="noopener" href="TKTK">{awardYear} Favorite Media of the Year</a>
-            lookback.
-          </p>
-        )
-      }
+      {award && <AwardLink {...award} />}
       {
         collections && (
-          <div class="ml-[-8px] mt-2 rounded bg-red-50 p-2">
+          <div class="py-2">
             <p>This movie is part of the following collection(s):</p>
             <ul class="pt-2">
               {collections.map((collection) => (

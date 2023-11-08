@@ -1,4 +1,4 @@
-import { NUM_RECORDS, client, type Base } from "./common";
+import { NUM_RECORDS, client, type AwardTier, type Base } from "./common";
 
 export const SCHEMA = {
   baseId: "appctKQDyHbyqNJOY",
@@ -13,13 +13,12 @@ export const SCHEMA = {
     tmdbID: "fldquYvRJYLZhvfvA",
     posterPath: "fldgUqyuGvEV9ESj8",
     collections: "fldy9V32NQfusaaVP",
-    award: "fldmW9FgOxwCcgmGE",
+    awardTier: "fldmW9FgOxwCcgmGE",
     awardYear: "fldr8qhnvoNTpykWe",
+    awardAnchor: "fldsBFKQ9Z8Uv6SDe",
     totalMovieWatches: "fldIcHiMwU6eMo3GG",
   },
 } as const satisfies Base;
-
-export type Awards = "Gold" | "Silver" | "Bronze";
 
 export const fields = SCHEMA.fields;
 
@@ -29,8 +28,9 @@ type NonStringFields = {
   [fields.isFirstWatch]: 0 | 1;
   [fields.tmdbID]: [string];
   [fields.collections]?: string[];
-  [fields.award]?: Awards;
+  [fields.awardTier]?: [AwardTier];
   [fields.awardYear]?: [number];
+  [fields.awardAnchor]?: [string];
   [fields.totalMovieWatches]: number;
 };
 type StringFields = {

@@ -13,3 +13,10 @@ export type Base = {
   viewId: string;
   fields: { [fieldName: string]: string };
 };
+export type AwardTier = "Gold" | "Silver" | "Bronze";
+
+export const medals: { [x in AwardTier]: string } = {
+  Gold: "🥇",
+  Silver: "🥈",
+  Bronze: "🥉",
+} as const;

@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 
 import MovieIcon from "../icons/movie.astro";
 import Rating from "../rating.astro";
+import { type AwardTier, medals } from "../../airtable/common";
 
 type Props = {
   title: string;
@@ -13,7 +14,7 @@ type Props = {
   numWatch: number;
   isFirstWatch: boolean;
   tmdbId: string;
-  award?: string;
+  awardTier?: AwardTier;
   collections?: string[];
 };
 const {
@@ -25,7 +26,7 @@ const {
   numWatch,
   isFirstWatch,
   tmdbId,
-  award,
+  awardTier,
   collections,
 } = Astro.props;
 ---
@@ -48,7 +49,8 @@ const {
         </h3></a
       >
       <div>
-        {award && <div class="inline pr-2">🥇</div>}
+        {awardTier && <div class="inline pr-2">{medals[awardTier]}</div>}
+        <!-- Add collection link: TKTK -->
         {
           collections &&
             collections.map((collection) => (

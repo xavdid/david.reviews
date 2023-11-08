@@ -41,7 +41,7 @@ const reviews = rawReviews.map((review) => {
           numWatch={review.numWatch}
           isFirstWatch={review[fields.isFirstWatch] === 1}
           tmdbId={review[fields.tmdbID][0]}
-          award={review[fields.award]}
+          awardTier={review[fields.awardTier]?.[0]}
           collections={review[fields.collections]}
         />
       ))
