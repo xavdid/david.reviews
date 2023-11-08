@@ -6,16 +6,31 @@ type Props = {
   watchedOn: string;
   notes: string;
   watchNumber: number;
+  isFirstWatch: boolean;
 };
 
-const { rating, watchedOn, watchNumber, notes } = Astro.props;
+const { rating, watchedOn, watchNumber, notes, isFirstWatch } = Astro.props;
+const notActuallyFirstWatch = watchNumber === 1 && !isFirstWatch;
 ---
 
-<div class="mb-6 rounded border-2 border-red-500 odd:bg-red-50">
-  <div class="flex justify-between border-b-2 border-red-500 px-2">
-    <span>{watchedOn}</span>
-    <span>Watch #{watchNumber}</span>
-    <div><Rating rating={rating} /></div>
+<>
+  <div class="mb-4 rounded border-2 border-red-500 even:bg-red-50">
+    <div class="flex justify-between border-b-2 border-red-500 px-2">
+      <span>{watchedOn}</span>
+      <span>Watch #{watchNumber}{notActuallyFirstWatch && "*"}</span>
+      <div><Rating rating={rating} /></div>
+    </div>
+    <p class="p-2">{notes || <em>no review</em>}</p>
   </div>
-  <p class="px-1 pb-1">{notes || <em>no review</em>}</p>
-</div>
+  {
+    notActuallyFirstWatch && (
+      <p>
+        <sup>
+          <code>*</code>
+        </sup>
+        denotes that this is my first <em>logged</em> watch, but I had seen the
+        movie before.
+      </p>
+    )
+  }
+</>

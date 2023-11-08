@@ -1,25 +1,9 @@
 ---
-import { BASES } from "../../airtable/constants";
-import { movieBase } from "../../airtable/data";
-import { type MovieReview } from "../../airtable/types";
+import { loadWatches, fields } from "../../airtable/movies";
 import Moviebox from "../../components/infoboxes/moviebox.astro";
 import Layout from "../../layouts/Layout.astro";
 
-const fields = BASES.movies.tables.watches.fields;
-const movies = await movieBase
-  .table("Watches")
-  .select({
-    maxRecords: 100,
-    view: BASES.movies.tables.watches.views.watchedMovies,
-    fields: [...Object.values(fields)],
-    returnFieldsByFieldId: true,
-  })
-  .all();
-
-const rawReviews = movies.map((m) => ({
-  recordId: m.id,
-  ...m.fields,
-})) as MovieReview[];
+const rawReviews = await loadWatches();
 const watchCounts: { [tmdbId: string]: number } = {};
 
 const reviews = rawReviews.map((review) => {
@@ -30,11 +14,6 @@ const reviews = rawReviews.map((review) => {
     numWatch: review[fields.totalMovieWatches] - thisWatchNum,
   };
 });
-
-// height={review[fields.poster][0].height / 2}
-// width={review[fields.poster][0].width / 2}
-// src={`https://image.tmdb.org/t/p/w500${review[fields.posterPath]}`}
-// src={review[fields.poster]?.[0]?.url}
 ---
 
 <Layout title="Movies!" active="movies">
@@ -42,29 +21,30 @@ const reviews = rawReviews.map((review) => {
   <p class="pb-3">
     There are {reviews.length} total reviews of {
       Object.keys(watchCounts).length
-    } movies. Click on a movie to see all of its reviews!
+    } movies. Click on a movie title to see all of its reviews!
   </p>
-
-  {
-    reviews.map((review) => (
-      <Moviebox
-        title={review[fields.title]}
-        rating={review[fields.rating]}
-        watchedOn={review[fields.dateWatched]}
-        posterUrl={`https://image.tmdb.org/t/p/w300${
-          review[fields.posterPath]
-        }`}
-        notes={review[fields.notes]}
-        numWatch={review.numWatch}
-        isFirstWatch={review[fields.isFirstWatch] === 1}
-        tmdbId={review[fields.tmdbID][0]}
-        award={review[fields.award]}
-        collections={review[fields.collections]}
-      />
-    ))
-  }
-
-  <p>
-    * this is my first <em>logged</em> watch, but I had seen the movie before.
+  <p class="pb-3">
+    <code>*</code> denotes that this is my first <em>logged</em> watch, but I
+    had seen the movie before.
   </p>
+  <div>
+    {
+      reviews.map((review) => (
+        <Moviebox
+          title={review[fields.title]}
+          rating={review[fields.rating]}
+          watchedOn={review[fields.dateWatched]}
+          posterUrl={`https://image.tmdb.org/t/p/w300${
+            review[fields.posterPath]
+          }`}
+          notes={review[fields.notes]}
+          numWatch={review.numWatch}
+          isFirstWatch={review[fields.isFirstWatch] === 1}
+          tmdbId={review[fields.tmdbID][0]}
+          award={review[fields.award]}
+          collections={review[fields.collections]}
+        />
+      ))
+    }
+  </div>
 </Layout>

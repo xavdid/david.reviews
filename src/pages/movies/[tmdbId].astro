@@ -1,8 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import { BASES } from "../../airtable/constants";
-import { movieBase } from "../../airtable/data";
-import type { MovieReview, Awards } from "../../airtable/types";
+
+import { type Awards, loadWatches, fields } from "../../airtable/movies";
 import Reviewbox from "../../components/infoboxes/reviewbox.astro";
 import Layout from "../../layouts/Layout.astro";
 
@@ -20,27 +19,14 @@ type Props = {
     notes: string;
     watchedOn: string;
     rating: number;
+    isFirstWatch: boolean;
   }>;
 };
 
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const fields = BASES.movies.tables.watches.fields;
-  const watches = await movieBase
-    .table("Watches")
-    .select({
-      maxRecords: 100,
-      view: BASES.movies.tables.watches.views.watchedMovies,
-      fields: [...Object.values(fields)],
-      returnFieldsByFieldId: true,
-    })
-    .all();
-
-  const rawReviews = watches.map((m) => ({
-    recordId: m.id,
-    ...m.fields,
-  })) as MovieReview[];
+  const rawReviews = await loadWatches();
 
   const movies = rawReviews.reduce<{ [tmdbId: string]: Props }>(
     (result, review) => {
@@ -50,6 +36,7 @@ export const getStaticPaths = async (): Result => {
         notes: review[fields.notes],
         watchedOn: review[fields.dateWatched],
         rating: review[fields.rating],
+        isFirstWatch: review[fields.isFirstWatch] === 1,
       };
 
       if (movie) {
@@ -69,8 +56,6 @@ export const getStaticPaths = async (): Result => {
     },
     {},
   );
-
-  // const movies: Record<string, number> = {};
 
   return Object.entries(movies).map(([tmdbId, props]) => ({
     params: { tmdbId },
@@ -142,10 +127,11 @@ if (Boolean(award) != Boolean(awardYear)) {
       }
     </div>
   </div>
-
-  {
-    watches.map((watch, index) => (
-      <Reviewbox {...watch} watchNumber={watches.length - index} />
-    ))
-  }
+  <div>
+    {
+      watches.map((watch, index) => (
+        <Reviewbox {...watch} watchNumber={watches.length - index} />
+      ))
+    }
+  </div>
 </Layout>

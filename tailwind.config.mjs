@@ -15,32 +15,6 @@ export default {
         insetMovie: insetShadow(red),
         insetBook: insetShadow(emerald),
       },
-      colors: {
-        // .orange {
-        // 	color: #ff9700;
-        // }
-
-        // .blue {
-        // 	color: #0f89ff;
-        // }
-
-        // .purple {
-        // 	color: #930eff;
-        // }
-
-        // .darkgreen {
-        // 	color: #68c800;
-        // }
-        game: {
-          500: "#0f89ff",
-        },
-        movie: {
-          500: "#ff9700",
-        },
-        book: {
-          500: "#930eff",
-        },
-      },
     },
   },
   plugins: [],
