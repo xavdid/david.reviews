@@ -17,16 +17,25 @@ const reviews = rawReviews.map((review) => {
 ---
 
 <Layout title="Movies!" active="movies">
-  <h1 class="pb-3 pt-2 text-2xl">Recently Watched Movies</h1>
+  <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Movie</h1>
   <p class="pb-3">
     There are {reviews.length} total reviews of {
       Object.keys(watchCounts).length
-    } movies. Click on a movie title to see all of its reviews!
+    } movies.
   </p>
-  <p class="pb-3">
-    <code>*</code> denotes that this is my first <em>logged</em> watch, but I
-    had seen the movie before.
-  </p>
+  <ul class="mb-3 rounded bg-red-50 p-2">
+    <li>
+      <code>*</code> - this is my first <em>logged</em> watch, but I had seen
+      the movie before.
+    </li>
+    <li>
+      🥇 / 🥈 / 🥉 - <a
+        href="https://xavd.id/blog/tags/yearly-review"
+        class="rounded bg-blue-200 p-1 hover:bg-blue-300"
+        >Favorite of the Year</a
+      > honoree
+    </li>
+  </ul>
   <div>
     {
       reviews.map((review) => (

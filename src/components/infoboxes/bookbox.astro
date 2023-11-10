@@ -1,0 +1,84 @@
+---
+import { Image } from "astro:assets";
+
+import BookIcon from "../icons/book.astro";
+import Rating from "../Rating.astro";
+
+import { type AwardTier, medals } from "../../airtable/common";
+import type { BookMedium } from "../../airtable/books";
+
+type Props = {
+  title: string;
+  rating: number;
+  dateFinished: string;
+  notes: string;
+  isReread: boolean;
+  googleBooksId: string;
+  bookMedium: BookMedium;
+  awardTier?: AwardTier;
+  seriesName?: string;
+  authors: string;
+};
+const {
+  title,
+  rating,
+  dateFinished,
+  isReread,
+  notes,
+  googleBooksId,
+  awardTier,
+  bookMedium,
+  seriesName,
+  authors,
+} = Astro.props;
+---
+
+<div class="mb-6 flex rounded border-2 border-emerald-600 even:bg-emerald-50">
+  <div class="p-2">
+    <a href={`/books/${googleBooksId}`}>
+      <Image
+        src={`https://books.google.com/books/content/images/frontcover/${googleBooksId}?fife=h188`}
+        alt={`cover for ${title}`}
+        height={188}
+        width={120}
+      /></a
+    >
+  </div>
+
+  <div class="flex w-full flex-col justify-between">
+    <div
+      class="flex justify-between border-b-2 border-l-2 border-emerald-600 pl-2"
+    >
+      <div>
+        <a href={`/books/${googleBooksId}`}>
+          <h3
+            class="text-l inline font-bold text-blue-600 underline hover:bg-blue-100"
+          >
+            {title}
+          </h3></a
+        >{" "}
+        <span>by {authors}</span>
+      </div>
+      <div>
+        {bookMedium === "Audio" && <div class="inline px-1">🔈</div>}
+        {seriesName && <div class="inline px-1">📚</div>}
+        {isReread && <div class="inline px-1">🔁</div>}
+        {awardTier && <div class="inline px-1">{medals[awardTier]}</div>}
+        <BookIcon classes="pb-[0.10em] inline h-6 fill-emerald-600 px-1" />
+      </div>
+    </div>
+    <p class="px-4 py-2">
+      {notes ?? <em>no review</em>}
+    </p>
+    <div
+      class="flex justify-between border-l-2 border-t-2 border-emerald-600 px-2"
+    >
+      <div>
+        <span class="hidden md:inline">Finished on:{" "}</span>{dateFinished}
+      </div>
+      <!-- <span>Watch #{numRead}{numRead === 1 && isReread && "*"}</span> -->
+
+      <Rating rating={rating} />
+    </div>
+  </div>
+</div>

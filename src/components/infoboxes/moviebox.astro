@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 
 import MovieIcon from "../icons/movie.astro";
-import Rating from "../rating.astro";
+import Rating from "../Rating.astro";
 import { type AwardTier, medals } from "../../airtable/common";
 
 type Props = {
@@ -33,18 +33,22 @@ const {
 
 <div class="mb-6 flex rounded border-2 border-red-500 even:bg-red-50">
   <div class="p-2">
-    <Image
-      src={posterUrl}
-      alt={`poster for ${title}`}
-      height={187.5}
-      width={125}
-    />
+    <a href={`/movies/${tmdbId}`}>
+      <Image
+        src={posterUrl}
+        alt={`poster for ${title}`}
+        height={187.5}
+        width={125}
+      /></a
+    >
   </div>
 
   <div class="flex w-full flex-col justify-between">
     <div class="flex justify-between border-b-2 border-l-2 border-red-500 pl-2">
       <a href={`/movies/${tmdbId}`}>
-        <h3 class="text-l font-bold underline hover:bg-slate-300">
+        <h3
+          class="text-l inline font-bold text-blue-600 underline hover:bg-blue-100"
+        >
           {title}
         </h3></a
       >
