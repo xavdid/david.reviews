@@ -100,7 +100,7 @@ const { gbid: slug } = Astro.params;
 if (!slug) {
   throw new Error(`${title} lacks a gbid?`);
 }
-const authorPermalink = (n: string) => `/authors/${slugify(n)}`;
+const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
 ---
 
 <Layout title={title} active="books">

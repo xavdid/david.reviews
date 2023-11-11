@@ -36,7 +36,7 @@ const {
 } = Astro.props;
 
 const bookPermalink = `/books/${slugify(title)}`;
-const authorPermalink = (n: string) => `/authors/${slugify(n)}`;
+const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
 ---
 
 <div class="mb-6 flex rounded border-2 border-emerald-600 even:bg-emerald-50">
@@ -100,7 +100,7 @@ const authorPermalink = (n: string) => `/authors/${slugify(n)}`;
           )
         }
       </div>
-      <div>
+      <div class="whitespace-nowrap pl-1">
         {bookMedium === "Audio" && <div class="inline px-1">🔈</div>}
         {seriesName && <div class="inline px-1">📚</div>}
         {isReread && <div class="inline px-1">🔁</div>}
