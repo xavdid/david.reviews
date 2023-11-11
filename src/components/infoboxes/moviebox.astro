@@ -58,16 +58,16 @@ const permalink = `/movies/${slugify(`${title} ${yearReleased}`)}`;
         </h3>
          ({yearReleased})
       </span>
-      <div>
-        {awardTier && <div class="inline pr-2">{medals[awardTier]}</div>}
+      <div class="whitespace-nowrap pl-1">
+        {awardTier && <div class="inline px-1">{medals[awardTier]}</div>}
         <!-- Add collection link: TKTK -->
         {
           collections &&
             collections.map((collection) => (
-              <div class="inline pr-2">{collection.split(" ")[0]}</div>
+              <div class="inline px-1">{collection.split(" ")[0]}</div>
             ))
         }
-        <MovieIcon classes="pb-[0.10em] inline h-6 fill-red-500 pr-1" />
+        <MovieIcon classes="pb-[0.10em] inline h-6 fill-red-500 px-1" />
       </div>
     </div>
     <p class="px-4 py-2">

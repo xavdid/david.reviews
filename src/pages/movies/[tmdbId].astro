@@ -96,7 +96,7 @@ const { title, watches, posterPath, award, collections, yearReleased } =
       <p class="pt-2">
         Originally released in {yearReleased}.
       </p>
-      <p class="pt-2">
+      <p class="pr-2 pt-2">
         I've watched this {watches.length} time{watches.length > 1 && "s"} and
         given it an average score of {
           watches.reduce((total, { rating }) => rating + total, 0) /
@@ -115,7 +115,7 @@ const { title, watches, posterPath, award, collections, yearReleased } =
             <p>This movie is part of the following collection(s):</p>
             <ul class="pt-2">
               {collections.map((collection) => (
-                <li class="pb-2 pl-2">
+                <li class="pb-2 pl-4">
                   <a
                     class="rounded bg-blue-200 p-1 hover:bg-blue-300"
                     href="TKTK"
