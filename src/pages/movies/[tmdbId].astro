@@ -8,6 +8,7 @@ import Rating from "../../components/Rating.astro";
 import AwardLink, {
   type Props as AwardProps,
 } from "../../components/AwardLink.astro";
+import slugify from "@sindresorhus/slugify";
 
 type Params = {
   tmdbId: string;
@@ -15,6 +16,7 @@ type Params = {
 
 type Props = {
   title: string;
+  yearReleased: number;
   posterPath: string;
   collections?: string[];
   award?: AwardProps;
@@ -47,6 +49,7 @@ export const getStaticPaths = async (): Result => {
       } else {
         const item: Props = {
           title: review[fields.title],
+          yearReleased: review[fields.yearReleased][0],
           posterPath: review[fields.posterPath],
           collections: review[fields.collections],
           watches: [miniReview],
@@ -70,17 +73,13 @@ export const getStaticPaths = async (): Result => {
   );
 
   return Object.entries(movies).map(([tmdbId, props]) => ({
-    params: { tmdbId },
+    params: { tmdbId: slugify(`${props.title} ${props.yearReleased}`) },
     props,
   }));
 };
 
-const { title, watches, posterPath, award, collections } = Astro.props;
-if (Boolean(award?.tier) != Boolean(award?.year)) {
-  throw new Error(
-    `Single movie page for "${title}" has only one of Award yier & tier.`,
-  );
-}
+const { title, watches, posterPath, award, collections, yearReleased } =
+  Astro.props;
 ---
 
 <Layout title={title} active="movies">
@@ -94,7 +93,10 @@ if (Boolean(award?.tier) != Boolean(award?.year)) {
     />
     <div class="pl-3">
       <h1 class="pt-2 text-2xl">{title}</h1>
-      <p class="">
+      <p class="pt-2">
+        Originally released in {yearReleased}.
+      </p>
+      <p class="pt-2">
         I've watched this {watches.length} time{watches.length > 1 && "s"} and
         given it an average score of {
           watches.reduce((total, { rating }) => rating + total, 0) /

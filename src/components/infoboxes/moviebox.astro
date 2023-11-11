@@ -1,39 +1,42 @@
 ---
 import { Image } from "astro:assets";
+import slugify from "@sindresorhus/slugify";
 
-import MovieIcon from "../icons/movie.astro";
+import { medals, type AwardTier } from "../../airtable/common";
 import Rating from "../Rating.astro";
-import { type AwardTier, medals } from "../../airtable/common";
+import MovieIcon from "../icons/movie.astro";
 
 type Props = {
   title: string;
+  yearReleased: number;
   rating: number;
   watchedOn: string;
   posterUrl: string;
   notes: string;
   numWatch: number;
   isFirstWatch: boolean;
-  tmdbId: string;
   awardTier?: AwardTier;
   collections?: string[];
 };
 const {
   title,
+  yearReleased,
   rating,
   watchedOn,
   posterUrl,
   notes,
   numWatch,
   isFirstWatch,
-  tmdbId,
   awardTier,
   collections,
 } = Astro.props;
+
+const permalink = `/movies/${slugify(`${title} ${yearReleased}`)}`;
 ---
 
 <div class="mb-6 flex rounded border-2 border-red-500 even:bg-red-50">
   <div class="p-2">
-    <a href={`/movies/${tmdbId}`}>
+    <a href={permalink}>
       <Image
         src={posterUrl}
         alt={`poster for ${title}`}
@@ -45,13 +48,16 @@ const {
 
   <div class="flex w-full flex-col justify-between">
     <div class="flex justify-between border-b-2 border-l-2 border-red-500 pl-2">
-      <a href={`/movies/${tmdbId}`}>
+      <span class="inline">
         <h3
           class="text-l inline font-bold text-blue-600 underline hover:bg-blue-100"
         >
-          {title}
-        </h3></a
-      >
+          <a href={permalink}>
+            {title}
+          </a>
+        </h3>
+         ({yearReleased})
+      </span>
       <div>
         {awardTier && <div class="inline pr-2">{medals[awardTier]}</div>}
         <!-- Add collection link: TKTK -->

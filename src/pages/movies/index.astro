@@ -41,6 +41,7 @@ const reviews = rawReviews.map((review) => {
       reviews.map((review) => (
         <Moviebox
           title={review[fields.title]}
+          yearReleased={review[fields.yearReleased][0]}
           rating={review[fields.rating]}
           watchedOn={review[fields.dateWatched]}
           posterUrl={`https://image.tmdb.org/t/p/w300${
@@ -49,7 +50,6 @@ const reviews = rawReviews.map((review) => {
           notes={review[fields.notes]}
           numWatch={review.numWatch}
           isFirstWatch={review[fields.isFirstWatch] === 1}
-          tmdbId={review[fields.tmdbID][0]}
           awardTier={review[fields.awardTier]?.[0]}
           collections={review[fields.collections]}
         />

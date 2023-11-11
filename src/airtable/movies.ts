@@ -17,6 +17,7 @@ export const SCHEMA = {
     awardYear: "fldr8qhnvoNTpykWe",
     awardAnchor: "fldsBFKQ9Z8Uv6SDe",
     totalMovieWatches: "fldIcHiMwU6eMo3GG",
+    yearReleased: "fldlzig4CUREoZ9Yn",
   },
 } as const satisfies Base;
 
@@ -32,6 +33,7 @@ type NonStringFields = {
   [fields.awardYear]?: [number];
   [fields.awardAnchor]?: [string];
   [fields.totalMovieWatches]: number;
+  [fields.yearReleased]: [number];
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
