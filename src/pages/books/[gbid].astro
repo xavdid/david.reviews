@@ -7,6 +7,7 @@ import AwardLink, {
   type Props as AwardProps,
 } from "../../components/AwardLink.astro";
 import { loadReads, fields, type BookMedium } from "../../airtable/books";
+import slugify from "@sindresorhus/slugify";
 
 type SeriesInfo = {
   name: string;
@@ -20,7 +21,7 @@ type Params = {
 type Props = {
   title: string;
   award?: AwardProps;
-  authorNames: string;
+  authorsInfo: { name: string; id: string }[];
   series?: SeriesInfo;
   reads: Array<{
     notes: string;
@@ -51,9 +52,14 @@ export const getStaticPaths = async (): Result => {
       if (book) {
         book.reads.push(miniReview);
       } else {
+        const splitNames = review[fields.authorFullNames].split(",");
+        const authorsInfo = splitNames.map((name, index) => ({
+          name,
+          id: review[fields.authorIds][index],
+        }));
         const item: Props = {
           title: review[fields.title][0],
-          authorNames: review[fields.authorFullNames],
+          authorsInfo,
           reads: [miniReview],
         };
 
@@ -87,7 +93,7 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { title, reads, series, award, authorNames } = Astro.props;
+const { title, reads, series, award, authorsInfo } = Astro.props;
 const { gbid } = Astro.params;
 if (!gbid) {
   throw new Error(`${title} lacks a gbid?`);
@@ -112,7 +118,20 @@ if (Boolean(award?.tier) != Boolean(award?.year)) {
     <div class="pl-3">
       <h1 class="pt-2 text-2xl">{title}</h1>
       <p class="pb-2">
-        by {authorNames}
+        by {
+          authorsInfo.map(({ name, id }, index) => (
+            <>
+              {/* little .join(", ") replacer */}
+              {index > 0 && ", "}{" "}
+              <a
+                class="rounded bg-blue-200 p-1 hover:bg-blue-300"
+                href={`/authors/${slugify(name)}`}
+              >
+                {name}
+              </a>
+            </>
+          ))
+        }
       </p>
       <p class="pb-2">
         I've read this {reads.length} time{reads.length > 1 && "s"} and given it

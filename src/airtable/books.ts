@@ -19,6 +19,7 @@ export const SCHEMA = {
     numberInSeries: "fldSdUIsg9exyh8BM",
     authorLastNames: "fld7vlWOOWSpAWk1q",
     authorFullNames: "fldp5tglohwONaZqE",
+    authorIds: "fld6Iuw1UwF0gCR5m",
   },
 } as const satisfies Base;
 
@@ -39,6 +40,7 @@ type NonStringFields = {
   [fields.seriesName]?: [string];
   [fields.numberInSeries]?: [number];
   [fields.authorLastNames]: string[];
+  [fields.authorIds]: string[];
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;

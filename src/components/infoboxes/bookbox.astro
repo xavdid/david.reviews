@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import slugify from "@sindresorhus/slugify";
 
 import BookIcon from "../icons/book.astro";
 import Rating from "../Rating.astro";
@@ -17,7 +18,8 @@ type Props = {
   bookMedium: BookMedium;
   awardTier?: AwardTier;
   seriesName?: string;
-  authors: string;
+  authors?: string;
+  coAuthors?: string;
 };
 const {
   title,
@@ -30,6 +32,7 @@ const {
   bookMedium,
   seriesName,
   authors,
+  coAuthors,
 } = Astro.props;
 ---
 
@@ -57,7 +60,42 @@ const {
             {title}
           </h3></a
         >{" "}
-        <span>by {authors}</span>
+        {
+          authors && (
+            <span>
+              by{" "}
+              {authors.split(",").map((n, index) => (
+                <>
+                  {index > 0 && ", "}{" "}
+                  <a
+                    href={`/authors/${slugify(n)}`}
+                    class="underline hover:bg-blue-100"
+                  >
+                    {n}
+                  </a>
+                </>
+              ))}
+            </span>
+          )
+        }
+        {
+          coAuthors && (
+            <span>
+              with{" "}
+              {coAuthors.split(",").map((n, index) => (
+                <>
+                  {index > 0 && ", "}{" "}
+                  <a
+                    href={`/authors/${slugify(n)}`}
+                    class="underline hover:bg-blue-100"
+                  >
+                    {n}
+                  </a>
+                </>
+              ))}
+            </span>
+          )
+        }
       </div>
       <div>
         {bookMedium === "Audio" && <div class="inline px-1">🔈</div>}
