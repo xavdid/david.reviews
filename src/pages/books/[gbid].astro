@@ -21,6 +21,7 @@ type Params = {
 type Props = {
   title: string;
   award?: AwardProps;
+  gbid: string;
   authorsInfo: { name: string; id: string }[];
   series?: SeriesInfo;
   reads: Array<{
@@ -59,6 +60,7 @@ export const getStaticPaths = async (): Result => {
         }));
         const item: Props = {
           title: review[fields.title][0],
+          gbid,
           authorsInfo,
           reads: [miniReview],
         };
@@ -87,23 +89,18 @@ export const getStaticPaths = async (): Result => {
     {},
   );
 
-  return Object.entries(books).map(([gbid, props]) => ({
-    params: { gbid },
+  return Object.entries(books).map(([_, props]) => ({
+    params: { gbid: slugify(props.title) },
     props,
   }));
 };
 
-const { title, reads, series, award, authorsInfo } = Astro.props;
-const { gbid } = Astro.params;
-if (!gbid) {
+const { title, reads, series, award, authorsInfo, gbid } = Astro.props;
+const { gbid: slug } = Astro.params;
+if (!slug) {
   throw new Error(`${title} lacks a gbid?`);
 }
-
-if (Boolean(award?.tier) != Boolean(award?.year)) {
-  throw new Error(
-    `Single movie page for "${title}" has only one of Award yier & tier.`,
-  );
-}
+const authorPermalink = (n: string) => `/authors/${slugify(n)}`;
 ---
 
 <Layout title={title} active="books">
@@ -119,13 +116,13 @@ if (Boolean(award?.tier) != Boolean(award?.year)) {
       <h1 class="pt-2 text-2xl">{title}</h1>
       <p class="pb-2">
         by {
-          authorsInfo.map(({ name, id }, index) => (
+          authorsInfo.map(({ name }, index) => (
             <>
               {/* little .join(", ") replacer */}
               {index > 0 && ", "}{" "}
               <a
                 class="rounded bg-blue-200 p-1 hover:bg-blue-300"
-                href={`/authors/${slugify(name)}`}
+                href={authorPermalink(name)}
               >
                 {name}
               </a>

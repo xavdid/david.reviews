@@ -34,11 +34,14 @@ const {
   authors,
   coAuthors,
 } = Astro.props;
+
+const bookPermalink = `/books/${slugify(title)}`;
+const authorPermalink = (n: string) => `/authors/${slugify(n)}`;
 ---
 
 <div class="mb-6 flex rounded border-2 border-emerald-600 even:bg-emerald-50">
   <div class="p-2">
-    <a href={`/books/${googleBooksId}`}>
+    <a href={bookPermalink}>
       <Image
         src={`https://books.google.com/books/content/images/frontcover/${googleBooksId}?fife=h188`}
         alt={`cover for ${title}`}
@@ -53,7 +56,7 @@ const {
       class="flex justify-between border-b-2 border-l-2 border-emerald-600 pl-2"
     >
       <div>
-        <a href={`/books/${googleBooksId}`}>
+        <a href={bookPermalink}>
           <h3
             class="text-l inline font-bold text-blue-600 underline hover:bg-blue-100"
           >
@@ -68,7 +71,7 @@ const {
                 <>
                   {index > 0 && ", "}{" "}
                   <a
-                    href={`/authors/${slugify(n)}`}
+                    href={authorPermalink(n)}
                     class="underline hover:bg-blue-100"
                   >
                     {n}
@@ -86,7 +89,7 @@ const {
                 <>
                   {index > 0 && ", "}{" "}
                   <a
-                    href={`/authors/${slugify(n)}`}
+                    href={authorPermalink(n)}
                     class="underline hover:bg-blue-100"
                   >
                     {n}
