@@ -1,0 +1,156 @@
+---
+import { Image } from "astro:assets";
+
+import Rating from "../../components/Rating.astro";
+import Layout from "../../layouts/Layout.astro";
+import AwardLink, {
+  type Props as AwardProps,
+} from "../../components/AwardLink.astro";
+import { loadReads, fields, type BookMedium } from "../../airtable/books";
+
+type SeriesInfo = {
+  name: string;
+  number: number;
+};
+
+type Params = {
+  gbid: string;
+};
+
+type Props = {
+  title: string;
+  award?: AwardProps;
+  authorNames: string;
+  series?: SeriesInfo;
+  reads: Array<{
+    notes: string;
+    dateFinished: string;
+    rating: number;
+    isReread: boolean;
+    bookMedium: BookMedium;
+  }>;
+};
+
+// own row for weird export reasons
+type Result = Promise<Array<{ params: Params; props: Props }>>;
+export const getStaticPaths = async (): Result => {
+  const rawReviews = await loadReads();
+
+  const books = rawReviews.reduce<{ [gbid: string]: Props }>(
+    (result, review) => {
+      const gbid = review[fields.googleBooksId]![0];
+      const book = result[gbid];
+      const miniReview: Props["reads"][number] = {
+        notes: review[fields.notes],
+        dateFinished: review[fields.dateFinished],
+        rating: review[fields.rating],
+        isReread: review[fields.isReread],
+        bookMedium: review[fields.medium],
+      };
+
+      if (book) {
+        book.reads.push(miniReview);
+      } else {
+        const item: Props = {
+          title: review[fields.title][0],
+          authorNames: review[fields.authorFullNames],
+          reads: [miniReview],
+        };
+
+        if (review[fields.seriesName]) {
+          item.series = {
+            name: review[fields.seriesName]![0],
+            number: review[fields.numberInSeries]![0],
+          };
+        }
+
+        if (review[fields.awardTier]) {
+          item.award = {
+            // this gets validated below
+            tier: review[fields.awardTier]![0],
+            year: review[fields.awardYear]![0],
+            anchor: review[fields.awardAnchor]?.[0],
+          };
+        }
+
+        result[gbid] = item;
+      }
+
+      return result;
+    },
+    {},
+  );
+
+  return Object.entries(books).map(([gbid, props]) => ({
+    params: { gbid },
+    props,
+  }));
+};
+
+const { title, reads, series, award, authorNames } = Astro.props;
+const { gbid } = Astro.params;
+if (!gbid) {
+  throw new Error(`${title} lacks a gbid?`);
+}
+
+if (Boolean(award?.tier) != Boolean(award?.year)) {
+  throw new Error(
+    `Single movie page for "${title}" has only one of Award yier & tier.`,
+  );
+}
+---
+
+<Layout title={title} active="books">
+  <div class="flex py-3">
+    <Image
+      src={`https://books.google.com/books/content/images/frontcover/${gbid}?fife=h225`}
+      alt={`poster for ${title}`}
+      height={450 / 2}
+      width={300 / 2}
+      class="max-h-[225px] max-w-[150px]"
+    />
+    <div class="pl-3">
+      <h1 class="pt-2 text-2xl">{title}</h1>
+      <p class="pb-2">
+        by {authorNames}
+      </p>
+      <p class="pb-2">
+        I've read this {reads.length} time{reads.length > 1 && "s"} and given it
+        an average score of {
+          reads.reduce((total, { rating }) => rating + total, 0) / reads.length
+        } (<a
+          class="text-blue-500 underline hover:text-blue-600"
+          target="_blank"
+          rel="noopener"
+          href="https://xavd.id/blog/post/on-the-rating-of-media/">out of 4</a
+        >).
+      </p>
+      {
+        series && (
+          <div class="py-2">
+            <p>
+              This is book #{series.number} in {series.name}.
+            </p>
+          </div>
+        )
+      }
+      {award && <AwardLink {...award} />}
+    </div>
+  </div>
+  <div>
+    {
+      reads.map(({ rating, bookMedium, notes, dateFinished }) => (
+        <div class="mb-4 rounded border-2 border-emerald-600 even:bg-emerald-50">
+          <div class="flex justify-between border-b-2 border-emerald-600 px-2">
+            <span>{dateFinished}</span>
+            {bookMedium === "Audio" && <span>🔈 Audiobook</span>}
+            <div>
+              <Rating rating={rating} />
+            </div>
+          </div>
+          <p class="p-2">{notes || <em>no review</em>}</p>
+        </div>
+      ))
+    }
+  </div>
+</Layout>

@@ -82,7 +82,7 @@ if (Boolean(award?.tier) != Boolean(award?.year)) {
 }
 ---
 
-<Layout title="Movies!" active="movies">
+<Layout title={title} active="movies">
   <div class="flex py-3">
     <Image
       src={`https://image.tmdb.org/t/p/w300${posterPath}`}
