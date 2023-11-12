@@ -1,12 +1,13 @@
 ---
 import { Image } from "astro:assets";
-import slugify from "@sindresorhus/slugify";
 
-import BookIcon from "../icons/book.astro";
-import Rating from "../Rating.astro";
-
-import { type AwardTier, medals } from "../../airtable/common";
 import type { BookMedium } from "../../airtable/books";
+import { medals, type AwardTier } from "../../airtable/common";
+import { bookPermalink, seriesPermalnk } from "../../utils";
+import AuthorList from "../AuthorList.astro";
+import SubtleLink from "../links/SubtleLink.astro";
+import TitleLink from "../links/TitleLink.astro";
+import BaseBox from "./BaseBox.astro";
 
 type SeriesInfo = {
   name: string;
@@ -40,101 +41,56 @@ const {
   coAuthors,
 } = Astro.props;
 
-const bookPermalink = `/books/${slugify(title)}`;
-const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
-const seriesPermalnk = (n: string) => `/books/series/${slugify(n)}`;
+const permalink = bookPermalink(title);
 ---
 
-<div class="mb-6 flex rounded border-2 border-emerald-600 even:bg-emerald-50">
-  <div class="p-2">
-    <a href={bookPermalink}>
-      <Image
-        src={`https://books.google.com/books/content/images/frontcover/${googleBooksId}?fife=h188`}
-        alt={`cover for ${title}`}
-        height={188}
-        width={120}
-      /></a
-    >
+<BaseBox type="book" notes={notes} rating={rating}>
+  <a slot="image" href={permalink}>
+    <Image
+      src={`https://books.google.com/books/content/images/frontcover/${googleBooksId}?fife=h188`}
+      alt={`cover for ${title}`}
+      height={188}
+      width={120}
+    /></a
+  >
+
+  <div slot="title">
+    <TitleLink href={permalink}>
+      {title}
+    </TitleLink>{" "}
+    {
+      authors && (
+        <span>
+          by <AuthorList authors={authors.split(",")} style="subtle" />
+        </span>
+      )
+    }
+    {
+      coAuthors && (
+        <span>
+          with <AuthorList authors={coAuthors.split(",")} style="subtle" />
+        </span>
+      )
+    }
   </div>
 
-  <div class="flex w-full flex-col justify-between">
-    <div
-      class="flex justify-between border-b-2 border-l-2 border-emerald-600 pl-2"
-    >
-      <div>
-        <a href={bookPermalink}>
-          <h3
-            class="text-l inline font-bold text-blue-600 underline hover:bg-blue-100"
-          >
-            {title}
-          </h3></a
-        >{" "}
-        {
-          authors && (
-            <span>
-              by{" "}
-              {authors.split(",").map((n, index) => (
-                <>
-                  {index > 0 && ", "}{" "}
-                  <a
-                    href={authorPermalink(n)}
-                    class="underline hover:bg-blue-100"
-                  >
-                    {n}
-                  </a>
-                </>
-              ))}
-            </span>
-          )
-        }
-        {
-          coAuthors && (
-            <span>
-              with{" "}
-              {coAuthors.split(",").map((n, index) => (
-                <>
-                  {index > 0 && ", "}{" "}
-                  <a
-                    href={authorPermalink(n)}
-                    class="underline hover:bg-blue-100"
-                  >
-                    {n}
-                  </a>
-                </>
-              ))}
-            </span>
-          )
-        }
-      </div>
-      <div class="whitespace-nowrap pl-1">
-        {bookMedium === "Audio" && <div class="inline px-1">🔈</div>}
-        {isReread && <div class="inline px-1">🔁</div>}
-        {awardTier && <div class="inline px-1">{medals[awardTier]}</div>}
-        <BookIcon classes="pb-[0.10em] inline h-6 fill-emerald-600 px-1" />
-      </div>
-    </div>
-    <p class="px-4 py-2">
-      {notes ?? <em>no review</em>}
-    </p>
-    <div
-      class="flex justify-between border-l-2 border-t-2 border-emerald-600 px-2"
-    >
-      <div>
-        <span class="hidden md:inline">Finished on:{" "}</span>{dateFinished}
-      </div>
+  <Fragment slot="icons">
+    {bookMedium === "Audio" && <div class="inline px-1">🔈</div>}
+    {isReread && <div class="inline px-1">🔁</div>}
+    {awardTier && <div class="inline px-1">{medals[awardTier]}</div>}
+  </Fragment>
 
-      {
-        series?.number && (
-          <a
-            href={seriesPermalnk(series.name)}
-            class="underline hover:bg-blue-100"
-          >
-            Book #{series.number}
-          </a>
-        )
-      }
-
-      <Rating rating={rating} />
+  <Fragment slot="footer">
+    <div>
+      <span class="hidden md:inline">Finished on:{" "}</span>{dateFinished}
     </div>
-  </div>
-</div>
+
+    {
+      series?.number && (
+        <SubtleLink href={seriesPermalnk(series.name)}>
+          Book #{series.number}
+        </SubtleLink>
+      )
+    }
+  </Fragment>
+</BaseBox>

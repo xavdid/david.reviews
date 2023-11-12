@@ -1,8 +1,12 @@
 ---
-import { loadReads, fields, type ReadRecord } from "../../../airtable/books";
+import slugify from "@sindresorhus/slugify";
+
+import { fields, loadReads, type ReadRecord } from "../../../airtable/books";
 import BookBox from "../../../components/infoboxes/bookbox.astro";
 import Layout from "../../../layouts/Layout.astro";
-import slugify from "@sindresorhus/slugify";
+import AuthorList from "../../../components/AuthorList.astro";
+import ExternalLink from "../../../components/links/ExternalLink.astro";
+import BookLegend from "../../../components/BookLegend.astro";
 
 type Params = {
   seriesSlug: string;
@@ -10,7 +14,7 @@ type Params = {
 
 type Props = {
   name: string;
-  authorsInfo: { name: string; id: string }[];
+  authors: string[];
   reads: ReadRecord[];
 };
 
@@ -29,15 +33,9 @@ export const getStaticPaths = async (): Result => {
         if (series) {
           series.reads.push(review);
         } else {
-          const splitNames = review[fields.authorFullNames].split(",");
-          const authorsInfo = splitNames.map((name, index) => ({
-            name,
-            id: review[fields.authorIds][index],
-          }));
-
           result[seriesSlug] = {
             name: seriesName,
-            authorsInfo,
+            authors: review[fields.authorFullNames].split(","),
             reads: [review],
           };
         }
@@ -53,9 +51,8 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { reads, name, authorsInfo } = Astro.props;
+const { reads, name, authors } = Astro.props;
 const numUniqueBooks = new Set(reads.map((r) => r[fields.googleBooksId])).size;
-const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
 
 // let's assume all books in a series are by the same person for now
 // coAuthors={
@@ -73,37 +70,14 @@ const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
     All reviews for The {name} series
   </h1>
   <p class="pb-2">
-    by {
-      authorsInfo.map(({ name }, index) => (
-        <>
-          {/* little .join(", ") replacer */}
-          {index > 0 && ", "}{" "}
-          <a
-            class="rounded bg-blue-200 p-1 hover:bg-blue-300"
-            href={authorPermalink(name)}
-          >
-            {name}
-          </a>
-        </>
-      ))
-    }
+    by <AuthorList authors={authors} style="rounded" />
   </p>
   <p class="pb-3">
     There are {reads.length} total reviews of {numUniqueBooks} book{
       reads.length > 1 && "s"
     }.
   </p>
-  <ul class="mb-4 rounded bg-emerald-50 p-2">
-    <li>🔈 - Audiobook</li>
-    <li>🔁 - Re-read</li>
-    <li>
-      🥇 / 🥈 / 🥉 - <a
-        href="https://xavd.id/blog/tags/yearly-review"
-        class="rounded bg-blue-200 p-1 hover:bg-blue-300"
-        >Favorite of the Year</a
-      > honoree
-    </li>
-  </ul>
+  <BookLegend />
   <div>
     {
       reads

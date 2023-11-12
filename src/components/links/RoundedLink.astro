@@ -1,0 +1,11 @@
+---
+type Props = {
+  href: string;
+};
+
+const { href } = Astro.props;
+---
+
+<a class="rounded bg-blue-200 p-1 hover:bg-blue-300" href={href}>
+  <slot />
+</a>

@@ -1,17 +1,16 @@
 ---
 import { Image } from "astro:assets";
 
-import { loadWatches, fields } from "../../airtable/movies";
-
-import Layout from "../../layouts/Layout.astro";
-import Rating from "../../components/Rating.astro";
-import AwardLink, {
+import { fields, loadWatches } from "../../airtable/movies";
+import AwardBlurb, {
   type Props as AwardProps,
-} from "../../components/AwardLink.astro";
-import slugify from "@sindresorhus/slugify";
+} from "../../components/AwardBlurb.astro";
+import Rating from "../../components/Rating.astro";
+import Layout from "../../layouts/Layout.astro";
+import { movieSlug } from "../../utils";
 
 type Params = {
-  tmdbId: string;
+  movieSlug: string;
 };
 
 type Props = {
@@ -73,7 +72,7 @@ export const getStaticPaths = async (): Result => {
   );
 
   return Object.entries(movies).map(([_, props]) => ({
-    params: { tmdbId: slugify(`${props.title} ${props.yearReleased}`) },
+    params: { movieSlug: movieSlug(props.title, props.yearReleased) },
     props,
   }));
 };
@@ -108,7 +107,7 @@ const { title, watches, posterPath, award, collections, yearReleased } =
           href="https://xavd.id/blog/post/on-the-rating-of-media/">out of 4</a
         >).
       </p>
-      {award && <AwardLink {...award} />}
+      {award && <AwardBlurb {...award} />}
       {
         collections && (
           <div class="py-2">
@@ -149,13 +148,7 @@ const { title, watches, posterPath, award, collections, yearReleased } =
                   <Rating rating={rating} />
                 </div>
               </div>
-              <p class="p-2">
-                {notes || (
-                  <Fragment>
-                    <em>no review</em>
-                  </Fragment>
-                )}
-              </p>
+              <p class="p-2">{notes || <em>no review</em>}</p>
             </div>
           </Fragment>
         );

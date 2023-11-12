@@ -1,10 +1,12 @@
 ---
 import { Image } from "astro:assets";
-import slugify from "@sindresorhus/slugify";
 
 import { medals, type AwardTier } from "../../airtable/common";
+import { moviePermalink } from "../../utils";
 import Rating from "../Rating.astro";
 import MovieIcon from "../icons/movie.astro";
+import TitleLink from "../links/TitleLink.astro";
+import BaseBox from "./BaseBox.astro";
 
 type Props = {
   title: string;
@@ -31,54 +33,39 @@ const {
   collections,
 } = Astro.props;
 
-const permalink = `/movies/${slugify(`${title} ${yearReleased}`)}`;
+const permalink = moviePermalink(title, yearReleased);
 ---
 
-<div class="mb-6 flex rounded border-2 border-red-500 even:bg-red-50">
-  <div class="p-2">
-    <a href={permalink}>
-      <Image
-        src={posterUrl}
-        alt={`poster for ${title}`}
-        height={187.5}
-        width={125}
-      /></a
-    >
-  </div>
+<BaseBox type="movie" notes={notes} rating={rating}>
+  <a slot="image" href={permalink}>
+    <Image
+      src={posterUrl}
+      alt={`poster for ${title}`}
+      height={187.5}
+      width={125}
+    /></a
+  >
 
-  <div class="flex w-full flex-col justify-between">
-    <div class="flex justify-between border-b-2 border-l-2 border-red-500 pl-2">
-      <span class="inline">
-        <h3
-          class="text-l inline font-bold text-blue-600 underline hover:bg-blue-100"
-        >
-          <a href={permalink}>
-            {title}
-          </a>
-        </h3>
-         ({yearReleased})
-      </span>
-      <div class="whitespace-nowrap pl-1">
-        {awardTier && <div class="inline px-1">{medals[awardTier]}</div>}
-        <!-- Add collection link: TKTK -->
-        {
-          collections &&
-            collections.map((collection) => (
-              <div class="inline px-1">{collection.split(" ")[0]}</div>
-            ))
-        }
-        <MovieIcon classes="pb-[0.10em] inline h-6 fill-red-500 px-1" />
-      </div>
-    </div>
-    <p class="px-4 py-2">
-      {notes ?? <em>no review</em>}
-    </p>
-    <div class="flex justify-between border-l-2 border-t-2 border-red-500 px-2">
-      <div class="">
-        <span class="hidden md:inline">Watched on:{" "}</span>{watchedOn}
-      </div>
-      <span>Watch #{numWatch}{numWatch === 1 && !isFirstWatch && "*"}</span>
-      <Rating rating={rating} />
-    </div>
-  </div>
-</div>
+  <span slot="title">
+    <TitleLink href={permalink}>{title}</TitleLink>
+     ({yearReleased})
+  </span>
+
+  <Fragment slot="icons">
+    {awardTier && <div class="inline px-1">{medals[awardTier]}</div>}
+    <!-- Add collection link: TKTK -->
+    {
+      collections &&
+        collections.map((collection) => (
+          <div class="inline px-1">{collection.split(" ")[0]}</div>
+        ))
+    }
+  </Fragment>
+
+  <Fragment slot="footer">
+    <span>
+      <span class="hidden md:inline">Watched on:{" "}</span>{watchedOn}
+    </span>
+    <span>Watch #{numWatch}{numWatch === 1 && !isFirstWatch && "*"}</span>
+  </Fragment>
+</BaseBox>

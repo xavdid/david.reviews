@@ -1,0 +1,24 @@
+---
+import { authorPermalink } from "../utils";
+import RoundedLink from "./links/RoundedLink.astro";
+import SubtleLink from "./links/SubtleLink.astro";
+type Props = {
+  authors: string[];
+  style: "subtle" | "rounded";
+};
+
+const { authors, style = "rounded" } = Astro.props;
+const LinkComponent = style === "rounded" ? RoundedLink : SubtleLink;
+---
+
+<span
+  >{
+    authors.map((name, index) => (
+      <>
+        {/* little .join(", ") replacer */}
+        {index > 0 && ", "}{" "}
+        <LinkComponent href={authorPermalink(name)}>{name}</LinkComponent>
+      </>
+    ))
+  }</span
+>

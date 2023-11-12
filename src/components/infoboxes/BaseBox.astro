@@ -1,0 +1,88 @@
+---
+import MovieIcon from "../icons/movie.astro";
+import BookIcon from "../icons/book.astro";
+import GameIcon from "../icons/game.astro";
+import Rating from "../Rating.astro";
+
+type Props = {
+  type: "book" | "movie" | "game";
+  notes: string;
+  rating: number;
+};
+
+const configs: {
+  [type in Props["type"]]: {
+    fillColor: `fill-${string}-${number}`;
+    borderColor: `border-${string}-${number}`;
+    evenColor: `even:bg-${string}-${number}`;
+    icon: typeof MovieIcon;
+  };
+} = {
+  movie: {
+    fillColor: "fill-red-600",
+    borderColor: "border-red-600",
+    evenColor: "even:bg-red-50",
+    icon: MovieIcon,
+  },
+  book: {
+    fillColor: "fill-emerald-600",
+    borderColor: "border-emerald-600",
+    evenColor: "even:bg-emerald-50",
+    icon: BookIcon,
+  },
+  game: {
+    fillColor: "fill-blue-600",
+    borderColor: "border-blue-600",
+    evenColor: "even:bg-blue-50",
+    icon: GameIcon,
+  },
+} as const;
+
+const { type, notes, rating } = Astro.props;
+const {
+  icon: IconComponent,
+  fillColor,
+  borderColor,
+  evenColor,
+} = configs[type];
+---
+
+<div class:list={["mb-6 flex rounded border-2", borderColor, evenColor]}>
+  {/* image area */}
+  <div class="p-2"><slot name="image" /></div>
+
+  {/* info area */}
+  <div class="flex w-full flex-col justify-between">
+    {/* title bar area */}
+    <div
+      class:list={[
+        "flex justify-between border-b-2 border-l-2 pl-2",
+        borderColor,
+      ]}
+    >
+      {/* title */}
+      <span>
+        <slot name="title" />
+      </span>
+      {/* icons */}
+      <div class="whitespace-nowrap pl-1">
+        <slot name="icons" />
+        <IconComponent classes={["pb-[0.10em] inline h-6 px-1", fillColor]} />
+      </div>
+    </div>
+    {/* body area */}
+    <p class="px-4 py-2">
+      {notes ?? <em>no review</em>}
+    </p>
+    {/* footer area */}
+    <div
+      class:list={[
+        "flex justify-between border-l-2 border-t-2 px-2",
+        borderColor,
+      ]}
+    >
+      <slot name="footer" />
+      <Rating rating={rating} />
+    </div>
+  </div>
+</div>

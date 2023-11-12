@@ -1,13 +1,16 @@
 ---
+import slugify from "@sindresorhus/slugify";
 import { Image } from "astro:assets";
 
+import { fields, loadReads, type BookMedium } from "../../airtable/books";
+import AwardBlurb, {
+  type Props as AwardProps,
+} from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
-import AwardLink, {
-  type Props as AwardProps,
-} from "../../components/AwardLink.astro";
-import { loadReads, fields, type BookMedium } from "../../airtable/books";
-import slugify from "@sindresorhus/slugify";
+import { seriesPermalnk } from "../../utils";
+import ExternalLink from "../../components/links/ExternalLink.astro";
+import AuthorList from "../../components/AuthorList.astro";
 
 type SeriesInfo = {
   name: string;
@@ -22,7 +25,7 @@ type Props = {
   title: string;
   award?: AwardProps;
   gbid: string;
-  authorsInfo: { name: string; id: string }[];
+  authors: string[];
   series?: SeriesInfo;
   reads: Array<{
     notes: string;
@@ -53,15 +56,10 @@ export const getStaticPaths = async (): Result => {
       if (book) {
         book.reads.push(miniReview);
       } else {
-        const splitNames = review[fields.authorFullNames].split(",");
-        const authorsInfo = splitNames.map((name, index) => ({
-          name,
-          id: review[fields.authorIds][index],
-        }));
         const item: Props = {
           title: review[fields.title][0],
           gbid,
-          authorsInfo,
+          authors: review[fields.authorFullNames].split(","),
           reads: [miniReview],
         };
 
@@ -95,9 +93,7 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { title, reads, series, award, authorsInfo, gbid } = Astro.props;
-const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
-const seriesPermalnk = (n: string) => `/books/series/${slugify(n)}`;
+const { title, reads, series, award, authors, gbid } = Astro.props;
 ---
 
 <Layout title={title} active="books">
@@ -112,48 +108,33 @@ const seriesPermalnk = (n: string) => `/books/series/${slugify(n)}`;
     <div class="pl-3">
       <h1 class="pt-2 text-2xl">{title}</h1>
       <p class="pb-2">
-        by {
-          authorsInfo.map(({ name }, index) => (
-            <>
-              {/* little .join(", ") replacer */}
-              {index > 0 && ", "}{" "}
-              <a
-                class="rounded bg-blue-200 p-1 hover:bg-blue-300"
-                href={authorPermalink(name)}
-              >
-                {name}
-              </a>
-            </>
-          ))
-        }
+        by <AuthorList authors={authors} style="rounded" />
       </p>
       <p class="pb-2">
         I've read this {reads.length} time{reads.length > 1 && "s"} and given it
         an average score of {
           reads.reduce((total, { rating }) => rating + total, 0) / reads.length
-        } (<a
-          class="text-blue-500 underline hover:text-blue-600"
-          target="_blank"
-          rel="noopener"
-          href="https://xavd.id/blog/post/on-the-rating-of-media/">out of 4</a
-        >).
+        }
+         (<!-- prettier-ignore -->
+        <ExternalLink href="https://xavd.id/blog/post/on-the-rating-of-media/">out of 4</ExternalLink>).
       </p>
       {
         series && (
           <div class="py-2">
             <p>
-              This is book #{series.number} in{" "}
+              This is book #{series.number} in the
               <a
                 class="rounded bg-blue-200 p-1 hover:bg-blue-300"
                 href={seriesPermalnk(series.name)}
               >
                 {series.name}
-              </a>.
+              </a>{" "}
+              series.
             </p>
           </div>
         )
       }
-      {award && <AwardLink {...award} />}
+      {award && <AwardBlurb {...award} />}
     </div>
   </div>
   <div>
