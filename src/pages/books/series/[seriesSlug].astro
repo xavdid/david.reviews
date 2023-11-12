@@ -1,0 +1,135 @@
+---
+import { loadReads, fields, type ReadRecord } from "../../../airtable/books";
+import BookBox from "../../../components/infoboxes/bookbox.astro";
+import Layout from "../../../layouts/Layout.astro";
+import slugify from "@sindresorhus/slugify";
+
+type Params = {
+  seriesSlug: string;
+};
+
+type Props = {
+  name: string;
+  authorsInfo: { name: string; id: string }[];
+  reads: ReadRecord[];
+};
+
+// own row for weird export reasons
+type Result = Promise<Array<{ params: Params; props: Props }>>;
+export const getStaticPaths = async (): Result => {
+  const rawReviews = await loadReads();
+
+  const series = rawReviews.reduce<{ [seriesSlug: string]: Props }>(
+    (result, review) => {
+      const seriesName = review[fields.seriesName]?.[0];
+      if (seriesName) {
+        const seriesSlug = slugify(seriesName);
+        const series = result[seriesSlug];
+
+        if (series) {
+          series.reads.push(review);
+        } else {
+          const splitNames = review[fields.authorFullNames].split(",");
+          const authorsInfo = splitNames.map((name, index) => ({
+            name,
+            id: review[fields.authorIds][index],
+          }));
+
+          result[seriesSlug] = {
+            name: seriesName,
+            authorsInfo,
+            reads: [review],
+          };
+        }
+      }
+      return result;
+    },
+    {},
+  );
+
+  return Object.entries(series).map(([seriesSlug, props]) => ({
+    params: { seriesSlug },
+    props,
+  }));
+};
+
+const { reads, name, authorsInfo } = Astro.props;
+const numUniqueBooks = new Set(reads.map((r) => r[fields.googleBooksId])).size;
+const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
+
+// let's assume all books in a series are by the same person for now
+// coAuthors={
+//   review[fields.authorIds].length
+//     ? review[fields.authorFullNames]
+//         .split(",")
+//         .filter((n) => n != name)
+//         .join(", ")
+//     : undefined
+// }
+---
+
+<Layout title={`${name} - Reviews`} active="books">
+  <h1 class="pt-2 text-2xl">
+    All reviews for The {name} series
+  </h1>
+  <p class="pb-2">
+    by {
+      authorsInfo.map(({ name }, index) => (
+        <>
+          {/* little .join(", ") replacer */}
+          {index > 0 && ", "}{" "}
+          <a
+            class="rounded bg-blue-200 p-1 hover:bg-blue-300"
+            href={authorPermalink(name)}
+          >
+            {name}
+          </a>
+        </>
+      ))
+    }
+  </p>
+  <p class="pb-3">
+    There are {reads.length} total reviews of {numUniqueBooks} book{
+      reads.length > 1 && "s"
+    }.
+  </p>
+  <ul class="mb-4 rounded bg-emerald-50 p-2">
+    <li>🔈 - Audiobook</li>
+    <li>🔁 - Re-read</li>
+    <li>
+      🥇 / 🥈 / 🥉 - <a
+        href="https://xavd.id/blog/tags/yearly-review"
+        class="rounded bg-blue-200 p-1 hover:bg-blue-300"
+        >Favorite of the Year</a
+      > honoree
+    </li>
+  </ul>
+  <div>
+    {
+      reads
+        .sort(
+          (a, b) => a[fields.numberInSeries]![0] - b[fields.numberInSeries]![0],
+        )
+        .map((review) => (
+          <BookBox
+            title={review[fields.title][0]}
+            rating={review[fields.rating]}
+            dateFinished={review[fields.dateFinished]}
+            notes={review[fields.notes]}
+            isReread={review[fields.isReread]}
+            googleBooksId={review[fields.googleBooksId]![0]}
+            awardTier={review[fields.awardTier]?.[0]}
+            bookMedium={review[fields.medium]}
+            series={
+              review[fields.seriesName]?.[0]
+                ? {
+                    name: review[fields.seriesName]![0],
+                    number: review[fields.numberInSeries]![0],
+                  }
+                : undefined
+            }
+          />
+        ))
+    }
+  </div>
+</Layout>

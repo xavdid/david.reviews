@@ -8,6 +8,11 @@ import Rating from "../Rating.astro";
 import { type AwardTier, medals } from "../../airtable/common";
 import type { BookMedium } from "../../airtable/books";
 
+type SeriesInfo = {
+  name: string;
+  number: number;
+};
+
 type Props = {
   title: string;
   rating: number;
@@ -17,7 +22,7 @@ type Props = {
   googleBooksId: string;
   bookMedium: BookMedium;
   awardTier?: AwardTier;
-  seriesName?: string;
+  series?: SeriesInfo;
   authors?: string;
   coAuthors?: string;
 };
@@ -30,13 +35,14 @@ const {
   googleBooksId,
   awardTier,
   bookMedium,
-  seriesName,
+  series,
   authors,
   coAuthors,
 } = Astro.props;
 
 const bookPermalink = `/books/${slugify(title)}`;
 const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
+const seriesPermalnk = (n: string) => `/books/series/${slugify(n)}`;
 ---
 
 <div class="mb-6 flex rounded border-2 border-emerald-600 even:bg-emerald-50">
@@ -102,7 +108,6 @@ const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
       </div>
       <div class="whitespace-nowrap pl-1">
         {bookMedium === "Audio" && <div class="inline px-1">🔈</div>}
-        {seriesName && <div class="inline px-1">📚</div>}
         {isReread && <div class="inline px-1">🔁</div>}
         {awardTier && <div class="inline px-1">{medals[awardTier]}</div>}
         <BookIcon classes="pb-[0.10em] inline h-6 fill-emerald-600 px-1" />
@@ -117,7 +122,17 @@ const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
       <div>
         <span class="hidden md:inline">Finished on:{" "}</span>{dateFinished}
       </div>
-      <!-- <span>Watch #{numRead}{numRead === 1 && isReread && "*"}</span> -->
+
+      {
+        series?.number && (
+          <a
+            href={seriesPermalnk(series.name)}
+            class="underline hover:bg-blue-100"
+          >
+            Book #{series.number}
+          </a>
+        )
+      }
 
       <Rating rating={rating} />
     </div>

@@ -1,16 +1,16 @@
 ---
-import { loadReads, fields, type BookReview } from "../../../airtable/books";
+import { loadReads, fields, type ReadRecord } from "../../../airtable/books";
 import BookBox from "../../../components/infoboxes/bookbox.astro";
 import Layout from "../../../layouts/Layout.astro";
 import slugify from "@sindresorhus/slugify";
 
 type Params = {
-  authorId: string;
+  authorSlug: string;
 };
 
 type Props = {
   name: string;
-  reads: BookReview[];
+  reads: ReadRecord[];
 };
 
 // own row for weird export reasons
@@ -36,8 +36,8 @@ export const getStaticPaths = async (): Result => {
     {},
   );
 
-  return Object.entries(authors).map(([authorId, props]) => ({
-    params: { authorId: slugify(props.name) },
+  return Object.entries(authors).map(([_, props]) => ({
+    params: { authorSlug: slugify(props.name) },
     props,
   }));
 };
@@ -57,7 +57,6 @@ const numUniqueBooks = new Set(reads.map((r) => r[fields.googleBooksId])).size;
   </p>
   <ul class="mb-4 rounded bg-emerald-50 p-2">
     <li>🔈 - Audiobook</li>
-    <li>📚 - Part of a Series</li>
     <li>🔁 - Re-read</li>
     <li>
       🥇 / 🥈 / 🥉 - <a
@@ -79,7 +78,14 @@ const numUniqueBooks = new Set(reads.map((r) => r[fields.googleBooksId])).size;
           googleBooksId={review[fields.googleBooksId]![0]}
           awardTier={review[fields.awardTier]?.[0]}
           bookMedium={review[fields.medium]}
-          seriesName={review[fields.seriesName]?.[0]}
+          series={
+            review[fields.seriesName]?.[0]
+              ? {
+                  name: review[fields.seriesName]![0],
+                  number: review[fields.numberInSeries]![0],
+                }
+              : undefined
+          }
           coAuthors={
             review[fields.authorIds].length
               ? review[fields.authorFullNames]

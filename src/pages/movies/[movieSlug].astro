@@ -72,7 +72,7 @@ export const getStaticPaths = async (): Result => {
     {},
   );
 
-  return Object.entries(movies).map(([tmdbId, props]) => ({
+  return Object.entries(movies).map(([_, props]) => ({
     params: { tmdbId: slugify(`${props.title} ${props.yearReleased}`) },
     props,
   }));

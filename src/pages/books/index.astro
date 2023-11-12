@@ -17,7 +17,6 @@ const numUniqueBooks = new Set(rawReviews.map((r) => r[fields.googleBooksId]))
   <!-- <h3 class="pb-2 text-xl">Legend</h3> -->
   <ul class="mb-4 rounded bg-emerald-50 p-2">
     <li>🔈 - Audiobook</li>
-    <li>📚 - Part of a Series</li>
     <li>🔁 - Re-read</li>
     <li>
       🥇 / 🥈 / 🥉 - <a
@@ -39,7 +38,14 @@ const numUniqueBooks = new Set(rawReviews.map((r) => r[fields.googleBooksId]))
           googleBooksId={review[fields.googleBooksId]![0]}
           awardTier={review[fields.awardTier]?.[0]}
           bookMedium={review[fields.medium]}
-          seriesName={review[fields.seriesName]?.[0]}
+          series={
+            review[fields.seriesName]?.[0]
+              ? {
+                  name: review[fields.seriesName]![0],
+                  number: review[fields.numberInSeries]![0],
+                }
+              : undefined
+          }
           authors={review[fields.authorFullNames]}
         />
       ))

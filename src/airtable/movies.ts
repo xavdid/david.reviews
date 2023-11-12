@@ -1,8 +1,9 @@
-import { NUM_RECORDS, client, type AwardTier, type Base } from "./common";
+import { loadAllRecords, type AwardTier, type Base } from "./common";
 
 export const SCHEMA = {
   baseId: "appctKQDyHbyqNJOY",
   viewId: "viwovZ8M1YpRtgpFS",
+  tableName: "Watches",
   // https://airtable.com/appctKQDyHbyqNJOY/api/docs#javascript/table:watches:fields
   fields: {
     title: "fldv3t6rmcVNEW9xN",
@@ -39,29 +40,11 @@ type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
 };
 
-export type MovieReview = StringFields & NonStringFields;
+type MovieReview = StringFields & NonStringFields;
 
-const movieBase = client.base(SCHEMA.baseId);
 export const loadWatches = async (): Promise<
   ({ recordId: string } & MovieReview)[]
 > => {
-  const watches = await movieBase
-    .table("Watches")
-    .select({
-      ...{
-        view: SCHEMA.viewId,
-        fields: [...Object.values(fields)],
-        returnFieldsByFieldId: true,
-      },
-      // maxRecords can't be undefined, has to be number or missing entirely
-      ...(NUM_RECORDS ? { maxRecords: NUM_RECORDS } : {}),
-    })
-    .all();
-
-  const rawReviews = watches.map((m) => ({
-    recordId: m.id,
-    ...m.fields,
-  })) as ({ recordId: string } & MovieReview)[];
-
-  return rawReviews;
+  const watchRows = await loadAllRecords<MovieReview>(SCHEMA);
+  return watchRows;
 };

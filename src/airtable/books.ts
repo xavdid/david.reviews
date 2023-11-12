@@ -1,8 +1,9 @@
-import { NUM_RECORDS, client, type AwardTier, type Base } from "./common";
+import { loadAllRecords, type AwardTier, type Base } from "./common";
 
 export const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
   viewId: "viwqz5EPsfegbEmCP",
+  tableName: "Reads",
   // https://airtable.com/appv2mhWOgkRhR4rK/api/docs#javascript/table:reads
   fields: {
     title: "fldGhXwfauEvXCOxU",
@@ -46,30 +47,17 @@ type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
 };
 
-export type BookReview = StringFields & NonStringFields;
+export type ReadRecord = StringFields & NonStringFields;
 
-const bookBase = client.base(SCHEMA.baseId);
 export const loadReads = async (): Promise<
-  ({ recordId: string } & BookReview)[]
+  ({ recordId: string } & ReadRecord)[]
 > => {
-  const reads = await bookBase
-    .table("Reads")
-    .select({
-      ...{
-        view: SCHEMA.viewId,
-        fields: [...Object.values(fields)],
-        returnFieldsByFieldId: true,
-      },
-      // maxRecords can't be undefined, has to be number or missing entirely
-      ...(NUM_RECORDS ? { maxRecords: NUM_RECORDS } : {}),
-    })
-    .all();
+  // if(checkCache) { return readCache() }
 
-  const rawReviews = reads.map((read) => ({
-    recordId: read.id,
-    ...read.fields,
-  })) as ({ recordId: string } & BookReview)[];
+  const readRows = await loadAllRecords<ReadRecord>(SCHEMA);
+
+  // TOOD: writeCache()
 
   // filter out audible-only things for now
-  return rawReviews.filter((r) => r[fields.googleBooksId]);
+  return readRows.filter((r) => r[fields.googleBooksId]);
 };

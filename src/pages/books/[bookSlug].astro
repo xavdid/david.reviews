@@ -15,7 +15,7 @@ type SeriesInfo = {
 };
 
 type Params = {
-  gbid: string;
+  bookSlug: string;
 };
 
 type Props = {
@@ -89,18 +89,15 @@ export const getStaticPaths = async (): Result => {
     {},
   );
 
-  return Object.entries(books).map(([_, props]) => ({
-    params: { gbid: slugify(props.title) },
+  return Object.values(books).map((props) => ({
+    params: { bookSlug: slugify(props.title) },
     props,
   }));
 };
 
 const { title, reads, series, award, authorsInfo, gbid } = Astro.props;
-const { gbid: slug } = Astro.params;
-if (!slug) {
-  throw new Error(`${title} lacks a gbid?`);
-}
 const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
+const seriesPermalnk = (n: string) => `/books/series/${slugify(n)}`;
 ---
 
 <Layout title={title} active="books">
@@ -145,7 +142,13 @@ const authorPermalink = (n: string) => `/books/authors/${slugify(n)}`;
         series && (
           <div class="py-2">
             <p>
-              This is book #{series.number} in {series.name}.
+              This is book #{series.number} in{" "}
+              <a
+                class="rounded bg-blue-200 p-1 hover:bg-blue-300"
+                href={seriesPermalnk(series.name)}
+              >
+                {series.name}
+              </a>.
             </p>
           </div>
         )
