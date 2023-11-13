@@ -1,18 +1,22 @@
 ---
-import { fields, loadWatches } from "../../airtable/movies";
+import {
+  fields,
+  loadMaterializedWatches,
+  loadWatches,
+} from "../../airtable/watches";
 import Moviebox from "../../components/infoboxes/moviebox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
 
-const rawReviews = await loadWatches();
+const watches = await loadMaterializedWatches();
 const watchCounts: { [tmdbId: string]: number } = {};
 
-const reviews = rawReviews.map((review) => {
-  const thisWatchNum = watchCounts[review[fields.tmdbID][0]] ?? 0;
-  watchCounts[review[fields.tmdbID][0]] = thisWatchNum + 1;
+const watchesWithCounts = watches.map((watch) => {
+  const thisWatchNum = watchCounts[watch.movie.tmdbId] ?? 0;
+  watchCounts[watch.movie.tmdbId] = thisWatchNum + 1;
   return {
-    ...review,
-    numWatch: review[fields.totalMovieWatches] - thisWatchNum,
+    ...watch,
+    numWatch: watch.movie.numWatches - thisWatchNum,
   };
 });
 ---
@@ -20,7 +24,7 @@ const reviews = rawReviews.map((review) => {
 <Layout title="Movies!" active="movies">
   <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Movie</h1>
   <p class="pb-3">
-    There are {reviews.length} total reviews of {
+    There are {watchesWithCounts.length} total reviews of {
       Object.keys(watchCounts).length
     } movies.
   </p>
@@ -38,22 +42,21 @@ const reviews = rawReviews.map((review) => {
   </ul>
   <div>
     {
-      reviews.map((review) => (
+      watchesWithCounts.map((watch) => (
         <Moviebox
-          title={review[fields.title]}
-          yearReleased={review[fields.yearReleased][0]}
-          rating={review[fields.rating]}
-          watchedOn={review[fields.dateWatched]}
-          posterUrl={`https://image.tmdb.org/t/p/w300${
-            review[fields.posterPath]
-          }`}
-          notes={review[fields.notes]}
-          numWatch={review.numWatch}
-          isFirstWatch={review[fields.isFirstWatch] === 1}
-          awardTier={review[fields.awardTier]?.[0]}
-          collections={review[fields.collections]}
+          title={watch.movie.title}
+          yearReleased={watch.movie.yearReleased}
+          rating={watch.rating}
+          watchedOn={watch.dateWatched}
+          posterUrl={watch.movie.posterUrl}
+          notes={watch.notes}
+          numWatch={watch.numWatch}
+          isFirstWatch={watch.isFirstWatch}
+          awardTier={watch.movie.award?.tier}
+          collections={watch.movie.collections}
         />
       ))
     }
   </div>
 </Layout>
+ ../../airtable/watches

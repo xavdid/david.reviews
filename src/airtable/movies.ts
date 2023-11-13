@@ -1,50 +1,96 @@
-import { loadAllRecords, type AwardTier, type Base } from "./common";
+import { movieSlug } from "../utils";
+import {
+  loadAllRecords,
+  type AwardDetails,
+  type AwardTier,
+  type Base,
+} from "./common";
 
 export const SCHEMA = {
   baseId: "appctKQDyHbyqNJOY",
-  viewId: "viwovZ8M1YpRtgpFS",
-  tableName: "Watches",
-  // https://airtable.com/appctKQDyHbyqNJOY/api/docs#javascript/table:watches:fields
+  viewId: "viwEn5Vs4zVmEHvSH",
+  tableName: "Movies",
   fields: {
-    title: "fldv3t6rmcVNEW9xN",
-    dateWatched: "fldhJwKvRV18ox99t",
-    isFirstWatch: "fldpSxAP9mpw0D7V6",
-    rating: "fld120ruFVH8sml4B",
-    notes: "fldHCPMRJrOOiZxca",
-    tmdbID: "fldquYvRJYLZhvfvA",
-    posterPath: "fldgUqyuGvEV9ESj8",
-    collections: "fldy9V32NQfusaaVP",
-    awardTier: "fldmW9FgOxwCcgmGE",
-    awardYear: "fldr8qhnvoNTpykWe",
-    awardAnchor: "fldsBFKQ9Z8Uv6SDe",
-    totalMovieWatches: "fldIcHiMwU6eMo3GG",
-    yearReleased: "fldlzig4CUREoZ9Yn",
+    title: "fldTnYNwU1nDCbVr4",
+    numWatches: "fldjw4L2x9amvkPoC",
+    tmdbId: "fld08lT0KsDWPAusk",
+    awardTier: "fldCv6iiAWI2dezEV",
+    awardAnchor: "fld4baGMFIIdjuC8v",
+    awardYear: "fld3rjdnSFEMLGsPh",
+    yearReleased: "fldjlzKYb5BNa56LN",
+    collections: "fldQHNpHO95v5XR2d",
+    averageScore: "fldEFOtQZiXwUxDRf",
+    posterPath: "fldRZ4cnbzJNVVoHq",
   },
 } as const satisfies Base;
-
-export const fields = SCHEMA.fields;
+const fields = SCHEMA.fields;
 
 type FieldIds = (typeof fields)[keyof typeof fields];
 type NonStringFields = {
-  [fields.rating]: number;
-  [fields.isFirstWatch]: 0 | 1;
-  [fields.tmdbID]: [string];
-  [fields.collections]?: string[];
-  [fields.awardTier]?: [AwardTier];
-  [fields.awardYear]?: [number];
-  [fields.awardAnchor]?: [string];
-  [fields.totalMovieWatches]: number;
-  [fields.yearReleased]: [number];
+  [fields.numWatches]: number;
+  [fields.awardTier]?: AwardTier;
+  [fields.awardAnchor]?: string;
+  [fields.awardYear]: number; // always defined because it's calculated; unwatched movies are `0`, but those are filtered
+  [fields.yearReleased]: number;
+  [fields.averageScore]: number;
+  [fields.collections]: string[];
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
 };
 
-type MovieReview = StringFields & NonStringFields;
+type MovieRecord = StringFields & NonStringFields;
 
-export const loadWatches = async (): Promise<
-  ({ recordId: string } & MovieReview)[]
+export const loadMovies = async (): Promise<
+  ({ recordId: string } & MovieRecord)[]
 > => {
-  const watchRows = await loadAllRecords<MovieReview>(SCHEMA);
-  return watchRows;
+  const movieRows = await loadAllRecords<MovieRecord>(SCHEMA, {
+    loadAll: true,
+  });
+  return movieRows;
+};
+
+export type MaterialzedMovie = {
+  tmdbId: string;
+  title: string;
+  slug: string;
+  yearReleased: number;
+  numWatches: number;
+  collections: string[];
+  posterUrl: string;
+  award?: AwardDetails;
+};
+
+export const loadMaterializedMovies = async (): Promise<{
+  [recordId: string]: MaterialzedMovie;
+}> => {
+  const movieRows = await loadMovies();
+  return movieRows.reduce<{ [recordId: string]: MaterialzedMovie }>(
+    (result, movieRow) => {
+      const item: MaterialzedMovie = {
+        tmdbId: movieRow[fields.tmdbId],
+        title: movieRow[fields.title],
+        slug: movieSlug(movieRow[fields.title], movieRow[fields.yearReleased]),
+        yearReleased: movieRow[fields.yearReleased],
+        numWatches: movieRow[fields.numWatches],
+        collections: movieRow[fields.collections],
+        posterUrl: `https://image.tmdb.org/t/p/w300${
+          movieRow[fields.posterPath]
+        }`,
+      };
+
+      if (movieRow[fields.awardTier]) {
+        item.award = {
+          tier: movieRow[fields.awardTier]!,
+          year: movieRow[fields.awardYear]!,
+          anchor: movieRow[fields.awardAnchor],
+        };
+      }
+
+      result[movieRow.recordId] = item;
+
+      return result;
+    },
+    {},
+  );
 };

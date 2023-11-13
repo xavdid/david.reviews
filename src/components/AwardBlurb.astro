@@ -1,11 +1,7 @@
 ---
-import { type AwardTier, medals } from "../airtable/common";
+import { medals, type AwardDetails } from "../airtable/common";
 
-export type Props = {
-  year: number;
-  tier: AwardTier;
-  anchor?: string;
-};
+export type Props = AwardDetails;
 
 const lookbacks: { [x: number]: string } = {
   2022: "https://xavd.id/blog/post/favorite-media-2022/",

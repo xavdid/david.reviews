@@ -1,68 +1,60 @@
 ---
 import { Image } from "astro:assets";
 
-import { fields, loadWatches } from "../../airtable/movies";
+import {
+  fields,
+  loadMaterializedWatches,
+  loadWatches,
+  type MaterialzedWatch,
+} from "../../airtable/watches";
 import AwardBlurb, {
   type Props as AwardProps,
 } from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
 import { movieSlug } from "../../utils";
+import type { MaterialzedMovie } from "../../airtable/movies";
 
 type Params = {
   movieSlug: string;
 };
 
-type Props = {
-  title: string;
-  yearReleased: number;
-  posterPath: string;
-  collections?: string[];
-  award?: AwardProps;
-  watches: Array<{
-    notes: string;
-    watchedOn: string;
-    rating: number;
-    isFirstWatch: boolean;
-  }>;
+// type Props = {
+//   title: string;
+//   yearReleased: number;
+//   posterPath: string;
+//   collections?: string[];
+//   award?: AwardProps;
+//   watches: Array<{
+//     notes: string;
+//     watchedOn: string;
+//     rating: number;
+//     isFirstWatch: boolean;
+//   }>;
+// };
+
+type Props = MaterialzedMovie & {
+  watches: Array<Omit<MaterialzedWatch, "movie">>;
 };
 
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const rawReviews = await loadWatches();
+  const watches = await loadMaterializedWatches();
 
-  const movies = rawReviews.reduce<{ [tmdbId: string]: Props }>(
-    (result, review) => {
-      const tmdbId = review[fields.tmdbID][0];
-      const movie = result[tmdbId];
-      const miniReview: Props["watches"][number] = {
-        notes: review[fields.notes],
-        watchedOn: review[fields.dateWatched],
-        rating: review[fields.rating],
-        isFirstWatch: review[fields.isFirstWatch] === 1,
-      };
+  const movies = watches.reduce<{ [tmdbId: string]: Props }>(
+    (result, watch) => {
+      const tmdbId = watch.movie.tmdbId;
+      const movieRecord = result[tmdbId];
 
-      if (movie) {
-        movie.watches.push(miniReview);
+      const { movie, ...movielessWatch } = watch;
+      if (movieRecord) {
+        movieRecord.watches.push(movielessWatch);
       } else {
         const item: Props = {
-          title: review[fields.title],
-          yearReleased: review[fields.yearReleased][0],
-          posterPath: review[fields.posterPath],
-          collections: review[fields.collections],
-          watches: [miniReview],
+          ...movie,
+          watches: [movielessWatch],
         };
-
-        if (review[fields.awardTier]) {
-          item.award = {
-            // this gets validated below
-            tier: review[fields.awardTier]![0],
-            year: review[fields.awardYear]![0],
-            anchor: review[fields.awardAnchor]?.[0],
-          };
-        }
-
         result[tmdbId] = item;
       }
 
@@ -77,14 +69,14 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { title, watches, posterPath, award, collections, yearReleased } =
+const { title, watches, posterUrl, award, collections, yearReleased } =
   Astro.props;
 ---
 
 <Layout title={title} active="movies">
   <div class="flex py-3">
     <Image
-      src={`https://image.tmdb.org/t/p/w300${posterPath}`}
+      src={posterUrl}
       alt={`poster for ${title}`}
       height={450 / 2}
       width={300 / 2}
@@ -131,7 +123,7 @@ const { title, watches, posterPath, award, collections, yearReleased } =
   </div>
   <div>
     {
-      watches.map(({ watchedOn, rating, notes, isFirstWatch }, index) => {
+      watches.map(({ dateWatched, rating, notes, isFirstWatch }, index) => {
         const watchNumber = watches.length - index;
         const notActuallyFirstWatch = watchNumber === 1 && !isFirstWatch;
 
@@ -139,7 +131,7 @@ const { title, watches, posterPath, award, collections, yearReleased } =
           <Fragment>
             <div class="mb-4 rounded border-2 border-red-500 even:bg-red-50">
               <div class="flex justify-between border-b-2 border-red-500 px-2">
-                <span>{watchedOn}</span>
+                <span>{dateWatched}</span>
                 <span>
                   Watch #{watches.length - index}
                   {notActuallyFirstWatch && "*"}

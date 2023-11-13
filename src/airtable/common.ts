@@ -15,6 +15,11 @@ export type Base = {
   fields: { [fieldName: string]: string };
 };
 export type AwardTier = "Gold" | "Silver" | "Bronze";
+export type AwardDetails = {
+  year: number;
+  tier: AwardTier;
+  anchor?: string;
+};
 
 export const medals: { [x in AwardTier]: string } = {
   Gold: "🥇",
@@ -22,12 +27,10 @@ export const medals: { [x in AwardTier]: string } = {
   Bronze: "🥉",
 } as const;
 
-export const loadAllRecords = async <T>({
-  baseId,
-  tableName,
-  fields,
-  viewId,
-}: Base): Promise<Array<{ recordId: string } & T>> => {
+export const loadAllRecords = async <T>(
+  { baseId, tableName, fields, viewId }: Base,
+  { loadAll = false }: { loadAll?: boolean } = {},
+): Promise<Array<{ recordId: string } & T>> => {
   const rawRecords = await client
     .base(baseId)
     .table(tableName)
@@ -38,7 +41,7 @@ export const loadAllRecords = async <T>({
         returnFieldsByFieldId: true,
       },
       // maxRecords can't be undefined, has to be number or missing entirely
-      ...(NUM_RECORDS ? { maxRecords: NUM_RECORDS } : {}),
+      ...(loadAll ? {} : NUM_RECORDS ? { maxRecords: NUM_RECORDS } : {}),
     })
     .all();
 
