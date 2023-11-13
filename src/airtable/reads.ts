@@ -1,4 +1,4 @@
-import { loadAllRecords, type AwardTier, type Base } from "./common";
+import { loadAllRecords, readCache, type AwardTier, type Base } from "./common";
 
 export const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
@@ -52,8 +52,6 @@ export type ReadRecord = StringFields & NonStringFields;
 export const loadReads = async (): Promise<
   ({ recordId: string } & ReadRecord)[]
 > => {
-  // if(checkCache) { return readCache() }
-
   const readRows = await loadAllRecords<ReadRecord>(SCHEMA);
 
   // TOOD: writeCache()

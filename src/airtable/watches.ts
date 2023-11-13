@@ -1,4 +1,10 @@
-import { loadAllRecords, type AwardTier, type Base } from "./common";
+import {
+  loadAllRecords,
+  readCache,
+  writeCache,
+  type AwardTier,
+  type Base,
+} from "./common";
 import { loadMaterializedMovies, type MaterialzedMovie } from "./movies";
 
 export const SCHEMA = {
@@ -62,11 +68,15 @@ export type MaterialzedWatch = {
 export const loadMaterializedWatches = async (): Promise<
   MaterialzedWatch[]
 > => {
-  const movies = await loadMaterializedMovies();
+  // const cache = await readCache<MaterialzedWatch>(SCHEMA.tableName);
+  // if (cache) {
+  //   return cache;
+  // }
 
+  const movies = await loadMaterializedMovies();
   const watches = await loadWatches();
 
-  return watches.map((watch) => {
+  const materializedWatches = watches.map((watch) => {
     const movie = movies[watch[fields.movie][0]];
     if (!movie) {
       throw new Error(
@@ -84,4 +94,8 @@ export const loadMaterializedWatches = async (): Promise<
     };
     return item;
   });
+
+  // writeCache(SCHEMA.tableName, materializedWatches);
+
+  return materializedWatches;
 };

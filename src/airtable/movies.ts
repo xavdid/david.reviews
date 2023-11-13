@@ -41,7 +41,7 @@ type StringFields = {
 
 type MovieRecord = StringFields & NonStringFields;
 
-export const loadMovies = async (): Promise<
+const loadMovies = async (): Promise<
   ({ recordId: string } & MovieRecord)[]
 > => {
   const movieRows = await loadAllRecords<MovieRecord>(SCHEMA, {
