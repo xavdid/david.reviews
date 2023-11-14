@@ -1,4 +1,5 @@
-import { loadAllRecords, readCache, type AwardTier, type Base } from "./common";
+import type { AwardTier, Base } from "../types";
+import { loadAllRecords } from "./common";
 
 export const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",

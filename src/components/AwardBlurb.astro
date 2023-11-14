@@ -1,5 +1,6 @@
 ---
-import { medals, type AwardDetails } from "../airtable/common";
+import { medals } from "../airtable/data/common";
+import { type AwardDetails } from "../airtable/types";
 
 export type Props = AwardDetails;
 
@@ -24,4 +25,4 @@ This movie won the {medals[tier]}{tier} medal in my
   target="_blank"
   rel="noopener"
   href={buildAwardUrl(year, anchor)}>{year} Media Yearly Review</a
->.
+>. ../airtable/data/common

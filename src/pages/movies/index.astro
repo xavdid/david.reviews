@@ -1,9 +1,5 @@
 ---
-import {
-  fields,
-  loadMaterializedWatches,
-  loadWatches,
-} from "../../airtable/watches";
+import { loadMaterializedWatches } from "../../airtable/data/watches";
 import Moviebox from "../../components/infoboxes/moviebox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -59,4 +55,4 @@ const watchesWithCounts = watches.map((watch) => {
     }
   </div>
 </Layout>
- ../../airtable/watches
+ ../../airtable/watches ../../airtable/data/watches

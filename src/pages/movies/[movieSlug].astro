@@ -2,18 +2,14 @@
 import { Image } from "astro:assets";
 
 import {
-  fields,
   loadMaterializedWatches,
-  loadWatches,
   type MaterialzedWatch,
-} from "../../airtable/watches";
-import AwardBlurb, {
-  type Props as AwardProps,
-} from "../../components/AwardBlurb.astro";
+} from "../../airtable/data/watches";
+import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
 import { movieSlug } from "../../utils";
-import type { MaterialzedMovie } from "../../airtable/movies";
+import type { MaterialzedMovie } from "../../airtable/data/movies";
 
 type Params = {
   movieSlug: string;

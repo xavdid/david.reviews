@@ -1,8 +1,9 @@
 ---
 import { Image } from "astro:assets";
 
-import type { BookMedium } from "../../airtable/reads";
-import { medals, type AwardTier } from "../../airtable/common";
+import type { BookMedium } from "../../airtable/data/reads";
+import { medals } from "../../airtable/data/common";
+import type { AwardTier } from "../../airtable/types";
 import { bookPermalink, seriesPermalnk } from "../../utils";
 import AuthorList from "../AuthorList.astro";
 import SubtleLink from "../links/SubtleLink.astro";
@@ -94,3 +95,4 @@ const permalink = bookPermalink(title);
     }
   </Fragment>
 </BaseBox>
+ ../../airtable/data/reads ../../airtable/data/common
