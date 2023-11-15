@@ -1,5 +1,5 @@
 import type { AwardTier, Base } from "../types";
-import { loadAllRecords, loadMainRecords } from "./common";
+import { foreignKeyWrapper, loadAllRecords, loadMainRecords } from "./common";
 import { loadMaterializedMovies, type MaterialzedMovie } from "./movies";
 
 export const SCHEMA = {
@@ -108,19 +108,12 @@ const materializer = (watchRow: WatchRecord): LocalFields => ({
 });
 
 export const loadWatches2 = async (): Promise<MaterialzedWatch[]> => {
-  // materializer returns keys ommitting lookups
-  // or it uses the object to do replacements
-  // output is the splat of materializer output and lookups output (which has keys and record types; needs row lookup key to full auto
-  return loadMainRecords<WatchRecord, LocalFields, ForeignKeyFields>(
-    SCHEMA,
-    materializer,
-    [
-      {
-        key: "movie",
-        recordLoader: loadMaterializedMovies,
-        keyGrabber: (watchRow: WatchRecord): string[] => watchRow[fields.movie],
-        condense: true,
-      },
-    ],
-  );
+  return loadMainRecords(SCHEMA, materializer, [
+    {
+      key: "movie",
+      recordLoader: loadMaterializedMovies,
+      keyGrabber: (watchRow) => watchRow[fields.movie],
+      condense: true,
+    },
+  ]);
 };

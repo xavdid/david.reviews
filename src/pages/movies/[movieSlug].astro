@@ -38,7 +38,6 @@ type Props = MaterialzedMovie & {
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
   const watches = await loadWatches2();
-  console.log(watches);
 
   const movies = watches.reduce<{ [tmdbId: string]: Props }>(
     (result, watch) => {

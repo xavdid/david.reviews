@@ -94,41 +94,50 @@ const materializeRecordIds = <T>(
   return condense ? result[0] : result;
 };
 
+/**
+ * this is a little more complicated than I like, but it _does_ validate foreign keys correctly, which is cool
+ */
 export const loadMainRecords = async <
-  RecordType, // WatchRecord
-  LocalFields, // MaterializedWatch
-  ForeignKeyFields, // title | movie | whatever
+  RecordType,
+  MaterializedType,
+  ForeignKeys extends keyof MaterializedType,
 >(
   schema: Base,
-  materializer: (row: RecordType) => LocalFields,
+  materializer: (row: RecordType) => Omit<MaterializedType, ForeignKeys>,
   foreignKeys: {
-    key: keyof ForeignKeyFields;
+    key: ForeignKeys;
     recordLoader: () => Promise<{
-      [recordId: string]: ForeignKeyFields[keyof ForeignKeyFields];
+      [recordId: string]: MaterializedType[ForeignKeys];
     }>;
     keyGrabber: (row: RecordType) => string[];
     condense?: boolean;
   }[],
-): Promise<Array<LocalFields & ForeignKeyFields>> => {
+): Promise<MaterializedType[]> => {
+  const data = await readCache<MaterializedType[]>(schema);
+  if (data) {
+    return data;
+  }
+
   const records = await loadAllRecords<RecordType>(schema);
 
-  // todo: cache
-  // @ts-expect-error - 'ForeignKeyFields' could be instantiated with an arbitrary type which could be unrelated to 'LocalFields'
-  return Promise.all(
-    records.map(async (record) => {
+  const result = await Promise.all(
+    records.map(async (record): Promise<MaterializedType> => {
       const result = materializer(record);
 
       for (const { key, recordLoader, keyGrabber, condense } of foreignKeys) {
         // todo: only call `recordLoader()` once
-        // @ts-expect-error - can't index LocalFields with key of ForeignKeyFields
+
+        // @ts-expect-error - I can index this with foreign keys
         result[key] = materializeRecordIds(
           keyGrabber(record),
-          // TODO: why did TS not flag this as needing to have been awaited?
           await recordLoader(),
           condense,
         );
       }
+      // @ts-expect-error - I promise these are related
       return result;
     }),
   );
+  writeCache(schema, result);
+  return result;
 };
