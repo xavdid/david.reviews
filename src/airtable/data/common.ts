@@ -69,3 +69,66 @@ export const loadAllReferenceRecords = async <RecordType, MaterializedType>(
   writeCache(schema, materializedById);
   return materializedById;
 };
+
+const materializeRecordIds = <T>(
+  recordIds: string[],
+  records: { [recordId: string]: T },
+  condense = true,
+): T | T[] => {
+  const result = recordIds.map((recordId) => {
+    const record = records[recordId];
+    if (!record) {
+      throw new Error(`Failed to materialize record for ${recordId}`);
+    }
+    return record;
+  });
+
+  if (condense && result.length > 1) {
+    throw new Error(
+      `tried to condense list ${JSON.stringify(
+        result,
+      )} that had more than one item`,
+    );
+  }
+
+  return condense ? result[0] : result;
+};
+
+export const loadMainRecords = async <
+  RecordType, // WatchRecord
+  LocalFields, // MaterializedWatch
+  ForeignKeyFields, // title | movie | whatever
+>(
+  schema: Base,
+  materializer: (row: RecordType) => LocalFields,
+  foreignKeys: {
+    key: keyof ForeignKeyFields;
+    recordLoader: () => Promise<{
+      [recordId: string]: ForeignKeyFields[keyof ForeignKeyFields];
+    }>;
+    keyGrabber: (row: RecordType) => string[];
+    condense?: boolean;
+  }[],
+): Promise<Array<LocalFields & ForeignKeyFields>> => {
+  const records = await loadAllRecords<RecordType>(schema);
+
+  // todo: cache
+  // @ts-expect-error - 'ForeignKeyFields' could be instantiated with an arbitrary type which could be unrelated to 'LocalFields'
+  return Promise.all(
+    records.map(async (record) => {
+      const result = materializer(record);
+
+      for (const { key, recordLoader, keyGrabber, condense } of foreignKeys) {
+        // todo: only call `recordLoader()` once
+        // @ts-expect-error - can't index LocalFields with key of ForeignKeyFields
+        result[key] = materializeRecordIds(
+          keyGrabber(record),
+          // TODO: why did TS not flag this as needing to have been awaited?
+          await recordLoader(),
+          condense,
+        );
+      }
+      return result;
+    }),
+  );
+};

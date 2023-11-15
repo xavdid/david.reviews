@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 
 import {
   loadMaterializedWatches,
+  loadWatches2,
   type MaterialzedWatch,
 } from "../../airtable/data/watches";
 import AwardBlurb from "../../components/AwardBlurb.astro";
@@ -36,7 +37,8 @@ type Props = MaterialzedMovie & {
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const watches = await loadMaterializedWatches();
+  const watches = await loadWatches2();
+  console.log(watches);
 
   const movies = watches.reduce<{ [tmdbId: string]: Props }>(
     (result, watch) => {

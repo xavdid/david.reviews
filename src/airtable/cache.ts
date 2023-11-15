@@ -1,12 +1,13 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname } from "node:path";
 import type { Base } from "./types";
 
-const cachePath = (table: string) =>
+const buildCachePath = (table: string) =>
   new URL(`./_cache/${table}.json`, import.meta.url);
 
 export const readCache = async <T>({ tableName }: Base): Promise<T | null> => {
   try {
-    const data = await readFile(cachePath(tableName), "utf-8");
+    const data = await readFile(buildCachePath(tableName), "utf-8");
     return JSON.parse(data) as T;
   } catch (e: any) {
     if (e.code !== "ENOENT") {
@@ -19,7 +20,12 @@ export const writeCache = async (
   { tableName }: Base,
   data: any,
 ): Promise<void> => {
-  return writeFile(cachePath(tableName), JSON.stringify(data), {
+  const cachePath = buildCachePath(tableName);
+
+  // write fails if the subfolder doesn't exist
+  await mkdir(dirname(cachePath.pathname), { recursive: true });
+
+  return writeFile(buildCachePath(tableName), JSON.stringify(data), {
     encoding: "utf-8",
   });
 };

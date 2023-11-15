@@ -1,5 +1,5 @@
 import type { AwardTier, Base } from "../types";
-import { loadAllRecords } from "./common";
+import { loadAllRecords, loadMainRecords } from "./common";
 import { loadMaterializedMovies, type MaterialzedMovie } from "./movies";
 
 export const SCHEMA = {
@@ -53,13 +53,18 @@ export const loadWatches = async (): Promise<
   return watchRows;
 };
 
-export type MaterialzedWatch = {
+type ForeignKeyFields = {
   movie: MaterialzedMovie;
+};
+type LocalFields = {
   rating: number;
   notes: string;
   dateWatched: string;
   isFirstWatch: boolean;
 };
+
+export type MaterialzedWatch = ForeignKeyFields & LocalFields;
+
 export const loadMaterializedWatches = async (): Promise<
   MaterialzedWatch[]
 > => {
@@ -93,4 +98,29 @@ export const loadMaterializedWatches = async (): Promise<
   // writeCache(SCHEMA.tableName, materializedWatches);
 
   return materializedWatches;
+};
+
+const materializer = (watchRow: WatchRecord): LocalFields => ({
+  rating: watchRow[fields.rating],
+  notes: watchRow[fields.notes],
+  dateWatched: watchRow[fields.dateWatched],
+  isFirstWatch: watchRow[fields.isFirstWatch] === 1,
+});
+
+export const loadWatches2 = async (): Promise<MaterialzedWatch[]> => {
+  // materializer returns keys ommitting lookups
+  // or it uses the object to do replacements
+  // output is the splat of materializer output and lookups output (which has keys and record types; needs row lookup key to full auto
+  return loadMainRecords<WatchRecord, LocalFields, ForeignKeyFields>(
+    SCHEMA,
+    materializer,
+    [
+      {
+        key: "movie",
+        recordLoader: loadMaterializedMovies,
+        keyGrabber: (watchRow: WatchRecord): string[] => watchRow[fields.movie],
+        condense: true,
+      },
+    ],
+  );
 };
