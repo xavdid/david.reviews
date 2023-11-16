@@ -1,6 +1,6 @@
 import { movieSlug } from "../../utils";
 import type { AwardDetails, AwardTier, Base } from "../types";
-import { loadAllReferenceRecords } from "./common";
+import { loadReferenceRecords } from "./common";
 
 export const SCHEMA = {
   baseId: "appctKQDyHbyqNJOY",
@@ -71,4 +71,7 @@ const materializeMovie = (movieRow: MovieRecord): MaterialzedMovie => {
 };
 
 export const loadMaterializedMovies = () =>
-  loadAllReferenceRecords(SCHEMA, materializeMovie);
+  loadReferenceRecords<MovieRecord, MaterialzedMovie, never>(
+    SCHEMA,
+    materializeMovie,
+  );

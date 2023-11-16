@@ -9,6 +9,7 @@ import AuthorList from "../AuthorList.astro";
 import SubtleLink from "../links/SubtleLink.astro";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
+import type { MaterializedAuthor } from "../../airtable/data/authors";
 
 type SeriesInfo = {
   name: string;
@@ -25,8 +26,9 @@ type Props = {
   bookMedium: BookMedium;
   awardTier?: AwardTier;
   series?: SeriesInfo;
-  authors?: string;
-  coAuthors?: string;
+  // these are optional because at-most-one is provided
+  authors: MaterializedAuthor[];
+  coAuthors?: boolean;
 };
 const {
   title,
@@ -60,16 +62,10 @@ const permalink = bookPermalink(title);
       {title}
     </TitleLink>{" "}
     {
-      authors && (
+      authors.length > 0 && (
         <span>
-          by <AuthorList authors={authors.split(",")} style="subtle" />
-        </span>
-      )
-    }
-    {
-      coAuthors && (
-        <span>
-          with <AuthorList authors={coAuthors.split(",")} style="subtle" />
+          {coAuthors ? "with" : "by"}{" "}
+          <AuthorList authors={authors} style="subtle" />
         </span>
       )
     }
@@ -95,4 +91,3 @@ const permalink = bookPermalink(title);
     }
   </Fragment>
 </BaseBox>
- ../../airtable/data/reads ../../airtable/data/common

@@ -1,10 +1,10 @@
 ---
-import { loadMaterializedWatches } from "../../airtable/data/watches";
+import { loadWatches } from "../../airtable/data/watches";
 import Moviebox from "../../components/infoboxes/moviebox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
 
-const watches = await loadMaterializedWatches();
+const watches = await loadWatches();
 const watchCounts: { [tmdbId: string]: number } = {};
 
 const watchesWithCounts = watches.map((watch) => {

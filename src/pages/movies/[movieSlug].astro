@@ -2,33 +2,17 @@
 import { Image } from "astro:assets";
 
 import {
-  loadMaterializedWatches,
-  loadWatches2,
+  loadWatches,
   type MaterialzedWatch,
 } from "../../airtable/data/watches";
 import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
-import { movieSlug } from "../../utils";
 import type { MaterialzedMovie } from "../../airtable/data/movies";
 
 type Params = {
   movieSlug: string;
 };
-
-// type Props = {
-//   title: string;
-//   yearReleased: number;
-//   posterPath: string;
-//   collections?: string[];
-//   award?: AwardProps;
-//   watches: Array<{
-//     notes: string;
-//     watchedOn: string;
-//     rating: number;
-//     isFirstWatch: boolean;
-//   }>;
-// };
 
 type Props = MaterialzedMovie & {
   watches: Array<Omit<MaterialzedWatch, "movie">>;
@@ -37,7 +21,7 @@ type Props = MaterialzedMovie & {
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const watches = await loadWatches2();
+  const watches = await loadWatches();
 
   const movies = watches.reduce<{ [tmdbId: string]: Props }>(
     (result, watch) => {
@@ -61,7 +45,7 @@ export const getStaticPaths = async (): Result => {
   );
 
   return Object.entries(movies).map(([_, props]) => ({
-    params: { movieSlug: movieSlug(props.title, props.yearReleased) },
+    params: { movieSlug: props.slug },
     props,
   }));
 };

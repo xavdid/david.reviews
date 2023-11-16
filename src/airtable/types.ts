@@ -1,8 +1,8 @@
 export type Base = {
-  baseId: string;
+  baseId: `app${string}`;
   tableName: string;
-  viewId: string;
-  fields: { [fieldName: string]: string };
+  viewId: `viw${string}`;
+  fields: { [fieldName: string]: `fld${string}` };
 };
 
 export type AwardTier = "Gold" | "Silver" | "Bronze";

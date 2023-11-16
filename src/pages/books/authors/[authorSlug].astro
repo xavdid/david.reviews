@@ -2,38 +2,40 @@
 import slugify from "@sindresorhus/slugify";
 
 import {
-  fields,
-  loadReads,
-  type ReadRecord,
+  loadMaterializedReads,
+  type MaterializedRead,
 } from "../../../airtable/data/reads";
 import BookBox from "../../../components/infoboxes/bookbox.astro";
 import Layout from "../../../layouts/Layout.astro";
 import BookLegend from "../../../components/BookLegend.astro";
+import type { MaterializedAuthor } from "../../../airtable/data/authors";
+import { authorPermalink } from "../../../utils";
 
 type Params = {
   authorSlug: string;
 };
 
-type Props = {
-  name: string;
-  reads: ReadRecord[];
+type Props = MaterializedAuthor & {
+  reads: MaterializedRead[];
 };
 
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const rawReviews = await loadReads();
+  const reads = await loadMaterializedReads();
 
-  const authors = rawReviews.reduce<{ [authorId: string]: Props }>(
-    (result, review) => {
-      review[fields.authorIds].forEach((authorId, authorIndex) => {
-        const author = result[authorId];
-        if (author) {
-          author.reads.push(review);
+  const authors = reads.reduce<{ [authorId: string]: Props }>(
+    (result, read) => {
+      read.book.authors.forEach((author) => {
+        const authorId = author.recordId;
+        const authorRecord = result[authorId];
+
+        if (authorRecord) {
+          authorRecord.reads.push(read);
         } else {
           result[authorId] = {
-            name: review[fields.authorFullNames].split(",")[authorIndex],
-            reads: [review],
+            ...author,
+            reads: [read],
           };
         }
       });
@@ -43,13 +45,13 @@ export const getStaticPaths = async (): Result => {
   );
 
   return Object.entries(authors).map(([_, props]) => ({
-    params: { authorSlug: slugify(props.name) },
+    params: { authorSlug: authorPermalink(props.slug) },
     props,
   }));
 };
 
-const { reads, name } = Astro.props;
-const numUniqueBooks = new Set(reads.map((r) => r[fields.googleBooksId])).size;
+const { reads, name, recordId } = Astro.props;
+const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 ---
 
 <Layout title={`${name} - Reviews`} active="books">
@@ -64,32 +66,26 @@ const numUniqueBooks = new Set(reads.map((r) => r[fields.googleBooksId])).size;
   <BookLegend />
   <div>
     {
-      reads.map((review) => (
+      reads.map((read) => (
         <BookBox
-          title={review[fields.title][0]}
-          rating={review[fields.rating]}
-          dateFinished={review[fields.dateFinished]}
-          notes={review[fields.notes]}
-          isReread={review[fields.isReread]}
-          googleBooksId={review[fields.googleBooksId]![0]}
-          awardTier={review[fields.awardTier]?.[0]}
-          bookMedium={review[fields.medium]}
+          title={read.book.name}
+          rating={read.rating}
+          dateFinished={read.dateFinished}
+          notes={read.notes}
+          isReread={read.isReread}
+          googleBooksId={read.book.gbid}
+          awardTier={read.book.award?.tier}
+          bookMedium={read.medium}
           series={
-            review[fields.seriesName]?.[0]
+            read.book.series
               ? {
-                  name: review[fields.seriesName]![0],
-                  number: review[fields.numberInSeries]![0],
+                  name: read.book.series.name,
+                  number: read.book.numberInSeries!,
                 }
               : undefined
           }
-          coAuthors={
-            review[fields.authorIds].length
-              ? review[fields.authorFullNames]
-                  .split(",")
-                  .filter((n) => n != name)
-                  .join(", ")
-              : undefined
-          }
+          coAuthors={true}
+          authors={read.book.authors.filter((a) => a.recordId !== recordId)}
         />
       ))
     }

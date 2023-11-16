@@ -2,44 +2,41 @@
 import slugify from "@sindresorhus/slugify";
 
 import {
-  fields,
-  loadReads,
-  type ReadRecord,
+  loadMaterializedReads,
+  type MaterializedRead,
 } from "../../../airtable/data/reads";
 import BookBox from "../../../components/infoboxes/bookbox.astro";
 import Layout from "../../../layouts/Layout.astro";
 import AuthorList from "../../../components/AuthorList.astro";
 import BookLegend from "../../../components/BookLegend.astro";
+import type { MaterializedSeries } from "../../../airtable/data/series";
 
 type Params = {
   seriesSlug: string;
 };
 
-type Props = {
-  name: string;
-  authors: string[];
-  reads: ReadRecord[];
+type Props = MaterializedSeries & {
+  reads: MaterializedRead[];
 };
 
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const rawReviews = await loadReads();
+  const reads = await loadMaterializedReads();
 
-  const series = rawReviews.reduce<{ [seriesSlug: string]: Props }>(
-    (result, review) => {
-      const seriesName = review[fields.seriesName]?.[0];
-      if (seriesName) {
-        const seriesSlug = slugify(seriesName);
-        const series = result[seriesSlug];
+  const series = reads.reduce<{ [seriesSlug: string]: Props }>(
+    (result, read) => {
+      const series = read.book.series;
+      if (series) {
+        const seriesSlug = series.slug;
+        const seriesRecord = result[seriesSlug];
 
-        if (series) {
-          series.reads.push(review);
+        if (seriesRecord) {
+          seriesRecord.reads.push(read);
         } else {
           result[seriesSlug] = {
-            name: seriesName,
-            authors: review[fields.authorFullNames].split(","),
-            reads: [review],
+            ...series,
+            reads: [read],
           };
         }
       }
@@ -48,24 +45,14 @@ export const getStaticPaths = async (): Result => {
     {},
   );
 
-  return Object.entries(series).map(([seriesSlug, props]) => ({
-    params: { seriesSlug },
+  return Object.entries(series).map(([_, props]) => ({
+    params: { seriesSlug: props.slug },
     props,
   }));
 };
 
-const { reads, name, authors } = Astro.props;
-const numUniqueBooks = new Set(reads.map((r) => r[fields.googleBooksId])).size;
-
-// let's assume all books in a series are by the same person for now
-// coAuthors={
-//   review[fields.authorIds].length
-//     ? review[fields.authorFullNames]
-//         .split(",")
-//         .filter((n) => n != name)
-//         .join(", ")
-//     : undefined
-// }
+const { reads, name } = Astro.props;
+const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 ---
 
 <Layout title={`${name} - Reviews`} active="books">
@@ -73,7 +60,8 @@ const numUniqueBooks = new Set(reads.map((r) => r[fields.googleBooksId])).size;
     All reviews for The {name} series
   </h1>
   <p class="pb-2">
-    by <AuthorList authors={authors} style="rounded" />
+    {/* all series are by a single set of authors, for now */}
+     by <AuthorList authors={reads[0].book.authors} style="rounded" />
   </p>
   <p class="pb-3">
     There are {reads.length} total reviews of {numUniqueBooks} book{
@@ -84,24 +72,23 @@ const numUniqueBooks = new Set(reads.map((r) => r[fields.googleBooksId])).size;
   <div>
     {
       reads
-        .sort(
-          (a, b) => a[fields.numberInSeries]![0] - b[fields.numberInSeries]![0],
-        )
-        .map((review) => (
+        .sort((a, b) => a.book.numberInSeries! - b.book.numberInSeries!)
+        .map((read) => (
           <BookBox
-            title={review[fields.title][0]}
-            rating={review[fields.rating]}
-            dateFinished={review[fields.dateFinished]}
-            notes={review[fields.notes]}
-            isReread={review[fields.isReread]}
-            googleBooksId={review[fields.googleBooksId]![0]}
-            awardTier={review[fields.awardTier]?.[0]}
-            bookMedium={review[fields.medium]}
+            title={read.book.name}
+            rating={read.rating}
+            dateFinished={read.dateFinished}
+            notes={read.notes}
+            isReread={read.isReread}
+            googleBooksId={read.book.gbid}
+            awardTier={read.book.award?.tier}
+            bookMedium={read.medium}
+            authors={[]}
             series={
-              review[fields.seriesName]?.[0]
+              read.book.series
                 ? {
-                    name: review[fields.seriesName]![0],
-                    number: review[fields.numberInSeries]![0],
+                    name: read.book.series.name,
+                    number: read.book.numberInSeries!,
                   }
                 : undefined
             }

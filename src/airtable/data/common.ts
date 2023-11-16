@@ -42,9 +42,21 @@ export const loadAllRecords = async <T>(
  *
  * It caches the materialized result.
  */
-export const loadAllReferenceRecords = async <RecordType, MaterializedType>(
+export const loadReferenceRecords = async <
+  RecordType,
+  MaterializedType,
+  ForeignKeys extends keyof MaterializedType,
+>(
   schema: Base,
-  materializer: (row: RecordType) => MaterializedType,
+  materializer: (row: RecordType) => Omit<MaterializedType, ForeignKeys>,
+  foreignKeyRelationships?: {
+    key: ForeignKeys;
+    foreignItems: {
+      [recordId: string]: MaterializedType[ForeignKeys];
+    };
+    keyGrabber: (row: RecordType) => string[] | undefined;
+    condense?: boolean;
+  }[],
 ): Promise<{
   [recordId: string]: MaterializedType;
 }> => {
@@ -55,14 +67,30 @@ export const loadAllReferenceRecords = async <RecordType, MaterializedType>(
     return data;
   }
 
-  const rows = await loadAllRecords<RecordType>(schema, {
+  const records = await loadAllRecords<RecordType>(schema, {
     loadAll: true,
   });
 
-  const materializedById = rows.reduce<{
+  const materializedById = records.reduce<{
     [recordId: string]: MaterializedType;
-  }>((result, row) => {
-    result[row.recordId] = materializer(row);
+  }>((result, record) => {
+    const item = materializer(record);
+
+    for (const {
+      key,
+      foreignItems,
+      keyGrabber,
+      condense,
+    } of foreignKeyRelationships ?? []) {
+      const fkIds = keyGrabber(record);
+      if (fkIds) {
+        // @ts-expect-error - I can index this with foreign keys
+        item[key] = materializeRecordIds(fkIds, foreignItems, condense);
+      }
+    }
+
+    // @ts-expect-error - these are related types!
+    result[record.recordId] = item;
     return result;
   }, {});
 
@@ -70,15 +98,18 @@ export const loadAllReferenceRecords = async <RecordType, MaterializedType>(
   return materializedById;
 };
 
+/**
+ * given a list of record ids and a big reference map, replace the ids with actual object
+ */
 const materializeRecordIds = <T>(
-  recordIds: string[],
-  records: { [recordId: string]: T },
+  foreignKeys: string[],
+  foreignObjects: { [recordId: string]: T },
   condense = true,
 ): T | T[] => {
-  const result = recordIds.map((recordId) => {
-    const record = records[recordId];
+  const result = foreignKeys.map((fk) => {
+    const record = foreignObjects[fk];
     if (!record) {
-      throw new Error(`Failed to materialize record for ${recordId}`);
+      throw new Error(`Failed to materialize record for ${fk}`);
     }
     return record;
   });
@@ -95,20 +126,21 @@ const materializeRecordIds = <T>(
 };
 
 /**
+ * Loads all records with foreign keys. Actually respects size limits.
  * this is a little more complicated than I like, but it _does_ validate foreign keys correctly, which is cool
  */
-export const loadMainRecords = async <
+export const loadListedRecords = async <
   RecordType,
   MaterializedType,
   ForeignKeys extends keyof MaterializedType,
 >(
   schema: Base,
   materializer: (row: RecordType) => Omit<MaterializedType, ForeignKeys>,
-  foreignKeys: {
+  foreignKeyRelationships: {
     key: ForeignKeys;
-    recordLoader: () => Promise<{
+    foreignItems: {
       [recordId: string]: MaterializedType[ForeignKeys];
-    }>;
+    };
     keyGrabber: (row: RecordType) => string[];
     condense?: boolean;
   }[],
@@ -120,24 +152,24 @@ export const loadMainRecords = async <
 
   const records = await loadAllRecords<RecordType>(schema);
 
-  const result = await Promise.all(
-    records.map(async (record): Promise<MaterializedType> => {
-      const result = materializer(record);
+  const result = records.map((record) => {
+    const item = materializer(record);
 
-      for (const { key, recordLoader, keyGrabber, condense } of foreignKeys) {
-        // todo: only call `recordLoader()` once
-
+    for (const {
+      key,
+      foreignItems,
+      keyGrabber,
+      condense,
+    } of foreignKeyRelationships) {
+      const fkIds = keyGrabber(record);
+      if (fkIds) {
         // @ts-expect-error - I can index this with foreign keys
-        result[key] = materializeRecordIds(
-          keyGrabber(record),
-          await recordLoader(),
-          condense,
-        );
+        item[key] = materializeRecordIds(fkIds, foreignItems, condense);
       }
-      // @ts-expect-error - I promise these are related
-      return result;
-    }),
-  );
+    }
+    return item;
+  }) as MaterializedType[];
+
   writeCache(schema, result);
   return result;
 };

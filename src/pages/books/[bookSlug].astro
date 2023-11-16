@@ -1,8 +1,11 @@
 ---
-import slugify from "@sindresorhus/slugify";
 import { Image } from "astro:assets";
 
-import { fields, loadReads, type BookMedium } from "../../airtable/data/reads";
+import {
+  loadMaterializedReads,
+  type BookMedium,
+  type MaterializedRead,
+} from "../../airtable/data/reads";
 import AwardBlurb, {
   type Props as AwardProps,
 } from "../../components/AwardBlurb.astro";
@@ -11,102 +14,62 @@ import Layout from "../../layouts/Layout.astro";
 import { seriesPermalnk } from "../../utils";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import AuthorList from "../../components/AuthorList.astro";
-
-type SeriesInfo = {
-  name: string;
-  number: number;
-};
+import type { MaterializedBook } from "../../airtable/data/books";
+import { bookPermalink } from "../../utils";
 
 type Params = {
   bookSlug: string;
 };
 
-type Props = {
-  title: string;
-  award?: AwardProps;
-  gbid: string;
-  authors: string[];
-  series?: SeriesInfo;
-  reads: Array<{
-    notes: string;
-    dateFinished: string;
-    rating: number;
-    isReread: boolean;
-    bookMedium: BookMedium;
-  }>;
+type Props = MaterializedBook & {
+  reads: Array<Omit<MaterializedRead, "book">>;
 };
 
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const rawReviews = await loadReads();
+  const reads = await loadMaterializedReads();
 
-  const books = rawReviews.reduce<{ [gbid: string]: Props }>(
-    (result, review) => {
-      const gbid = review[fields.googleBooksId]![0];
-      const book = result[gbid];
-      const miniReview: Props["reads"][number] = {
-        notes: review[fields.notes],
-        dateFinished: review[fields.dateFinished],
-        rating: review[fields.rating],
-        isReread: review[fields.isReread],
-        bookMedium: review[fields.medium],
+  const books = reads.reduce<{ [gbid: string]: Props }>((result, read) => {
+    const gbid = read.book.gbid;
+    const bookRecord = result[gbid];
+
+    const { book, ...booklessRead } = read;
+
+    if (bookRecord) {
+      bookRecord.reads.push(booklessRead);
+    } else {
+      const item: Props = {
+        ...book,
+        reads: [booklessRead],
       };
+      result[gbid] = item;
+    }
 
-      if (book) {
-        book.reads.push(miniReview);
-      } else {
-        const item: Props = {
-          title: review[fields.title][0],
-          gbid,
-          authors: review[fields.authorFullNames].split(","),
-          reads: [miniReview],
-        };
-
-        if (review[fields.seriesName]) {
-          item.series = {
-            name: review[fields.seriesName]![0],
-            number: review[fields.numberInSeries]![0],
-          };
-        }
-
-        if (review[fields.awardTier]) {
-          item.award = {
-            // this gets validated below
-            tier: review[fields.awardTier]![0],
-            year: review[fields.awardYear]![0],
-            anchor: review[fields.awardAnchor]?.[0],
-          };
-        }
-
-        result[gbid] = item;
-      }
-
-      return result;
-    },
-    {},
-  );
+    return result;
+  }, {});
 
   return Object.values(books).map((props) => ({
-    params: { bookSlug: slugify(props.title) },
+    params: { bookSlug: bookPermalink(props.slug) },
     props,
   }));
 };
 
-const { title, reads, series, award, authors, gbid } = Astro.props;
+const { name, reads, series, award, authors, gbid, numberInSeries } =
+  Astro.props;
 ---
 
-<Layout title={title} active="books">
+<Layout title={name} active="books">
   <div class="flex py-3">
     <Image
       src={`https://books.google.com/books/content/images/frontcover/${gbid}?fife=h225`}
-      alt={`poster for ${title}`}
+      alt={`poster for ${name}`}
       height={450 / 2}
       width={300 / 2}
       class="max-h-[225px] max-w-[150px]"
     />
     <div class="pl-3">
-      <h1 class="pt-2 text-2xl">{title}</h1>
+      <h1 class="pt-2 text-2xl">{name}</h1>
       <p class="pb-2">
         by <AuthorList authors={authors} style="rounded" />
       </p>
@@ -122,7 +85,7 @@ const { title, reads, series, award, authors, gbid } = Astro.props;
         series && (
           <div class="py-2">
             <p>
-              This is book #{series.number} in the
+              This is book #{numberInSeries} in the
               <a
                 class="rounded bg-blue-200 p-1 hover:bg-blue-300"
                 href={seriesPermalnk(series.name)}
@@ -139,11 +102,11 @@ const { title, reads, series, award, authors, gbid } = Astro.props;
   </div>
   <div>
     {
-      reads.map(({ rating, bookMedium, notes, dateFinished }) => (
+      reads.map(({ rating, medium, notes, dateFinished }) => (
         <div class="mb-4 rounded border-2 border-emerald-600 even:bg-emerald-50">
           <div class="flex justify-between border-b-2 border-emerald-600 px-2">
             <span>{dateFinished}</span>
-            {bookMedium === "Audio" && <span>🔈 Audiobook</span>}
+            {medium === "Audio" && <span>🔈 Audiobook</span>}
             <div>
               <Rating rating={rating} />
             </div>

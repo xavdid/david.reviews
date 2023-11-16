@@ -1,9 +1,10 @@
 ---
+import type { MaterializedAuthor } from "../airtable/data/authors";
 import { authorPermalink } from "../utils";
 import RoundedLink from "./links/RoundedLink.astro";
 import SubtleLink from "./links/SubtleLink.astro";
 type Props = {
-  authors: string[];
+  authors: MaterializedAuthor[];
   style: "subtle" | "rounded";
 };
 
@@ -13,11 +14,13 @@ const LinkComponent = style === "rounded" ? RoundedLink : SubtleLink;
 
 <span
   >{
-    authors.map((name, index) => (
+    authors.map((author, index) => (
       <>
         {/* little .join(", ") replacer */}
         {index > 0 && ", "}{" "}
-        <LinkComponent href={authorPermalink(name)}>{name}</LinkComponent>
+        <LinkComponent href={authorPermalink(author.slug)}>
+          {author.name}
+        </LinkComponent>
       </>
     ))
   }</span

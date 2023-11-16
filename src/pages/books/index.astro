@@ -1,13 +1,13 @@
 ---
-import { fields, loadReads } from "../../airtable/data/reads";
+import { loadMaterializedReads } from "../../airtable/data/reads";
 import BookLegend from "../../components/BookLegend.astro";
 import BookBox from "../../components/infoboxes/bookbox.astro";
 import Layout from "../../layouts/Layout.astro";
+import { bookPermalink } from "../../utils";
 
-const rawReviews = await loadReads();
+const rawReviews = await loadMaterializedReads();
 
-const numUniqueBooks = new Set(rawReviews.map((r) => r[fields.googleBooksId]))
-  .size;
+const numUniqueBooks = new Set(rawReviews.map((r) => r.book.gbid)).size;
 ---
 
 <Layout title="Books!" active="books">
@@ -18,25 +18,25 @@ const numUniqueBooks = new Set(rawReviews.map((r) => r[fields.googleBooksId]))
   <BookLegend />
   <div>
     {
-      rawReviews.map((review) => (
+      rawReviews.map((read) => (
         <BookBox
-          title={review[fields.title][0]}
-          rating={review[fields.rating]}
-          dateFinished={review[fields.dateFinished]}
-          notes={review[fields.notes]}
-          isReread={review[fields.isReread]}
-          googleBooksId={review[fields.googleBooksId]![0]}
-          awardTier={review[fields.awardTier]?.[0]}
-          bookMedium={review[fields.medium]}
+          title={read.book.name}
+          rating={read.rating}
+          dateFinished={read.dateFinished}
+          notes={read.notes}
+          isReread={read.isReread}
+          googleBooksId={read.book.gbid}
+          awardTier={read.book.award?.tier}
+          bookMedium={read.medium}
           series={
-            review[fields.seriesName]?.[0]
+            read.book.series
               ? {
-                  name: review[fields.seriesName]![0],
-                  number: review[fields.numberInSeries]![0],
+                  name: read.book.series.name,
+                  number: read.book.numberInSeries!,
                 }
               : undefined
           }
-          authors={review[fields.authorFullNames]}
+          authors={read.book.authors}
         />
       ))
     }
