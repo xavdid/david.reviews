@@ -4,7 +4,7 @@ import { loadAllRecords, loadListedRecords } from "./common";
 
 export const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
-  viewId: "viwqz5EPsfegbEmCP",
+  viewId: "viwaBGtdx8nc8I1Kp",
   tableName: "Reads",
   // https://airtable.com/appv2mhWOgkRhR4rK/api/docs#javascript/table:reads
   fields: {

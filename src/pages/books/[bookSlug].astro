@@ -50,7 +50,7 @@ export const getStaticPaths = async (): Result => {
   }, {});
 
   return Object.values(books).map((props) => ({
-    params: { bookSlug: bookPermalink(props.slug) },
+    params: { bookSlug: props.slug },
     props,
   }));
 };

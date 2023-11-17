@@ -81,7 +81,7 @@ export const loadMaterializedBooks = async (): Promise<{
     {
       key: "authors",
       foreignItems: await loadMaterializedAuthors(),
-      keyGrabber: (bookRow) => bookRow[fields.series],
+      keyGrabber: (bookRow) => bookRow[fields.authors],
       condense: false,
     },
   ]);

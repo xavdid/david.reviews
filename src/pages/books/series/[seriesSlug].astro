@@ -76,6 +76,7 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
         .map((read) => (
           <BookBox
             title={read.book.name}
+            slug={read.book.slug}
             rating={read.rating}
             dateFinished={read.dateFinished}
             notes={read.notes}

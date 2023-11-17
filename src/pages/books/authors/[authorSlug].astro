@@ -45,7 +45,7 @@ export const getStaticPaths = async (): Result => {
   );
 
   return Object.entries(authors).map(([_, props]) => ({
-    params: { authorSlug: authorPermalink(props.slug) },
+    params: { authorSlug: props.slug },
     props,
   }));
 };
@@ -69,6 +69,7 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
       reads.map((read) => (
         <BookBox
           title={read.book.name}
+          slug={read.book.slug}
           rating={read.rating}
           dateFinished={read.dateFinished}
           notes={read.notes}

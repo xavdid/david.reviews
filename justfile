@@ -26,7 +26,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 
 # do a production build
 [no-exit-message]
-@build: validate
+@build: validate clear-cache
 	astro build
 
 [no-exit-message]

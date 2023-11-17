@@ -75,7 +75,6 @@ export const loadReferenceRecords = async <
     [recordId: string]: MaterializedType;
   }>((result, record) => {
     const item = materializer(record);
-
     for (const {
       key,
       foreignItems,
