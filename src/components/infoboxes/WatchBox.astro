@@ -6,56 +6,42 @@ import type { AwardTier } from "../../airtable/types";
 import { moviePermalink } from "../../utils";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
+import type { MaterialzedWatch } from "../../airtable/data/watches";
 
 type Props = {
-  title: string;
-  yearReleased: number;
-  rating: number;
-  watchedOn: string;
-  posterUrl: string;
-  notes: string;
+  watch: MaterialzedWatch;
   numWatch: number;
-  isFirstWatch: boolean;
-  awardTier?: AwardTier;
-  collections?: string[];
 };
-const {
-  title,
-  yearReleased,
-  rating,
-  watchedOn,
-  posterUrl,
-  notes,
-  numWatch,
-  isFirstWatch,
-  awardTier,
-  collections,
-} = Astro.props;
+const { watch, numWatch } = Astro.props;
 
-const permalink = moviePermalink(title, yearReleased);
+const permalink = moviePermalink(watch.movie.title, watch.movie.yearReleased);
 ---
 
-<BaseBox type="movie" notes={notes} rating={rating}>
+<BaseBox type="movie" notes={watch.notes} rating={watch.rating}>
   <a slot="image" href={permalink}>
     <Image
-      src={posterUrl}
-      alt={`poster for ${title}`}
+      src={watch.movie.posterUrl}
+      alt={`poster for ${watch.movie.title}`}
       height={187.5}
       width={125}
     /></a
   >
 
   <span slot="title">
-    <TitleLink href={permalink}>{title}</TitleLink>
-     ({yearReleased})
+    <TitleLink href={permalink}>{watch.movie.title}</TitleLink>
+     ({watch.movie.yearReleased})
   </span>
 
   <Fragment slot="icons">
-    {awardTier && <div class="inline px-1">{medals[awardTier]}</div>}
+    {
+      watch.movie.award && (
+        <div class="inline px-1">{medals[watch.movie.award.tier]}</div>
+      )
+    }
     <!-- Add collection link: TKTK -->
     {
-      collections &&
-        collections.map((collection) => (
+      watch.movie.collections &&
+        watch.movie.collections.map((collection) => (
           <div class="inline px-1">{collection.split(" ")[0]}</div>
         ))
     }
@@ -63,8 +49,8 @@ const permalink = moviePermalink(title, yearReleased);
 
   <Fragment slot="footer">
     <span>
-      <span class="hidden md:inline">Watched on:{" "}</span>{watchedOn}
+      <span class="hidden md:inline">Watched on:{" "}</span>{watch.dateWatched}
     </span>
-    <span>Watch #{numWatch}{numWatch === 1 && !isFirstWatch && "*"}</span>
+    <span>Watch #{numWatch}{numWatch === 1 && !watch.isFirstWatch && "*"}</span>
   </Fragment>
 </BaseBox>

@@ -1,6 +1,6 @@
 ---
 import { loadWatches } from "../../airtable/data/watches";
-import Moviebox from "../../components/infoboxes/WatchBox.astro";
+import WatchBox from "../../components/infoboxes/WatchBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
 
@@ -11,7 +11,7 @@ const watchesWithCounts = watches.map((watch) => {
   const thisWatchNum = watchCounts[watch.movie.tmdbId] ?? 0;
   watchCounts[watch.movie.tmdbId] = thisWatchNum + 1;
   return {
-    ...watch,
+    watch,
     numWatch: watch.movie.numWatches - thisWatchNum,
   };
 });
@@ -38,19 +38,8 @@ const watchesWithCounts = watches.map((watch) => {
   </ul>
   <div>
     {
-      watchesWithCounts.map((watch) => (
-        <Moviebox
-          title={watch.movie.title}
-          yearReleased={watch.movie.yearReleased}
-          rating={watch.rating}
-          watchedOn={watch.dateWatched}
-          posterUrl={watch.movie.posterUrl}
-          notes={watch.notes}
-          numWatch={watch.numWatch}
-          isFirstWatch={watch.isFirstWatch}
-          awardTier={watch.movie.award?.tier}
-          collections={watch.movie.collections}
-        />
+      watchesWithCounts.map(({ watch, numWatch }) => (
+        <WatchBox watch={watch} numWatch={numWatch} />
       ))
     }
   </div>
