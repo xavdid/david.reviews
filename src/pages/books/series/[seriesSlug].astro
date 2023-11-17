@@ -5,7 +5,7 @@ import {
   loadMaterializedReads,
   type MaterializedRead,
 } from "../../../airtable/data/reads";
-import BookBox from "../../../components/infoboxes/bookbox.astro";
+import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import Layout from "../../../layouts/Layout.astro";
 import AuthorList from "../../../components/AuthorList.astro";
 import BookLegend from "../../../components/BookLegend.astro";
@@ -74,25 +74,9 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
       reads
         .sort((a, b) => a.book.numberInSeries! - b.book.numberInSeries!)
         .map((read) => (
-          <BookBox
-            title={read.book.name}
-            slug={read.book.slug}
-            rating={read.rating}
-            dateFinished={read.dateFinished}
-            notes={read.notes}
-            isReread={read.isReread}
-            googleBooksId={read.book.gbid}
-            awardTier={read.book.award?.tier}
-            bookMedium={read.medium}
-            authors={[]}
-            series={
-              read.book.series
-                ? {
-                    name: read.book.series.name,
-                    number: read.book.numberInSeries!,
-                  }
-                : undefined
-            }
+          <ReadBox
+            read={read}
+            omitAuthorIds={read.book.authors.map((a) => a.recordId)}
           />
         ))
     }

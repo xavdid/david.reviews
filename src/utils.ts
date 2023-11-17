@@ -2,7 +2,7 @@ import slugify from "@sindresorhus/slugify";
 
 export const bookPermalink = (slug: string) => `/books/${slug}`;
 export const authorPermalink = (slug: string) => `/books/authors/${slug}`;
-export const seriesPermalnk = (n: string) => `/books/series/${slugify(n)}`;
+export const seriesPermalnk = (slug: string) => `/books/series/${slug}`;
 
 export const movieSlug = (title: string, yearReleased: number) =>
   slugify(`${title} ${yearReleased}`);

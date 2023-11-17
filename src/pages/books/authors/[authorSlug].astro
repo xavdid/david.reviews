@@ -1,15 +1,12 @@
 ---
-import slugify from "@sindresorhus/slugify";
-
+import type { MaterializedAuthor } from "../../../airtable/data/authors";
 import {
   loadMaterializedReads,
   type MaterializedRead,
 } from "../../../airtable/data/reads";
-import BookBox from "../../../components/infoboxes/bookbox.astro";
-import Layout from "../../../layouts/Layout.astro";
 import BookLegend from "../../../components/BookLegend.astro";
-import type { MaterializedAuthor } from "../../../airtable/data/authors";
-import { authorPermalink } from "../../../utils";
+import ReadBox from "../../../components/infoboxes/ReadBox.astro";
+import Layout from "../../../layouts/Layout.astro";
 
 type Params = {
   authorSlug: string;
@@ -50,7 +47,7 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { reads, name, recordId } = Astro.props;
+const { reads, name, recordId: authorId } = Astro.props;
 const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 ---
 
@@ -65,30 +62,6 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   </p>
   <BookLegend />
   <div>
-    {
-      reads.map((read) => (
-        <BookBox
-          title={read.book.name}
-          slug={read.book.slug}
-          rating={read.rating}
-          dateFinished={read.dateFinished}
-          notes={read.notes}
-          isReread={read.isReread}
-          googleBooksId={read.book.gbid}
-          awardTier={read.book.award?.tier}
-          bookMedium={read.medium}
-          series={
-            read.book.series
-              ? {
-                  name: read.book.series.name,
-                  number: read.book.numberInSeries!,
-                }
-              : undefined
-          }
-          coAuthors={true}
-          authors={read.book.authors.filter((a) => a.recordId !== recordId)}
-        />
-      ))
-    }
+    {reads.map((read) => <ReadBox read={read} omitAuthorIds={[authorId]} />)}
   </div>
 </Layout>

@@ -1,0 +1,71 @@
+---
+import { Image } from "astro:assets";
+
+import { medals } from "../../airtable/data/common";
+import type { MaterializedRead } from "../../airtable/data/reads";
+import { bookPermalink, seriesPermalnk } from "../../utils";
+import AuthorList from "../AuthorList.astro";
+import SubtleLink from "../links/SubtleLink.astro";
+import TitleLink from "../links/TitleLink.astro";
+import BaseBox from "./BaseBox.astro";
+
+type Props = {
+  read: MaterializedRead;
+  omitAuthorIds?: string[];
+};
+const { read, omitAuthorIds } = Astro.props;
+const authors = read.book.authors.filter(
+  (a) => !omitAuthorIds?.includes(a.recordId),
+);
+
+const permalink = bookPermalink(read.book.slug);
+---
+
+<BaseBox type="book" notes={read.notes} rating={read.rating}>
+  <a slot="image" href={permalink}>
+    <Image
+      src={`https://books.google.com/books/content/images/frontcover/${read.book.gbid}?fife=h188`}
+      alt={`cover for ${read.book.name}`}
+      height={188}
+      width={120}
+    /></a
+  >
+
+  <div slot="title">
+    <TitleLink href={permalink}>
+      {read.book.name}
+    </TitleLink>{" "}
+    {
+      authors.length > 0 && (
+        <span>
+          {omitAuthorIds?.length ? "with" : "by"}{" "}
+          <AuthorList authors={authors} style="subtle" />
+        </span>
+      )
+    }
+  </div>
+
+  <Fragment slot="icons">
+    {read.medium === "Audio" && <div class="inline px-1">🔈</div>}
+    {read.isReread && <div class="inline px-1">🔁</div>}
+    {
+      read.book.award && (
+        <div class="inline px-1">{medals[read.book.award.tier]}</div>
+      )
+    }
+  </Fragment>
+
+  <Fragment slot="footer">
+    <div>
+      <span class="hidden md:inline">Finished on:{" "}</span>{read.dateFinished}
+    </div>
+
+    {
+      read.book.series && (
+        <SubtleLink href={seriesPermalnk(read.book.series.slug)}>
+          Book #{read.book.numberInSeries}
+        </SubtleLink>
+      )
+    }
+  </Fragment>
+</BaseBox>

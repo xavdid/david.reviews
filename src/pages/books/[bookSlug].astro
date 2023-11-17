@@ -22,7 +22,7 @@ type Params = {
 };
 
 type Props = MaterializedBook & {
-  reads: Array<Omit<MaterializedRead, "book">>;
+  reads: MaterializedRead[];
 };
 
 // own row for weird export reasons
@@ -34,14 +34,12 @@ export const getStaticPaths = async (): Result => {
     const gbid = read.book.gbid;
     const bookRecord = result[gbid];
 
-    const { book, ...booklessRead } = read;
-
     if (bookRecord) {
-      bookRecord.reads.push(booklessRead);
+      bookRecord.reads.push(read);
     } else {
       const item: Props = {
-        ...book,
-        reads: [booklessRead],
+        ...read.book,
+        reads: [read],
       };
       result[gbid] = item;
     }
