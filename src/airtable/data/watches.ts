@@ -1,8 +1,8 @@
-import type { Base } from "../types";
+import type { Base, RecordBase } from "../types";
 import { loadListedRecords } from "./common";
-import { loadMaterializedMovies, type MaterialzedMovie } from "./movies";
+import { loadMovies, type Movie } from "./movies";
 
-export const SCHEMA = {
+const SCHEMA = {
   baseId: "appctKQDyHbyqNJOY",
   viewId: "viwovZ8M1YpRtgpFS",
   tableName: "Watches",
@@ -15,8 +15,7 @@ export const SCHEMA = {
     movie: "fldhAqjnIaBR90xr1",
   },
 } as const satisfies Base;
-
-export const fields = SCHEMA.fields;
+const fields = SCHEMA.fields;
 
 type FieldIds = (typeof fields)[keyof typeof fields];
 type NonStringFields = {
@@ -27,8 +26,7 @@ type NonStringFields = {
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
 };
-
-type WatchRecord = StringFields & NonStringFields;
+type WatchRecord = StringFields & NonStringFields & RecordBase;
 
 type LocalFields = {
   rating: number;
@@ -37,23 +35,22 @@ type LocalFields = {
   isFirstWatch: boolean;
 };
 type ForeignKeyFields = {
-  movie: MaterialzedMovie;
+  movie: Movie;
 };
+export type Watch = LocalFields & ForeignKeyFields;
 
-export type MaterialzedWatch = LocalFields & ForeignKeyFields;
-
-const materializer = (watchRow: WatchRecord): LocalFields => ({
+const materialize = (watchRow: WatchRecord): LocalFields => ({
   rating: watchRow[fields.rating],
   notes: watchRow[fields.notes],
   dateWatched: watchRow[fields.dateWatched],
   isFirstWatch: watchRow[fields.isFirstWatch] === 1,
 });
 
-export const loadWatches = async (): Promise<MaterialzedWatch[]> =>
-  loadListedRecords(SCHEMA, materializer, [
+export const loadWatches = async (): Promise<Watch[]> =>
+  loadListedRecords(SCHEMA, materialize, [
     {
       key: "movie",
-      foreignItems: await loadMaterializedMovies(),
+      foreignItems: await loadMovies(),
       keyGrabber: (watchRow) => watchRow[fields.movie],
     },
   ]);

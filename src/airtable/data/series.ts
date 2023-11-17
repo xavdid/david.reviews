@@ -1,8 +1,8 @@
 import slugify from "@sindresorhus/slugify";
-import type { Base } from "../types";
+import type { Base, RecordBase } from "../types";
 import { loadReferenceRecords } from "./common";
 
-export const SCHEMA = {
+const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
   viewId: "viwvyQagVr2UQhhNe",
   tableName: "Series",
@@ -17,21 +17,17 @@ type NonStringFields = {};
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
 };
+type SeriesRecord = StringFields & NonStringFields & RecordBase;
 
-type SeriesRecord = StringFields & NonStringFields;
-
-export type MaterializedSeries = {
+export type Series = {
   name: string;
   slug: string;
 };
 
-const materializeSeries = (seriesRow: SeriesRecord): MaterializedSeries => ({
+const materialize = (seriesRow: SeriesRecord): Series => ({
   name: seriesRow[fields.name],
   slug: slugify(seriesRow[fields.name]),
 });
 
-export const loadMaterializedSeries = () =>
-  loadReferenceRecords<SeriesRecord, MaterializedSeries, never>(
-    SCHEMA,
-    materializeSeries,
-  );
+export const loadSeries = () =>
+  loadReferenceRecords<SeriesRecord, Series, never>(SCHEMA, materialize);

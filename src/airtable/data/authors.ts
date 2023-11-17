@@ -1,8 +1,9 @@
 import slugify from "@sindresorhus/slugify";
-import { type Base } from "../types";
+
+import { type Base, type RecordBase } from "../types";
 import { loadReferenceRecords } from "./common";
 
-export const SCHEMA = {
+const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
   viewId: "viwst3tJ6W0nlO8tm",
   tableName: "Authors",
@@ -14,30 +15,25 @@ const fields = SCHEMA.fields;
 
 type FieldIds = (typeof fields)[keyof typeof fields];
 type NonStringFields = {
+  // manually defined, but not requested from Airtable
   recordId: string;
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
 };
+type AuthorRecord = StringFields & NonStringFields & RecordBase;
 
-type AuthorRecord = StringFields & NonStringFields;
-
-export type MaterializedAuthor = {
+export type Author = {
   name: string;
   recordId: string;
   slug: string;
 };
 
-const materializeAuthor = (
-  authorRow: AuthorRecord & { recordId: string },
-): MaterializedAuthor => ({
+const materialize = (authorRow: AuthorRecord): Author => ({
   name: authorRow[fields.name],
   slug: slugify(authorRow[fields.name]),
   recordId: authorRow.recordId,
 });
 
-export const loadMaterializedAuthors = () =>
-  loadReferenceRecords<AuthorRecord, MaterializedAuthor, never>(
-    SCHEMA,
-    materializeAuthor,
-  );
+export const loadAuthors = () =>
+  loadReferenceRecords<AuthorRecord, Author, never>(SCHEMA, materialize);

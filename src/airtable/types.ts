@@ -12,3 +12,7 @@ export type AwardDetails = {
   tier: AwardTier;
   anchor?: string;
 };
+
+export type RecordBase = {
+  recordId: string;
+};

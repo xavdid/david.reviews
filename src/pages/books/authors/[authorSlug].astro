@@ -1,9 +1,6 @@
 ---
-import type { MaterializedAuthor } from "../../../airtable/data/authors";
-import {
-  loadMaterializedReads,
-  type MaterializedRead,
-} from "../../../airtable/data/reads";
+import type { Author } from "../../../airtable/data/authors";
+import { loadReads, type Read } from "../../../airtable/data/reads";
 import BookLegend from "../../../components/BookLegend.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import Layout from "../../../layouts/Layout.astro";
@@ -12,14 +9,14 @@ type Params = {
   authorSlug: string;
 };
 
-type Props = MaterializedAuthor & {
-  reads: MaterializedRead[];
+type Props = Author & {
+  reads: Read[];
 };
 
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const reads = await loadMaterializedReads();
+  const reads = await loadReads();
 
   const authors = reads.reduce<{ [authorId: string]: Props }>(
     (result, read) => {

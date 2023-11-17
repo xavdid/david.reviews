@@ -1,10 +1,11 @@
 import slugify from "@sindresorhus/slugify";
-import type { AwardDetails, AwardTier, Base } from "../types";
-import { loadMaterializedAuthors, type MaterializedAuthor } from "./authors";
-import { loadReferenceRecords } from "./common";
-import { loadMaterializedSeries, type MaterializedSeries } from "./series";
 
-export const SCHEMA = {
+import type { AwardDetails, AwardTier, Base, RecordBase } from "../types";
+import { loadAuthors, type Author } from "./authors";
+import { loadReferenceRecords } from "./common";
+import { loadSeries, type Series } from "./series";
+
+const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
   viewId: "viwaexsdFEWc0Hkew",
   tableName: "Books",
@@ -33,8 +34,7 @@ type NonStringFields = {
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
 };
-
-type BookRecord = StringFields & NonStringFields;
+type BookRecord = StringFields & NonStringFields & RecordBase;
 
 type LocalFields = {
   name: string;
@@ -44,13 +44,12 @@ type LocalFields = {
   numberInSeries?: number;
 };
 type ForeignKeyFields = {
-  authors: MaterializedAuthor[];
-  series?: MaterializedSeries;
+  authors: Author[];
+  series?: Series;
 };
+export type Book = LocalFields & ForeignKeyFields;
 
-export type MaterializedBook = LocalFields & ForeignKeyFields;
-
-const materializeBook = (bookRow: BookRecord): LocalFields => {
+const materialize = (bookRow: BookRecord): LocalFields => {
   const item: LocalFields = {
     name: bookRow[fields.name],
     slug: slugify(bookRow[fields.name]),
@@ -69,18 +68,18 @@ const materializeBook = (bookRow: BookRecord): LocalFields => {
   return item;
 };
 
-export const loadMaterializedBooks = async (): Promise<{
-  [recordId: string]: MaterializedBook;
+export const loadBooks = async (): Promise<{
+  [recordId: string]: Book;
 }> =>
-  loadReferenceRecords(SCHEMA, materializeBook, [
+  loadReferenceRecords(SCHEMA, materialize, [
     {
       key: "series",
-      foreignItems: await loadMaterializedSeries(),
+      foreignItems: await loadSeries(),
       keyGrabber: (bookRow) => bookRow[fields.series],
     },
     {
       key: "authors",
-      foreignItems: await loadMaterializedAuthors(),
+      foreignItems: await loadAuthors(),
       keyGrabber: (bookRow) => bookRow[fields.authors],
       condense: false,
     },

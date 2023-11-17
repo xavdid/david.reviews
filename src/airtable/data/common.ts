@@ -4,17 +4,17 @@ import type { AwardTier, Base } from "../types";
 
 export const isProdBuild = import.meta.env.MODE === "production";
 
-const client = new Airtable({
-  apiKey: import.meta.env.AIRTABLE_API_KEY,
-});
-
 export const medals: { [x in AwardTier]: string } = {
   Gold: "🥇",
   Silver: "🥈",
   Bronze: "🥉",
 } as const;
 
-export const loadAllRecords = async <T>(
+const client = new Airtable({
+  apiKey: import.meta.env.AIRTABLE_API_KEY,
+});
+
+const loadAllRecords = async <T>(
   { baseId, tableName, fields, viewId }: Base,
   { loadAll = false }: { loadAll?: boolean } = {},
 ): Promise<Array<{ recordId: string } & T>> => {

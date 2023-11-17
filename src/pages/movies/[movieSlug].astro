@@ -1,11 +1,8 @@
 ---
 import { Image } from "astro:assets";
 
-import type { MaterialzedMovie } from "../../airtable/data/movies";
-import {
-  loadWatches,
-  type MaterialzedWatch,
-} from "../../airtable/data/watches";
+import type { Movie } from "../../airtable/data/movies";
+import { loadWatches, type Watch } from "../../airtable/data/watches";
 import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -14,8 +11,8 @@ type Params = {
   movieSlug: string;
 };
 
-type Props = MaterialzedMovie & {
-  watches: Array<Omit<MaterialzedWatch, "movie">>;
+type Props = Movie & {
+  watches: Array<Omit<Watch, "movie">>;
 };
 
 // own row for weird export reasons

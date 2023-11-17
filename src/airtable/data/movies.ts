@@ -1,8 +1,9 @@
 import slugify from "@sindresorhus/slugify";
-import type { AwardDetails, AwardTier, Base } from "../types";
+
+import type { AwardDetails, AwardTier, Base, RecordBase } from "../types";
 import { loadReferenceRecords } from "./common";
 
-export const SCHEMA = {
+const SCHEMA = {
   baseId: "appctKQDyHbyqNJOY",
   viewId: "viwEn5Vs4zVmEHvSH",
   tableName: "Movies",
@@ -34,10 +35,9 @@ type NonStringFields = {
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
 };
+type MovieRecord = StringFields & NonStringFields & RecordBase;
 
-type MovieRecord = StringFields & NonStringFields;
-
-export type MaterialzedMovie = {
+export type Movie = {
   tmdbId: string;
   title: string;
   slug: string;
@@ -48,8 +48,8 @@ export type MaterialzedMovie = {
   award?: AwardDetails;
 };
 
-const materializeMovie = (movieRow: MovieRecord): MaterialzedMovie => {
-  const item: MaterialzedMovie = {
+const materialize = (movieRow: MovieRecord): Movie => {
+  const item: Movie = {
     tmdbId: movieRow[fields.tmdbId],
     title: movieRow[fields.title],
     slug: slugify(`${movieRow[fields.title]} ${movieRow[fields.yearReleased]}`),
@@ -70,8 +70,5 @@ const materializeMovie = (movieRow: MovieRecord): MaterialzedMovie => {
   return item;
 };
 
-export const loadMaterializedMovies = () =>
-  loadReferenceRecords<MovieRecord, MaterialzedMovie, never>(
-    SCHEMA,
-    materializeMovie,
-  );
+export const loadMovies = () =>
+  loadReferenceRecords<MovieRecord, Movie, never>(SCHEMA, materialize);

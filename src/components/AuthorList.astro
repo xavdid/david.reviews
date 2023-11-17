@@ -1,11 +1,11 @@
 ---
-import type { MaterializedAuthor } from "../airtable/data/authors";
+import type { Author } from "../airtable/data/authors";
 import { authorPermalink } from "../utils";
 import RoundedLink from "./links/RoundedLink.astro";
 import SubtleLink from "./links/SubtleLink.astro";
 
 type Props = {
-  authors: MaterializedAuthor[];
+  authors: Author[];
   style: "subtle" | "rounded";
 };
 

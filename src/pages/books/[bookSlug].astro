@@ -1,11 +1,8 @@
 ---
 import { Image } from "astro:assets";
 
-import type { MaterializedBook } from "../../airtable/data/books";
-import {
-  loadMaterializedReads,
-  type MaterializedRead,
-} from "../../airtable/data/reads";
+import type { Book } from "../../airtable/data/books";
+import { loadReads, type Read } from "../../airtable/data/reads";
 import AuthorList from "../../components/AuthorList.astro";
 import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
@@ -17,14 +14,14 @@ type Params = {
   bookSlug: string;
 };
 
-type Props = MaterializedBook & {
-  reads: MaterializedRead[];
+type Props = Book & {
+  reads: Read[];
 };
 
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const reads = await loadMaterializedReads();
+  const reads = await loadReads();
 
   const books = reads.reduce<{ [gbid: string]: Props }>((result, read) => {
     const gbid = read.book.gbid;

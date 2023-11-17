@@ -2,13 +2,13 @@
 import { Image } from "astro:assets";
 
 import { medals } from "../../airtable/data/common";
-import type { MaterialzedWatch } from "../../airtable/data/watches";
+import type { Watch } from "../../airtable/data/watches";
 import { moviePermalink } from "../../utils";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
 
 type Props = {
-  watch: MaterialzedWatch;
+  watch: Watch;
   numWatch: number;
 };
 const { watch, numWatch } = Astro.props;

@@ -1,70 +1,50 @@
-import type { AwardTier, Base } from "../types";
-import { loadMaterializedBooks, type MaterializedBook } from "./books";
-import { loadAllRecords, loadListedRecords } from "./common";
+import type { Base, RecordBase } from "../types";
+import { loadBooks, type Book } from "./books";
+import { loadListedRecords } from "./common";
 
-export const SCHEMA = {
+const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
   viewId: "viwaBGtdx8nc8I1Kp",
   tableName: "Reads",
   // https://airtable.com/appv2mhWOgkRhR4rK/api/docs#javascript/table:reads
   fields: {
-    // title: "fldGhXwfauEvXCOxU", // TODO: remove
-    // googleBooksId: "fldFQOw6UZDeMwsf4", // TODO: remove
     rating: "fldcYBkA0w9G49ZRr",
     notes: "fldt0Xy3ncrVOxGAI",
     dateFinished: "fldqmKpPjPt6VNgAn",
     isReread: "fldp6jjlmJ5BP7P6w",
     medium: "fld00LRZuJkDXWMsg",
-    // seriesName: "fldeG50NjS7IZFsQb", // remove
-    // numberInSeries: "fldSdUIsg9exyh8BM",
     book: "fldxbKcjUeeQG1e8G",
-    // authorLastNames: "fld7vlWOOWSpAWk1q", // remove
-    // authorFullNames: "fldp5tglohwONaZqE", // remove
-    // authorIds: "fld6Iuw1UwF0gCR5m", // remove
   },
 } as const satisfies Base;
-
 const fields = SCHEMA.fields;
 
-export type BookMedium = "Paper" | "Digital" | "Audio";
+type ReadMedium = "Paper" | "Digital" | "Audio";
 
 type FieldIds = (typeof fields)[keyof typeof fields];
 type NonStringFields = {
-  // [fields.title]: [string];
   [fields.rating]: number;
   [fields.isReread]: boolean;
-  [fields.medium]: BookMedium;
+  [fields.medium]: ReadMedium;
   [fields.book]: [string];
-  // [fields.awardTier]?: [AwardTier];
-  // [fields.awardYear]?: [number];
-  // [fields.awardAnchor]?: [string];
-  // [fields.googleBooksId]?: [string];
-  // [fields.seriesName]?: [string];
-  // [fields.numberInSeries]?: [number];
-  // [fields.authorLastNames]: string[];
-  // [fields.authorIds]: string[];
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
 };
-
-export type ReadRecord = StringFields & NonStringFields;
+type ReadRecord = StringFields & NonStringFields & RecordBase;
 
 type LocalFields = {
   rating: number;
   notes: string;
   dateFinished: string;
   isReread: boolean;
-  medium: BookMedium;
-  // numberInSeries?: number;
+  medium: ReadMedium;
 };
 type ForeignKeyFields = {
-  book: MaterializedBook;
+  book: Book;
 };
+export type Read = LocalFields & ForeignKeyFields;
 
-export type MaterializedRead = LocalFields & ForeignKeyFields;
-
-const materializer = (readRow: ReadRecord): LocalFields => ({
+const materialize = (readRow: ReadRecord): LocalFields => ({
   rating: readRow[fields.rating],
   notes: readRow[fields.notes],
   dateFinished: readRow[fields.dateFinished],
@@ -72,11 +52,11 @@ const materializer = (readRow: ReadRecord): LocalFields => ({
   medium: readRow[fields.medium],
 });
 
-export const loadMaterializedReads = async (): Promise<MaterializedRead[]> =>
-  loadListedRecords(SCHEMA, materializer, [
+export const loadReads = async (): Promise<Read[]> =>
+  loadListedRecords(SCHEMA, materialize, [
     {
       key: "book",
-      foreignItems: await loadMaterializedBooks(),
+      foreignItems: await loadBooks(),
       keyGrabber: (readRow) => readRow[fields.book],
     },
   ]);

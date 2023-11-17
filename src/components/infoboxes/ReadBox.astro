@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 
 import { medals } from "../../airtable/data/common";
-import type { MaterializedRead } from "../../airtable/data/reads";
+import type { Read } from "../../airtable/data/reads";
 import { bookPermalink, seriesPermalnk } from "../../utils";
 import AuthorList from "../AuthorList.astro";
 import SubtleLink from "../links/SubtleLink.astro";
@@ -10,7 +10,7 @@ import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
 
 type Props = {
-  read: MaterializedRead;
+  read: Read;
   omitAuthorIds?: string[];
 };
 const { read, omitAuthorIds } = Astro.props;
