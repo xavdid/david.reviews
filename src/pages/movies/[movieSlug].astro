@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 
+import type { MaterialzedMovie } from "../../airtable/data/movies";
 import {
   loadWatches,
   type MaterialzedWatch,
@@ -8,7 +9,6 @@ import {
 import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
-import type { MaterialzedMovie } from "../../airtable/data/movies";
 
 type Params = {
   movieSlug: string;

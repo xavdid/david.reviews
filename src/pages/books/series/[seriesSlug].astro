@@ -1,15 +1,13 @@
 ---
-import slugify from "@sindresorhus/slugify";
-
 import {
   loadMaterializedReads,
   type MaterializedRead,
 } from "../../../airtable/data/reads";
-import ReadBox from "../../../components/infoboxes/ReadBox.astro";
-import Layout from "../../../layouts/Layout.astro";
+import type { MaterializedSeries } from "../../../airtable/data/series";
 import AuthorList from "../../../components/AuthorList.astro";
 import BookLegend from "../../../components/BookLegend.astro";
-import type { MaterializedSeries } from "../../../airtable/data/series";
+import ReadBox from "../../../components/infoboxes/ReadBox.astro";
+import Layout from "../../../layouts/Layout.astro";
 
 type Params = {
   seriesSlug: string;

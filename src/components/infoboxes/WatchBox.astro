@@ -2,11 +2,10 @@
 import { Image } from "astro:assets";
 
 import { medals } from "../../airtable/data/common";
-import type { AwardTier } from "../../airtable/types";
+import type { MaterialzedWatch } from "../../airtable/data/watches";
 import { moviePermalink } from "../../utils";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
-import type { MaterialzedWatch } from "../../airtable/data/watches";
 
 type Props = {
   watch: MaterialzedWatch;
@@ -14,7 +13,7 @@ type Props = {
 };
 const { watch, numWatch } = Astro.props;
 
-const permalink = moviePermalink(watch.movie.title, watch.movie.yearReleased);
+const permalink = moviePermalink(watch.movie.slug);
 ---
 
 <BaseBox type="movie" notes={watch.notes} rating={watch.rating}>

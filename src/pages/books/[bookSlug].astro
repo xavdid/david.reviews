@@ -1,21 +1,17 @@
 ---
 import { Image } from "astro:assets";
 
+import type { MaterializedBook } from "../../airtable/data/books";
 import {
   loadMaterializedReads,
-  type BookMedium,
   type MaterializedRead,
 } from "../../airtable/data/reads";
-import AwardBlurb, {
-  type Props as AwardProps,
-} from "../../components/AwardBlurb.astro";
+import AuthorList from "../../components/AuthorList.astro";
+import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
+import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { seriesPermalnk } from "../../utils";
-import ExternalLink from "../../components/links/ExternalLink.astro";
-import AuthorList from "../../components/AuthorList.astro";
-import type { MaterializedBook } from "../../airtable/data/books";
-import { bookPermalink } from "../../utils";
 
 type Params = {
   bookSlug: string;
