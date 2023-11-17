@@ -1,4 +1,4 @@
-import { movieSlug } from "../../utils";
+import slugify from "@sindresorhus/slugify";
 import type { AwardDetails, AwardTier, Base } from "../types";
 import { loadReferenceRecords } from "./common";
 
@@ -52,7 +52,7 @@ const materializeMovie = (movieRow: MovieRecord): MaterialzedMovie => {
   const item: MaterialzedMovie = {
     tmdbId: movieRow[fields.tmdbId],
     title: movieRow[fields.title],
-    slug: movieSlug(movieRow[fields.title], movieRow[fields.yearReleased]),
+    slug: slugify(`${movieRow[fields.title]} ${movieRow[fields.yearReleased]}`),
     yearReleased: movieRow[fields.yearReleased],
     numWatches: movieRow[fields.numWatches],
     collections: movieRow[fields.collections],
