@@ -14,6 +14,8 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 # to any checks to ensure the site is ready to go
 [no-exit-message]
 @validate: clean
+	eslint src
+	prettier -c src
 	astro check
 # tsc --noEmit
 # broken until ~ prettier 3.1 is out

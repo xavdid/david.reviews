@@ -11,7 +11,7 @@ export const medals: { [x in AwardTier]: string } = {
 } as const;
 
 const client = new Airtable({
-  apiKey: import.meta.env.AIRTABLE_API_KEY,
+  apiKey: import.meta.env.AIRTABLE_API_KEY as string,
 });
 
 const loadAllRecords = async <T>(
@@ -34,7 +34,7 @@ const loadAllRecords = async <T>(
   return rawRecords.map((record) => ({
     recordId: record.id,
     ...record.fields,
-  })) as ({ recordId: string } & T)[];
+  })) as Array<{ recordId: string } & T>;
 };
 
 /**
@@ -49,20 +49,14 @@ export const loadReferenceRecords = async <
 >(
   schema: Base,
   materializer: (row: RecordType) => Omit<MaterializedType, ForeignKeys>,
-  foreignKeyRelationships?: {
+  foreignKeyRelationships?: Array<{
     key: ForeignKeys;
-    foreignItems: {
-      [recordId: string]: MaterializedType[ForeignKeys];
-    };
+    foreignItems: Record<string, MaterializedType[ForeignKeys]>;
     keyGrabber: (row: RecordType) => string[] | undefined;
     condense?: boolean;
-  }[],
-): Promise<{
-  [recordId: string]: MaterializedType;
-}> => {
-  const data = await readCache<{
-    [recordId: string]: MaterializedType;
-  }>(schema);
+  }>,
+): Promise<Record<string, MaterializedType>> => {
+  const data = await readCache<Record<string, MaterializedType>>(schema);
   if (data) {
     return data;
   }
@@ -71,29 +65,30 @@ export const loadReferenceRecords = async <
     loadAll: true,
   });
 
-  const materializedById = records.reduce<{
-    [recordId: string]: MaterializedType;
-  }>((result, record) => {
-    const item = materializer(record);
-    for (const {
-      key,
-      foreignItems,
-      keyGrabber,
-      condense,
-    } of foreignKeyRelationships ?? []) {
-      const fkIds = keyGrabber(record);
-      if (fkIds) {
-        // @ts-expect-error - I can index this with foreign keys
-        item[key] = materializeRecordIds(fkIds, foreignItems, condense);
+  const materializedById = records.reduce<Record<string, MaterializedType>>(
+    (result, record) => {
+      const item = materializer(record);
+      for (const {
+        key,
+        foreignItems,
+        keyGrabber,
+        condense,
+      } of foreignKeyRelationships ?? []) {
+        const fkIds = keyGrabber(record);
+        if (fkIds) {
+          // @ts-expect-error - I can index this with foreign keys
+          item[key] = materializeRecordIds(fkIds, foreignItems, condense);
+        }
       }
-    }
 
-    // @ts-expect-error - these are related types!
-    result[record.recordId] = item;
-    return result;
-  }, {});
+      // @ts-expect-error - these are related types!
+      result[record.recordId] = item;
+      return result;
+    },
+    {},
+  );
 
-  writeCache(schema, materializedById);
+  await writeCache(schema, materializedById);
   return materializedById;
 };
 
@@ -102,12 +97,12 @@ export const loadReferenceRecords = async <
  */
 const materializeRecordIds = <T>(
   foreignKeys: string[],
-  foreignObjects: { [recordId: string]: T },
+  foreignObjects: Record<string, T>,
   condense = true,
 ): T | T[] => {
   const result = foreignKeys.map((fk) => {
-    const record = foreignObjects[fk];
-    if (!record) {
+    const record = foreignObjects[fk] as T | undefined;
+    if (record === undefined) {
       throw new Error(`Failed to materialize record for ${fk}`);
     }
     return record;
@@ -135,14 +130,12 @@ export const loadListedRecords = async <
 >(
   schema: Base,
   materializer: (row: RecordType) => Omit<MaterializedType, ForeignKeys>,
-  foreignKeyRelationships: {
+  foreignKeyRelationships: Array<{
     key: ForeignKeys;
-    foreignItems: {
-      [recordId: string]: MaterializedType[ForeignKeys];
-    };
+    foreignItems: Record<string, MaterializedType[ForeignKeys]>;
     keyGrabber: (row: RecordType) => string[];
     condense?: boolean;
-  }[],
+  }>,
 ): Promise<MaterializedType[]> => {
   const data = await readCache<MaterializedType[]>(schema);
   if (data) {
@@ -161,7 +154,7 @@ export const loadListedRecords = async <
       condense,
     } of foreignKeyRelationships) {
       const fkIds = keyGrabber(record);
-      if (fkIds) {
+      if (fkIds.length) {
         // @ts-expect-error - I can index this with foreign keys
         item[key] = materializeRecordIds(fkIds, foreignItems, condense);
       }
@@ -169,6 +162,6 @@ export const loadListedRecords = async <
     return item;
   }) as MaterializedType[];
 
-  writeCache(schema, result);
+  await writeCache(schema, result);
   return result;
 };

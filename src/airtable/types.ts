@@ -2,7 +2,7 @@ export type Base = {
   baseId: `app${string}`;
   tableName: string;
   viewId: `viw${string}`;
-  fields: { [fieldName: string]: `fld${string}` };
+  fields: Record<string, `fld${string}`>;
 };
 
 export type AwardTier = "Gold" | "Silver" | "Bronze";

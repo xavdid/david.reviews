@@ -47,7 +47,7 @@ const materialize = (watchRow: WatchRecord): LocalFields => ({
 });
 
 export const loadWatches = async (): Promise<Watch[]> =>
-  loadListedRecords(SCHEMA, materialize, [
+  await loadListedRecords(SCHEMA, materialize, [
     {
       key: "movie",
       foreignItems: await loadMovies(),

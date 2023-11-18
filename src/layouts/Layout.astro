@@ -1,10 +1,10 @@
 ---
 import Navbar from "../components/Navbar.astro";
 
-interface Props {
+type Props = {
   title: string;
   active?: "games" | "movies" | "books";
-}
+};
 
 const { title, active } = Astro.props;
 ---
@@ -24,7 +24,7 @@ const { title, active } = Astro.props;
     <title>{title} | david.reviews</title>
   </head>
   <body>
-    <Navbar active={active || "games"} />
+    <Navbar active={active} />
     <main class="mx-auto max-w-[95%] pb-4 md:max-w-xl">
       <slot />
     </main>

@@ -1,7 +1,7 @@
 ---
-interface Props {
-  classes?: (string | string[])[];
-}
+type Props = {
+  classes?: Array<string | string[]>;
+};
 
 const { classes = [] } = Astro.props;
 ---

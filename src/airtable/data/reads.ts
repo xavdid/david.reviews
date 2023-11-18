@@ -53,7 +53,7 @@ const materialize = (readRow: ReadRecord): LocalFields => ({
 });
 
 export const loadReads = async (): Promise<Read[]> =>
-  loadListedRecords(SCHEMA, materialize, [
+  await loadListedRecords(SCHEMA, materialize, [
     {
       key: "book",
       foreignItems: await loadBooks(),

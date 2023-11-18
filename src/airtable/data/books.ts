@@ -59,7 +59,9 @@ const materialize = (bookRow: BookRecord): LocalFields => {
 
   if (bookRow[fields.awardTier]) {
     item.award = {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       tier: bookRow[fields.awardTier]!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       year: bookRow[fields.awardYear]!,
       anchor: bookRow[fields.awardAnchor],
     };
@@ -68,10 +70,8 @@ const materialize = (bookRow: BookRecord): LocalFields => {
   return item;
 };
 
-export const loadBooks = async (): Promise<{
-  [recordId: string]: Book;
-}> =>
-  loadReferenceRecords(SCHEMA, materialize, [
+export const loadBooks = async (): Promise<Record<string, Book>> =>
+  await loadReferenceRecords(SCHEMA, materialize, [
     {
       key: "series",
       foreignItems: await loadSeries(),

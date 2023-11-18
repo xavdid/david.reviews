@@ -61,7 +61,9 @@ const materialize = (movieRow: MovieRecord): Movie => {
 
   if (movieRow[fields.awardTier]) {
     item.award = {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       tier: movieRow[fields.awardTier]!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       year: movieRow[fields.awardYear]!,
       anchor: movieRow[fields.awardAnchor],
     };
@@ -70,5 +72,5 @@ const materialize = (movieRow: MovieRecord): Movie => {
   return item;
 };
 
-export const loadMovies = () =>
-  loadReferenceRecords<MovieRecord, Movie, never>(SCHEMA, materialize);
+export const loadMovies = async (): Promise<Record<string, Movie>> =>
+  await loadReferenceRecords<MovieRecord, Movie, never>(SCHEMA, materialize);

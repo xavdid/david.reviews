@@ -20,26 +20,23 @@ type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
   const watches = await loadWatches();
 
-  const movies = watches.reduce<{ [tmdbId: string]: Props }>(
-    (result, watch) => {
-      const tmdbId = watch.movie.tmdbId;
-      const movieRecord = result[tmdbId];
+  const movies = watches.reduce<Record<string, Props>>((result, watch) => {
+    const tmdbId = watch.movie.tmdbId;
+    const movieRecord = result[tmdbId] as Props | undefined;
 
-      const { movie, ...movielessWatch } = watch;
-      if (movieRecord) {
-        movieRecord.watches.push(movielessWatch);
-      } else {
-        const item: Props = {
-          ...movie,
-          watches: [movielessWatch],
-        };
-        result[tmdbId] = item;
-      }
+    const { movie, ...movielessWatch } = watch;
+    if (movieRecord) {
+      movieRecord.watches.push(movielessWatch);
+    } else {
+      const item: Props = {
+        ...movie,
+        watches: [movielessWatch],
+      };
+      result[tmdbId] = item;
+    }
 
-      return result;
-    },
-    {},
-  );
+    return result;
+  }, {});
 
   return Object.entries(movies).map(([_, props]) => ({
     params: { movieSlug: props.slug },
@@ -79,7 +76,7 @@ const { title, watches, posterUrl, award, collections, yearReleased } =
       </p>
       {award && <AwardBlurb {...award} />}
       {
-        collections && (
+        collections.length && (
           <div class="py-2">
             <p>This movie is part of the following collection(s):</p>
             <ul class="pt-2">

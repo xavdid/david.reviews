@@ -18,25 +18,22 @@ type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
   const reads = await loadReads();
 
-  const authors = reads.reduce<{ [authorId: string]: Props }>(
-    (result, read) => {
-      read.book.authors.forEach((author) => {
-        const authorId = author.recordId;
-        const authorRecord = result[authorId];
+  const authors = reads.reduce<Record<string, Props>>((result, read) => {
+    read.book.authors.forEach((author) => {
+      const authorId = author.recordId;
+      const authorRecord = result[authorId] as Props | undefined;
 
-        if (authorRecord) {
-          authorRecord.reads.push(read);
-        } else {
-          result[authorId] = {
-            ...author,
-            reads: [read],
-          };
-        }
-      });
-      return result;
-    },
-    {},
-  );
+      if (authorRecord) {
+        authorRecord.reads.push(read);
+      } else {
+        result[authorId] = {
+          ...author,
+          reads: [read],
+        };
+      }
+    });
+    return result;
+  }, {});
 
   return Object.entries(authors).map(([_, props]) => ({
     params: { authorSlug: props.slug },

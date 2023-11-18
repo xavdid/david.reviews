@@ -23,9 +23,9 @@ type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
   const reads = await loadReads();
 
-  const books = reads.reduce<{ [gbid: string]: Props }>((result, read) => {
+  const books = reads.reduce<Record<string, Props>>((result, read) => {
     const gbid = read.book.gbid;
-    const bookRecord = result[gbid];
+    const bookRecord = result[gbid] as Props | undefined;
 
     if (bookRecord) {
       bookRecord.reads.push(read);

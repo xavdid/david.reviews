@@ -13,11 +13,10 @@ const SCHEMA = {
 const fields = SCHEMA.fields;
 
 type FieldIds = (typeof fields)[keyof typeof fields];
-type NonStringFields = {};
 type StringFields = {
-  [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
+  [fieldId in FieldIds]: string;
 };
-type SeriesRecord = StringFields & NonStringFields & RecordBase;
+type SeriesRecord = StringFields & RecordBase;
 
 export type Series = {
   name: string;
@@ -29,5 +28,5 @@ const materialize = (seriesRow: SeriesRecord): Series => ({
   slug: slugify(seriesRow[fields.name]),
 });
 
-export const loadSeries = () =>
-  loadReferenceRecords<SeriesRecord, Series, never>(SCHEMA, materialize);
+export const loadSeries = async (): Promise<Record<string, Series>> =>
+  await loadReferenceRecords<SeriesRecord, Series, never>(SCHEMA, materialize);

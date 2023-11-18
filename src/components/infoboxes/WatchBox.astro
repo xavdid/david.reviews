@@ -39,10 +39,9 @@ const permalink = moviePermalink(watch.movie.slug);
     }
     <!-- Add collection link: TKTK -->
     {
-      watch.movie.collections &&
-        watch.movie.collections.map((collection) => (
-          <div class="inline px-1">{collection.split(" ")[0]}</div>
-        ))
+      watch.movie.collections?.map((collection) => (
+        <div class="inline px-1">{collection.split(" ")[0]}</div>
+      ))
     }
   </Fragment>
 

@@ -19,26 +19,23 @@ type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
   const reads = await loadReads();
 
-  const series = reads.reduce<{ [seriesSlug: string]: Props }>(
-    (result, read) => {
-      const series = read.book.series;
-      if (series) {
-        const seriesSlug = series.slug;
-        const seriesRecord = result[seriesSlug];
+  const series = reads.reduce<Record<string, Props>>((result, read) => {
+    const series = read.book.series;
+    if (series) {
+      const seriesSlug = series.slug;
+      const seriesRecord = result[seriesSlug] as Props | undefined;
 
-        if (seriesRecord) {
-          seriesRecord.reads.push(read);
-        } else {
-          result[seriesSlug] = {
-            ...series,
-            reads: [read],
-          };
-        }
+      if (seriesRecord) {
+        seriesRecord.reads.push(read);
+      } else {
+        result[seriesSlug] = {
+          ...series,
+          reads: [read],
+        };
       }
-      return result;
-    },
-    {},
-  );
+    }
+    return result;
+  }, {});
 
   return Object.entries(series).map(([_, props]) => ({
     params: { seriesSlug: props.slug },
@@ -67,6 +64,7 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   <div>
     {
       reads
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         .sort((a, b) => a.book.numberInSeries! - b.book.numberInSeries!)
         .map((read) => (
           <ReadBox

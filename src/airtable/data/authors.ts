@@ -35,5 +35,5 @@ const materialize = (authorRow: AuthorRecord): Author => ({
   recordId: authorRow.recordId,
 });
 
-export const loadAuthors = () =>
-  loadReferenceRecords<AuthorRecord, Author, never>(SCHEMA, materialize);
+export const loadAuthors = async (): Promise<Record<string, Author>> =>
+  await loadReferenceRecords<AuthorRecord, Author, never>(SCHEMA, materialize);

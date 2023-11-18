@@ -5,7 +5,7 @@ import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
 
 const watches = await loadWatches();
-const watchCounts: { [tmdbId: string]: number } = {};
+const watchCounts: Record<string, number> = {};
 
 const watchesWithCounts = watches.map((watch) => {
   const thisWatchNum = watchCounts[watch.movie.tmdbId] ?? 0;
