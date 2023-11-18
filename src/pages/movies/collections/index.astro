@@ -1,0 +1,56 @@
+---
+import { loadMovies, type Collection } from "../../../airtable/data/movies";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
+import Layout from "../../../layouts/Layout.astro";
+import { collectionPermalink } from "../../../utils";
+
+const movies = await loadMovies();
+
+type CollectionRecord = { collection: Collection; movies: Set<string> };
+
+const collections = Object.values(movies).reduce<
+  Record<string, CollectionRecord>
+>((result, movie) => {
+  movie.collections?.forEach((collection) => {
+    const collectionRecord = result[collection.slug] as
+      | CollectionRecord
+      | undefined;
+
+    if (collectionRecord) {
+      collectionRecord.movies.add(movie.tmdbId);
+    } else {
+      result[collection.slug] = {
+        collection,
+        movies: new Set([movie.tmdbId]),
+      };
+    }
+  });
+  return result;
+}, {});
+---
+
+<Layout title="Collections" active="movies">
+  <div class="py-3">
+    <h1 class="pt-2 text-2xl">Movie Collections</h1>
+    <p class="pt-2">
+      Each of these collections houses my absolute favorite movies in each of
+      these genres. If you're a fan, you're sure to find something good to
+      watch.
+    </p>
+  </div>
+  <ul class="list-disc">
+    {
+      Object.values(collections)
+        .toSorted((a, b) => b.movies.size - a.movies.size)
+        .map(({ collection, movies }) => (
+          <li class="py-2">
+            <RoundedLink href={collectionPermalink(collection.slug)}>
+              {collection.fullName}
+            </RoundedLink>
+            {/* these counts may not match the page in dev, sicne it tracks watches and this tracks movies */}
+            - {movies.size} movies
+          </li>
+        ))
+    }
+  </ul>
+</Layout>
