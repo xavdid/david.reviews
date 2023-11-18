@@ -3,3 +3,5 @@ export const authorPermalink = (slug: string): string =>
   `/books/authors/${slug}`;
 export const seriesPermalnk = (slug: string): string => `/books/series/${slug}`;
 export const moviePermalink = (slug: string): string => `/movies/${slug}`;
+export const collectionPermalink = (slug: string): string =>
+  `/movies/collections/${slug}`;

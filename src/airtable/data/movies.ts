@@ -30,12 +30,18 @@ type NonStringFields = {
   [fields.awardYear]: number; // always defined because it's calculated; unwatched movies are `0`, but those are filtered
   [fields.yearReleased]: number;
   [fields.averageScore]: number;
-  [fields.collections]: string[];
+  [fields.collections]?: string[];
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
 };
 type MovieRecord = StringFields & NonStringFields & RecordBase;
+
+export type Collection = {
+  fullName: string;
+  emoji: string;
+  slug: string;
+};
 
 export type Movie = {
   tmdbId: string;
@@ -43,7 +49,7 @@ export type Movie = {
   slug: string;
   yearReleased: number;
   numWatches: number;
-  collections: string[];
+  collections?: Collection[];
   posterUrl: string;
   award?: AwardDetails;
 };
@@ -55,7 +61,12 @@ const materialize = (movieRow: MovieRecord): Movie => {
     slug: slugify(`${movieRow[fields.title]} ${movieRow[fields.yearReleased]}`),
     yearReleased: movieRow[fields.yearReleased],
     numWatches: movieRow[fields.numWatches],
-    collections: movieRow[fields.collections],
+    collections: movieRow[fields.collections]?.map((c) => ({
+      fullName: c,
+      // need to split the string to find the emoji, don't just take the first character
+      emoji: c.split(" ")[0],
+      slug: slugify(c),
+    })),
     posterUrl: `https://image.tmdb.org/t/p/w300${movieRow[fields.posterPath]}`,
   };
 

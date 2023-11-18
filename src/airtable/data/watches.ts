@@ -22,6 +22,7 @@ type NonStringFields = {
   [fields.rating]: number;
   [fields.isFirstWatch]: 0 | 1;
   [fields.movie]: [string];
+  [fields.notes]?: string;
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
@@ -41,7 +42,7 @@ export type Watch = LocalFields & ForeignKeyFields;
 
 const materialize = (watchRow: WatchRecord): LocalFields => ({
   rating: watchRow[fields.rating],
-  notes: watchRow[fields.notes],
+  notes: watchRow[fields.notes] ?? "",
   dateWatched: watchRow[fields.dateWatched],
   isFirstWatch: watchRow[fields.isFirstWatch] === 1,
 });

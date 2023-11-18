@@ -6,13 +6,16 @@ import { loadWatches, type Watch } from "../../airtable/data/watches";
 import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
+import { collectionPermalink } from "../../utils";
+import ExternalLink from "../../components/links/ExternalLink.astro";
 
 type Params = {
   movieSlug: string;
 };
 
-type Props = Movie & {
-  watches: Array<Omit<Watch, "movie">>;
+type Props = {
+  movie: Movie;
+  watches: Watch[];
 };
 
 // own row for weird export reasons
@@ -24,13 +27,12 @@ export const getStaticPaths = async (): Result => {
     const tmdbId = watch.movie.tmdbId;
     const movieRecord = result[tmdbId] as Props | undefined;
 
-    const { movie, ...movielessWatch } = watch;
     if (movieRecord) {
-      movieRecord.watches.push(movielessWatch);
+      movieRecord.watches.push(watch);
     } else {
       const item: Props = {
-        ...movie,
-        watches: [movielessWatch],
+        movie: watch.movie,
+        watches: [watch],
       };
       result[tmdbId] = item;
     }
@@ -39,13 +41,15 @@ export const getStaticPaths = async (): Result => {
   }, {});
 
   return Object.entries(movies).map(([_, props]) => ({
-    params: { movieSlug: props.slug },
+    params: { movieSlug: props.movie.slug },
     props,
   }));
 };
 
-const { title, watches, posterUrl, award, collections, yearReleased } =
-  Astro.props;
+const {
+  watches,
+  movie: { title, posterUrl, award, collections, yearReleased },
+} = Astro.props;
 ---
 
 <Layout title={title} active="movies">
@@ -67,16 +71,15 @@ const { title, watches, posterUrl, award, collections, yearReleased } =
         given it an average score of {
           watches.reduce((total, { rating }) => rating + total, 0) /
             watches.length
-        } (<a
-          class="text-blue-500 underline hover:text-blue-600"
-          target="_blank"
-          rel="noopener"
-          href="https://xavd.id/blog/post/on-the-rating-of-media/">out of 4</a
-        >).
+        } (<ExternalLink
+          href="https://xavd.id/blog/post/on-the-rating-of-media/"
+        >
+          {"out of 4"}
+        </ExternalLink>).
       </p>
       {award && <AwardBlurb {...award} />}
       {
-        collections.length && (
+        collections && (
           <div class="py-2">
             <p>This movie is part of the following collection(s):</p>
             <ul class="pt-2">
@@ -84,9 +87,9 @@ const { title, watches, posterUrl, award, collections, yearReleased } =
                 <li class="pb-2 pl-4">
                   <a
                     class="rounded bg-blue-200 p-1 hover:bg-blue-300"
-                    href="TKTK"
+                    href={collectionPermalink(collection.slug)}
                   >
-                    {collection}
+                    {collection.fullName}
                   </a>
                 </li>
               ))}

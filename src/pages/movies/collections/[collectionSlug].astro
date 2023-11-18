@@ -1,0 +1,145 @@
+---
+import type { Movie, Collection } from "../../../airtable/data/movies";
+import { loadWatches, type Watch } from "../../../airtable/data/watches";
+import ExternalLink from "../../../components/links/ExternalLink.astro";
+import Layout from "../../../layouts/Layout.astro";
+import { moviePermalink } from "../../../utils";
+import { Image } from "astro:assets";
+
+type Params = {
+  collectionSlug: string;
+};
+
+type MovieAndWatches = {
+  movie: Movie;
+  watches: Watch[];
+};
+type Props = {
+  collection: Collection;
+  movies: MovieAndWatches[];
+};
+
+// own row for weird export reasons
+type Result = Promise<Array<{ params: Params; props: Props }>>;
+export const getStaticPaths = async (): Result => {
+  const watches = await loadWatches();
+
+  const movies = watches.reduce<Record<string, MovieAndWatches>>(
+    (result, watch) => {
+      if (watch.movie.collections === undefined) {
+        return result;
+      }
+
+      const tmdbId = watch.movie.tmdbId;
+      const movieRecord = result[tmdbId] as MovieAndWatches | undefined;
+
+      if (movieRecord) {
+        movieRecord.watches.push(watch);
+      } else {
+        const item: MovieAndWatches = {
+          movie: watch.movie,
+          watches: [watch],
+        };
+        result[tmdbId] = item;
+      }
+
+      return result;
+    },
+    {},
+  );
+
+  const collections = Object.values(movies).reduce<Record<string, Props>>(
+    (result, movieWithWatches) => {
+      movieWithWatches.movie.collections?.forEach((collection) => {
+        const collectionRecord = result[collection.slug] as Props | undefined;
+
+        if (collectionRecord) {
+          collectionRecord.movies.push(movieWithWatches);
+        } else {
+          result[collection.slug] = {
+            collection,
+            movies: [movieWithWatches],
+          };
+        }
+      });
+
+      return result;
+    },
+    {},
+  );
+
+  return Object.entries(collections).map(([collectionSlug, props]) => ({
+    params: { collectionSlug },
+    props,
+  }));
+};
+
+const { movies, collection } = Astro.props;
+const sortedMovies = movies
+  .map(({ movie, watches }) => ({
+    title: movie.title,
+    avgRating: +(
+      watches.reduce((total, { rating }) => rating + total, 0) / watches.length
+    ).toFixed(2),
+    numWatches: watches.length,
+    permalink: moviePermalink(movie.slug),
+    posterUrl: movie.posterUrl,
+    // the longest review is probably the best one?
+    blurb: watches.reduce<string>((result, { notes }) => {
+      return result.length > notes.length ? result : notes;
+    }, ""),
+  }))
+  .toSorted((a, b) => b.numWatches - a.numWatches || b.avgRating - a.avgRating);
+---
+
+<Layout title={collection.fullName} active="movies">
+  <div class="py-3">
+    <h1 class="pt-2 text-2xl">
+      My Favorite <span class="rounded border-2 border-black p-1">
+        {collection.fullName}</span
+      >
+       Movies
+    </h1>
+    <p class="pt-2">
+      The {movies.length} movies below are some of my favories in this genre.
+      Whenever this season or mood arrives, items from this list are my go-to
+      comfort food. To qualify, a movie must be solidly in-genre <em
+        >and be highly rated (or purposefully bad)</em
+      >. Either way, these are the cream of their respective crop. Please <ExternalLink
+        href="https://xavd.id/contact"
+      >
+        {"Let me know"}
+      </ExternalLink> if you'd like to nominate an addition!
+    </p>
+  </div>
+  <div>
+    {
+      sortedMovies.map(
+        ({ title, avgRating, numWatches, permalink, posterUrl, blurb }) => (
+          <div class="mb-4 flex rounded border-2 border-red-500 p-2 even:bg-red-50">
+            <a slot="image" href={permalink}>
+              <Image
+                class="max-w-[unset]"
+                src={posterUrl}
+                alt={`poster for ${title}`}
+                height={187.5}
+                width={125}
+              />
+            </a>
+            <div class="pl-2">
+              <h3 class="inline text-xl font-bold text-blue-600 underline hover:bg-blue-100">
+                <a href={permalink}>{title}</a>
+              </h3>
+
+              <div>
+                Watched {numWatches} time{numWatches > 1 && "s"}
+              </div>
+              <div>Avg Rating: {avgRating}/4</div>
+              <p class="mt-2 border-l-2 border-red-500 pl-2 italic">{blurb}</p>
+            </div>
+          </div>
+        ),
+      )
+    }
+  </div>
+</Layout>

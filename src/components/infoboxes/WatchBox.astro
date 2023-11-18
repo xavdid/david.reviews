@@ -19,6 +19,7 @@ const permalink = moviePermalink(watch.movie.slug);
 <BaseBox type="movie" notes={watch.notes} rating={watch.rating}>
   <a slot="image" href={permalink}>
     <Image
+      class="max-w-[unset]"
       src={watch.movie.posterUrl}
       alt={`poster for ${watch.movie.title}`}
       height={187.5}
@@ -37,10 +38,9 @@ const permalink = moviePermalink(watch.movie.slug);
         <div class="inline px-1">{medals[watch.movie.award.tier]}</div>
       )
     }
-    <!-- Add collection link: TKTK -->
     {
       watch.movie.collections?.map((collection) => (
-        <div class="inline px-1">{collection.split(" ")[0]}</div>
+        <div class="inline px-1">{collection.emoji}</div>
       ))
     }
   </Fragment>

@@ -15,6 +15,12 @@ const watchesWithCounts = watches.map((watch) => {
     numWatch: watch.movie.numWatches - thisWatchNum,
   };
 });
+const collectionEmoji = new Set<string>(
+  watches
+    .map((w) => w.movie.collections?.map((c) => c.emoji))
+    .flat()
+    .filter(Boolean) as string[],
+);
 ---
 
 <Layout title="Movies!" active="movies">
@@ -30,9 +36,14 @@ const watchesWithCounts = watches.map((watch) => {
       the movie before.
     </li>
     <li>
+      {[...collectionEmoji].join(" / ")} -
+      <!-- link TKTK -->
+       Member of a collection.
+    </li>
+    <li>
       🥇 / 🥈 / 🥉 -
       <ExternalLink href="https://xavd.id/blog/tags/yearly-review">
-        Favorite of the Year
+        {"Favorite of the Year"}
       </ExternalLink> honoree.
     </li>
   </ul>
@@ -44,4 +55,3 @@ const watchesWithCounts = watches.map((watch) => {
     }
   </div>
 </Layout>
- ../../airtable/watches ../../airtable/data/watches
