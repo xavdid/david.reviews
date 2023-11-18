@@ -28,7 +28,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 
 # do a production build
 [no-exit-message]
-@build: validate clear-cache
+@build: validate clean
 	astro build
 
 [no-exit-message]
@@ -38,10 +38,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @test-watch:
   vitest watch
 
-# remove the build artifact
+# remove the build artifact & data cache
 @clean:
 	rm -rf dist
-
-# bust the dev cache
-@clear-cache:
 	rm -rf src/airtable/_cache
