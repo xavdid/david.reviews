@@ -1,4 +1,4 @@
-import type { Base, RecordBase } from "../types";
+import type { AirtableBase, RecordBase } from "../types";
 import { loadListedRecords } from "./common";
 import { loadMovies, type Movie } from "./movies";
 
@@ -14,7 +14,7 @@ const SCHEMA = {
     notes: "fldHCPMRJrOOiZxca",
     movie: "fldhAqjnIaBR90xr1",
   },
-} as const satisfies Base;
+} as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
 
 type FieldIds = (typeof fields)[keyof typeof fields];

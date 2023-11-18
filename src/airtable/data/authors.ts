@@ -1,6 +1,6 @@
 import slugify from "@sindresorhus/slugify";
 
-import { type Base, type RecordBase } from "../types";
+import { type AirtableBase, type RecordBase } from "../types";
 import { loadReferenceRecords } from "./common";
 
 const SCHEMA = {
@@ -10,7 +10,7 @@ const SCHEMA = {
   fields: {
     name: "fldKxzwvf9blINIWw",
   },
-} as const satisfies Base;
+} as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
 
 type FieldIds = (typeof fields)[keyof typeof fields];

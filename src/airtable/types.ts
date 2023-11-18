@@ -1,4 +1,4 @@
-export type Base = {
+export type AirtableBase = {
   baseId: `app${string}`;
   tableName: string;
   viewId: `viw${string}`;

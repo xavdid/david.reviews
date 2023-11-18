@@ -1,6 +1,6 @@
 import Airtable from "airtable";
 import { readCache, writeCache } from "../cache";
-import type { AwardTier, Base } from "../types";
+import type { AirtableBase, AwardTier } from "../types";
 
 export const isProdBuild = import.meta.env.MODE === "production";
 
@@ -15,7 +15,7 @@ const client = new Airtable({
 });
 
 const loadAllRecords = async <T>(
-  { baseId, tableName, fields, viewId }: Base,
+  { baseId, tableName, fields, viewId }: AirtableBase,
   { loadAll = false }: { loadAll?: boolean } = {},
 ): Promise<Array<{ recordId: string } & T>> => {
   const rawRecords = await client
@@ -47,7 +47,7 @@ export const loadReferenceRecords = async <
   MaterializedType,
   ForeignKeys extends keyof MaterializedType,
 >(
-  schema: Base,
+  schema: AirtableBase,
   materializer: (row: RecordType) => Omit<MaterializedType, ForeignKeys>,
   foreignKeyRelationships?: Array<{
     key: ForeignKeys;
@@ -128,7 +128,7 @@ export const loadListedRecords = async <
   MaterializedType,
   ForeignKeys extends keyof MaterializedType,
 >(
-  schema: Base,
+  schema: AirtableBase,
   materializer: (row: RecordType) => Omit<MaterializedType, ForeignKeys>,
   foreignKeyRelationships: Array<{
     key: ForeignKeys;

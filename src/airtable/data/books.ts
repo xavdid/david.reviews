@@ -1,6 +1,11 @@
 import slugify from "@sindresorhus/slugify";
 
-import type { AwardDetails, AwardTier, Base, RecordBase } from "../types";
+import type {
+  AirtableBase,
+  AwardDetails,
+  AwardTier,
+  RecordBase,
+} from "../types";
 import { loadAuthors, type Author } from "./authors";
 import { loadReferenceRecords } from "./common";
 import { loadSeries, type Series } from "./series";
@@ -10,7 +15,7 @@ const SCHEMA = {
   viewId: "viwaexsdFEWc0Hkew",
   tableName: "Books",
   fields: {
-    name: "fldbpYqMmVWPta1vH",
+    title: "fldbpYqMmVWPta1vH",
     gbid: "fldVZwAWk0INpKwvd",
     authors: "fld7cSq3WI1jyiAQ5",
     series: "fldpotcy2cUaEcs3c",
@@ -19,7 +24,7 @@ const SCHEMA = {
     awardAnchor: "fldhBsaMHcTbP6iYw",
     awardYear: "fld8n2g7b5pgtXPu5",
   },
-} as const satisfies Base;
+} as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
 
 type FieldIds = (typeof fields)[keyof typeof fields];
@@ -37,7 +42,7 @@ type StringFields = {
 type BookRecord = StringFields & NonStringFields & RecordBase;
 
 type LocalFields = {
-  name: string;
+  title: string;
   gbid: string;
   slug: string;
   award?: AwardDetails;
@@ -51,8 +56,8 @@ export type Book = LocalFields & ForeignKeyFields;
 
 const materialize = (bookRow: BookRecord): LocalFields => {
   const item: LocalFields = {
-    name: bookRow[fields.name],
-    slug: slugify(bookRow[fields.name]),
+    title: bookRow[fields.title],
+    slug: slugify(bookRow[fields.title]),
     gbid: bookRow[fields.gbid],
     numberInSeries: bookRow[fields.numberInSeries],
   };

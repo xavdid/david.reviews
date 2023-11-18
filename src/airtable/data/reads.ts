@@ -1,4 +1,4 @@
-import type { Base, RecordBase } from "../types";
+import type { AirtableBase, RecordBase } from "../types";
 import { loadBooks, type Book } from "./books";
 import { loadListedRecords } from "./common";
 
@@ -15,7 +15,7 @@ const SCHEMA = {
     medium: "fld00LRZuJkDXWMsg",
     book: "fldxbKcjUeeQG1e8G",
   },
-} as const satisfies Base;
+} as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
 
 type ReadMedium = "Paper" | "Digital" | "Audio";

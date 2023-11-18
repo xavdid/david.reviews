@@ -1,11 +1,13 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import type { Base } from "./types";
+import type { AirtableBase } from "./types";
 
 const buildCachePath = (table: string): URL =>
   new URL(`./_cache/${table}.json`, import.meta.url);
 
-export const readCache = async <T>({ tableName }: Base): Promise<T | null> => {
+export const readCache = async <T>({
+  tableName,
+}: AirtableBase): Promise<T | null> => {
   try {
     const data = await readFile(buildCachePath(tableName), "utf-8");
     return JSON.parse(data) as T;
@@ -19,7 +21,7 @@ export const readCache = async <T>({ tableName }: Base): Promise<T | null> => {
   }
 };
 export const writeCache = async (
-  { tableName }: Base,
+  { tableName }: AirtableBase,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any,
 ): Promise<void> => {

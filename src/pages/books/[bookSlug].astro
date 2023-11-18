@@ -46,21 +46,21 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { name, reads, series, award, authors, gbid, numberInSeries } =
+const { title, reads, series, award, authors, gbid, numberInSeries } =
   Astro.props;
 ---
 
-<Layout title={name} active="books">
+<Layout title={title} active="books">
   <div class="flex py-3">
     <Image
       src={`https://books.google.com/books/content/images/frontcover/${gbid}?fife=h225`}
-      alt={`poster for ${name}`}
+      alt={`poster for ${title}`}
       height={450 / 2}
       width={300 / 2}
       class="max-h-[225px] max-w-[150px]"
     />
     <div class="pl-3">
-      <h1 class="pt-2 text-2xl">{name}</h1>
+      <h1 class="pt-2 text-2xl">{title}</h1>
       <p class="pb-2">
         by <AuthorList authors={authors} style="rounded" />
       </p>

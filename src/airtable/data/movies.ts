@@ -1,6 +1,11 @@
 import slugify from "@sindresorhus/slugify";
 
-import type { AwardDetails, AwardTier, Base, RecordBase } from "../types";
+import type {
+  AirtableBase,
+  AwardDetails,
+  AwardTier,
+  RecordBase,
+} from "../types";
 import { loadReferenceRecords } from "./common";
 
 const SCHEMA = {
@@ -19,7 +24,7 @@ const SCHEMA = {
     averageScore: "fldEFOtQZiXwUxDRf",
     posterPath: "fldRZ4cnbzJNVVoHq",
   },
-} as const satisfies Base;
+} as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
 
 type FieldIds = (typeof fields)[keyof typeof fields];
