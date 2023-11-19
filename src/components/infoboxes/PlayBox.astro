@@ -1,0 +1,52 @@
+---
+import { Image } from "astro:assets";
+
+import { medals } from "../../airtable/data/common";
+import type { Play } from "../../airtable/data/plays";
+import { gamePermalink, minutesToDuration } from "../../utils";
+import TitleLink from "../links/TitleLink.astro";
+import BaseBox from "./BaseBox.astro";
+
+type Props = {
+  play: Play;
+};
+const { play } = Astro.props;
+
+const permalink = gamePermalink(play.game.slug);
+---
+
+<BaseBox type="game" notes={play.notes} rating={play.rating}>
+  <a slot="image" href={permalink}>
+    <Image
+      class="max-w-[unset]"
+      src={play.game.posterUrl}
+      alt={`poster for ${play.game.title}`}
+      height={160}
+      width={120}
+    /></a
+  >
+
+  <span slot="title">
+    <TitleLink href={permalink}>{play.game.title}</TitleLink>
+  </span>
+
+  <div class="text-end" slot="subtitle">
+    <span class="inline-block border-b-2 border-l-2 border-blue-600 px-1">
+      {play.game.genre}</span
+    >
+  </div>
+
+  <Fragment slot="icons">
+    {
+      play.game.award && (
+        <div class="inline px-1">{medals[play.game.award.tier]}</div>
+      )
+    }
+    {play.playType !== "First Time" && <div class="inline px-1">🔁</div>}
+  </Fragment>
+
+  <Fragment slot="footer">
+    <span>{play.dateFinished}</span>
+    <span>{minutesToDuration(play.minutesPlayed)}</span>
+  </Fragment>
+</BaseBox>

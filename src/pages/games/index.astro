@@ -1,0 +1,29 @@
+---
+import { loadPlays } from "../../airtable/data/plays";
+import PlayBox from "../../components/infoboxes/PlayBox.astro";
+import ExternalLink from "../../components/links/ExternalLink.astro";
+import Layout from "../../layouts/Layout.astro";
+
+const plays = await loadPlays();
+const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
+---
+
+<Layout title="Games!" active="games">
+  <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Game</h1>
+  <p class="pb-3">
+    There are {plays.length} total reviews of {numUniqueGames}
+     games (which includes replays, separate DLC plays, etc).
+  </p>
+  <ul class="mb-3 rounded bg-sky-50 p-2">
+    <li>🔁 - Re-play</li>
+    <li>
+      🥇 / 🥈 / 🥉 -
+      <ExternalLink href="https://xavd.id/blog/tags/yearly-review">
+        {"Favorite of the Year"}
+      </ExternalLink> honoree.
+    </li>
+  </ul>
+  <div>
+    {plays.map((play) => <PlayBox play={play} />)}
+  </div>
+</Layout>
