@@ -6,6 +6,7 @@ import type { Play } from "../../airtable/data/plays";
 import { gamePermalink, minutesToDuration } from "../../utils";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
+import SubtleLink from "../links/SubtleLink.astro";
 
 type Props = {
   play: Play;
@@ -30,10 +31,12 @@ const permalink = gamePermalink(play.game.slug);
     <TitleLink href={permalink}>{play.game.title}</TitleLink>
   </span>
 
-  <div class="text-end" slot="subtitle">
-    <span class="inline-block border-b-2 border-l-2 border-blue-600 px-1">
-      {play.game.genre}</span
-    >
+  <div
+    class="flex justify-around border-b-2 border-l-2 border-blue-600 px-2"
+    slot="subtitle"
+  >
+    <span><SubtleLink href="TKTK">{play.game.genre}</SubtleLink></span>
+    <span>{play.playType}</span>
   </div>
 
   <Fragment slot="icons">
@@ -42,7 +45,6 @@ const permalink = gamePermalink(play.game.slug);
         <div class="inline px-1">{medals[play.game.award.tier]}</div>
       )
     }
-    {play.playType !== "First Time" && <div class="inline px-1">🔁</div>}
   </Fragment>
 
   <Fragment slot="footer">

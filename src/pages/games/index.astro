@@ -11,11 +11,11 @@ const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
 <Layout title="Games!" active="games">
   <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Game</h1>
   <p class="pb-3">
-    There are {plays.length} total reviews of {numUniqueGames}
-     games (which includes replays, separate DLC plays, etc).
+    There are {plays.length} reviews of {numUniqueGames}
+     games. Each game notes a simple genre and play type (first time, replays,
+    DLC, etc).
   </p>
   <ul class="mb-3 rounded bg-sky-50 p-2">
-    <li>🔁 - Re-play</li>
     <li>
       🥇 / 🥈 / 🥉 -
       <ExternalLink href="https://xavd.id/blog/tags/yearly-review">
