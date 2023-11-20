@@ -50,9 +50,9 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
     Reviews for {name}
   </h1>
   <p class="pb-3">
-    There are {reads.length} total reviews of {numUniqueBooks} book{
-      reads.length > 1 && "s"
-    } by {name}.
+    There {reads.length > 1 ? "are" : "is"}{" "}
+    {reads.length} review{reads.length > 1 && "s"} of {numUniqueBooks}
+     book{reads.length > 1 && "s"}.
   </p>
   <BookLegend />
   <div>

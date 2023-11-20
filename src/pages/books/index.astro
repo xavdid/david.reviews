@@ -12,7 +12,7 @@ const numUniqueBooks = new Set(rawReviews.map((r) => r.book.gbid)).size;
 <Layout title="Books!" active="books">
   <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Book</h1>
   <p class="pb-3">
-    There are {rawReviews.length} total reviews of {numUniqueBooks} books.
+    There are {rawReviews.length} reviews of {numUniqueBooks} books.
   </p>
   <BookLegend />
   <div>

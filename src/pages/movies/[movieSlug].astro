@@ -67,8 +67,8 @@ const {
         Originally released in {yearReleased}.
       </p>
       <p class="pr-2 pt-2">
-        I've watched this {watches.length} time{watches.length > 1 && "s"} and
-        given it an average score of {
+        I've watched this movie {watches.length} time{watches.length > 1 && "s"}
+         and given it an average score of {
           watches.reduce((total, { rating }) => rating + total, 0) /
             watches.length
         } (<ExternalLink
@@ -106,21 +106,19 @@ const {
         const notActuallyFirstWatch = watchNumber === 1 && !isFirstWatch;
 
         return (
-          <Fragment>
-            <div class="mb-4 rounded border-2 border-red-500 even:bg-red-50">
-              <div class="flex justify-between border-b-2 border-red-500 px-2">
-                <span>{dateWatched}</span>
-                <span>
-                  Watch #{watches.length - index}
-                  {notActuallyFirstWatch && "*"}
-                </span>
-                <div>
-                  <Rating rating={rating} />
-                </div>
+          <div class="mb-4 rounded border-2 border-red-500 even:bg-red-50">
+            <div class="flex justify-between border-b-2 border-red-500 px-2">
+              <span>{dateWatched}</span>
+              <span>
+                Watch #{watches.length - index}
+                {notActuallyFirstWatch && "*"}
+              </span>
+              <div>
+                <Rating rating={rating} />
               </div>
-              <p class="p-2">{notes || <em>no review</em>}</p>
             </div>
-          </Fragment>
+            <p class="p-2">{notes || <em>no review</em>}</p>
+          </div>
         );
       })
     }
