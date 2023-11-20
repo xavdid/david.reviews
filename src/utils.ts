@@ -6,6 +6,7 @@ export const moviePermalink = (slug: string): string => `/movies/${slug}`;
 export const collectionPermalink = (slug: string): string =>
   `/movies/collections/${slug}`;
 export const gamePermalink = (slug: string): string => `/games/${slug}`;
+export const genrePermalink = (slug: string): string => `/games/genres/${slug}`;
 export const minutesToDuration = (totalMinutes: number): string => {
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes - hours * 60;

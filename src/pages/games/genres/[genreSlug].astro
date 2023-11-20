@@ -1,0 +1,133 @@
+---
+import slugify from "@sindresorhus/slugify";
+import { Image } from "astro:assets";
+import { type Game } from "../../../airtable/data/games";
+import { loadPlays, type Play } from "../../../airtable/data/plays";
+import Layout from "../../../layouts/Layout.astro";
+import { gamePermalink } from "../../../utils";
+import Rating from "../../../components/Rating.astro";
+
+type Params = {
+  genreSlug: string;
+};
+
+type GameAndPlays = {
+  game: Game;
+  plays: Play[];
+};
+type Props = {
+  genre: { name: string; slug: string };
+  games: GameAndPlays[];
+};
+
+// own row for weird export reasons
+type Result = Promise<Array<{ params: Params; props: Props }>>;
+export const getStaticPaths = async (): Result => {
+  const plays = await loadPlays();
+
+  const games = plays.reduce<Record<string, GameAndPlays>>((result, play) => {
+    // these shouldn't count towards an average score
+    if (play.playType !== "First Time") {
+      return result;
+    }
+
+    const igdbId = play.game.igdbId;
+    const gameRecord = result[igdbId] as GameAndPlays | undefined;
+
+    if (gameRecord) {
+      gameRecord.plays.push(play);
+    } else {
+      const item: GameAndPlays = {
+        game: play.game,
+        plays: [play],
+      };
+      result[igdbId] = item;
+    }
+
+    return result;
+  }, {});
+
+  const genres = Object.values(games).reduce<Record<string, Props>>(
+    (result, gameWithPlays) => {
+      const genreSlug = slugify(gameWithPlays.game.genre);
+      const genreRecord = result[genreSlug] as Props | undefined;
+
+      if (genreRecord) {
+        genreRecord.games.push(gameWithPlays);
+      } else {
+        result[genreSlug] = {
+          genre: { name: gameWithPlays.game.genre, slug: genreSlug },
+          games: [gameWithPlays],
+        };
+      }
+
+      return result;
+    },
+    {},
+  );
+
+  return Object.entries(genres).map(([genreSlug, props]) => ({
+    params: { genreSlug },
+    props,
+  }));
+};
+
+const { games, genre } = Astro.props;
+const processedGames = games
+  .map(({ game, plays }) => ({
+    title: game.title,
+    rating: plays[0].rating,
+    permalink: gamePermalink(game.slug),
+    posterUrl: game.posterUrl,
+    dateFinished: plays[0].dateFinished,
+    // the longest review is probably the best one?
+    blurb: plays.reduce<string>((result, { notes }) => {
+      return result.length > notes.length ? result : notes;
+    }, ""),
+  }))
+  .toSorted(
+    (a, b) =>
+      new Date(b.dateFinished).valueOf() - new Date(a.dateFinished).valueOf(),
+  );
+---
+
+<Layout title={genre.name} active="games">
+  <div class="py-3">
+    <h1 class="pt-2 text-2xl">
+      <span class="rounded border-2 border-black p-1"> {genre.name}</span>
+       Games I've Played
+    </h1>
+    <p class="pt-2">
+      I categorize games with TKTK as "{genre.name}" games. I've played {
+        games.length
+      } of them so far.
+    </p>
+  </div>
+  <div>
+    {
+      processedGames.map(({ title, rating, permalink, posterUrl, blurb }) => (
+        <div class="mb-4 flex rounded border-2 border-blue-500 p-2 even:bg-blue-50">
+          <a href={permalink}>
+            <Image
+              class="max-w-[unset]"
+              src={posterUrl}
+              alt={`poster for ${title}`}
+              height={187.5}
+              width={125}
+            />
+          </a>
+          <div class="pl-4">
+            <h3 class="inline text-xl font-bold text-blue-600 underline hover:bg-blue-100">
+              <a href={permalink}>{title}</a>
+            </h3>
+
+            <div class="pt-1">
+              <Rating rating={rating} />
+            </div>
+            <p class="mt-2 border-l-2 border-blue-500 pl-2 italic">{blurb}</p>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</Layout>

@@ -5,10 +5,11 @@ import type { Game } from "../../airtable/data/games";
 import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
-import { minutesToDuration } from "../../utils";
+import { genrePermalink, minutesToDuration } from "../../utils";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import { loadPlays, type Play } from "../../airtable/data/plays";
 import RoundedLink from "../../components/links/RoundedLink.astro";
+import slugify from "@sindresorhus/slugify";
 
 type Params = {
   gameSlug: string;
@@ -65,7 +66,9 @@ const {
     <div class="pl-3">
       <h1 class="pt-2 text-2xl">{title}</h1>
       <p class="pt-2">
-        I've categorized this as a <RoundedLink href="TKTK">
+        I've categorized this as a <RoundedLink
+          href={genrePermalink(slugify(genre))}
+        >
           {genre}
         </RoundedLink> game.
       </p>

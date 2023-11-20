@@ -3,10 +3,11 @@ import { Image } from "astro:assets";
 
 import { medals } from "../../airtable/data/common";
 import type { Play } from "../../airtable/data/plays";
-import { gamePermalink, minutesToDuration } from "../../utils";
+import { gamePermalink, minutesToDuration, genrePermalink } from "../../utils";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
 import SubtleLink from "../links/SubtleLink.astro";
+import slugify from "@sindresorhus/slugify";
 
 type Props = {
   play: Play;
@@ -35,7 +36,11 @@ const permalink = gamePermalink(play.game.slug);
     class="flex justify-around border-b-2 border-l-2 border-blue-600 px-2"
     slot="subtitle"
   >
-    <span><SubtleLink href="TKTK">{play.game.genre}</SubtleLink></span>
+    <span
+      ><SubtleLink href={genrePermalink(slugify(play.game.genre))}>
+        {play.game.genre}
+      </SubtleLink></span
+    >
     <span>{play.playType}</span>
   </div>
 
