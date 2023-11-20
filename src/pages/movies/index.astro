@@ -2,7 +2,9 @@
 import { loadWatches } from "../../airtable/data/watches";
 import WatchBox from "../../components/infoboxes/WatchBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
+import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
+import { collectionPermalink } from "../../utils";
 
 const watches = await loadWatches();
 const watchCounts: Record<string, number> = {};
@@ -36,9 +38,11 @@ const collectionEmoji = new Set<string>(
       the movie before.
     </li>
     <li>
-      {[...collectionEmoji].join(" / ")} -
-      <!-- link TKTK -->
-       Member of a collection.
+      {[...collectionEmoji].join(" / ")} - Member of a <RoundedLink
+        href={collectionPermalink("")}
+      >
+        {"collection"}
+      </RoundedLink>.
     </li>
     <li>
       🥇 / 🥈 / 🥉 -
