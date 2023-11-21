@@ -2,7 +2,9 @@
 import { loadPlays } from "../../airtable/data/plays";
 import PlayBox from "../../components/infoboxes/PlayBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
+import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
+import { genrePermalink } from "../../utils";
 
 const plays = await loadPlays();
 const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
@@ -10,10 +12,16 @@ const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
 
 <Layout title="Games!" active="games">
   <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Game</h1>
-  <p class="pb-3">
+  <p class="py-2">
     There are {plays.length} reviews of {numUniqueGames}
      games. Each game notes a simple genre and play type (first time, replays,
     DLC, etc).
+  </p>
+  <p class="py-2">
+    Each game notes its <RoundedLink href={genrePermalink("")}>
+      {"genre"}
+    </RoundedLink>, and you can click through to see all the others games from
+    that genre I've played.
   </p>
   <ul class="mb-3 rounded bg-sky-50 p-2">
     <li>

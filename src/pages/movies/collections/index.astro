@@ -38,7 +38,7 @@ const collections = Object.values(movies).reduce<
       watch.
     </p>
   </div>
-  <ul class="list-disc">
+  <ul class="list-disc pl-4">
     {
       Object.values(collections)
         .toSorted((a, b) => b.movies.size - a.movies.size)
@@ -47,7 +47,7 @@ const collections = Object.values(movies).reduce<
             <RoundedLink href={collectionPermalink(collection.slug)}>
               {collection.fullName}
             </RoundedLink>
-            {/* these counts may not match the page in dev, sicne it tracks watches and this tracks movies */}
+            {/* these counts may not match the page in dev, since it tracks watches and this tracks movies */}
             - {movies.size} movies
           </li>
         ))

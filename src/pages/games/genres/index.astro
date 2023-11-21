@@ -1,5 +1,61 @@
 ---
+import slugify from "@sindresorhus/slugify";
+import { loadGames, GENRE_DESCRIPTIONS } from "../../../airtable/data/games";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
+import Layout from "../../../layouts/Layout.astro";
+import { genrePermalink } from "../../../utils";
 
+const games = await loadGames();
+
+type GenreRecord = {
+  genre: { name: string; slug: string };
+  games: Set<string>;
+};
+
+const genres = Object.values(games).reduce<Record<string, GenreRecord>>(
+  (result, game) => {
+    const genreSlug = slugify(game.genre);
+
+    const genreRecord = result[genreSlug] as GenreRecord | undefined;
+
+    if (genreRecord) {
+      genreRecord.games.add(game.igdbId);
+    } else {
+      result[genreSlug] = {
+        genre: { name: game.genre, slug: genreSlug },
+        games: new Set([game.igdbId]),
+      };
+    }
+
+    return result;
+  },
+  {},
+);
 ---
 
-ok
+<Layout title="Collections" active="games">
+  <div class="py-3">
+    <h1 class="pt-2 text-2xl">Game Genres</h1>
+    <p class="pt-2">
+      I categorize games I've played into into a basic genre based on their core
+      gameplay loop. It's not an exact science, but it helps ensure I'm not
+      playing a bunch of the same style of game in a row. The genres are as
+      follows:
+    </p>
+  </div>
+  <ul class="list-disc pl-4">
+    {
+      Object.values(genres)
+        .toSorted((a, b) => b.games.size - a.games.size)
+        .map(({ genre, games }) => (
+          <li class="py-2">
+            <RoundedLink href={genrePermalink(genre.slug)}>
+              {genre.name}
+            </RoundedLink>
+            games ({games.size} play{games.size > 1 && "s"}) are categorized by{" "}
+            {GENRE_DESCRIPTIONS[genre.slug] ?? "MISSING GENRE DESCRIPTION!"}
+          </li>
+        ))
+    }
+  </ul>
+</Layout>

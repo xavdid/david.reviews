@@ -85,7 +85,7 @@ export const GENRE_DESCRIPTIONS: Record<string, `${string}.`> = {
     "large, interconnected maps and progression blocked by ability acquisition.",
   "open-world":
     "self-directed story progression and (probably) many icons placed on a map.",
-  platformer: "running and jumping while trying not to fall off.",
+  platformer: "running and jumping while trying not to fall off something.",
   programming: "puzzles, but with a focus on algorithms or actual code.",
   punching:
     "combat where pressing a button corresponds to throwing a punch or swinging a sword. Most action games fall into this category.",
