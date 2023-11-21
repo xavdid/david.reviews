@@ -116,7 +116,7 @@ const sortedMovies = movies
     {
       sortedMovies.map(
         ({ title, avgRating, numWatches, permalink, posterUrl, blurb }) => (
-          <div class="mb-4 flex rounded border-2 border-red-500 p-2 even:bg-red-50">
+          <div class="mb-4 flex rounded border-2 border-red-600 p-2 even:bg-red-50">
             <a slot="image" href={permalink}>
               <Image
                 class="max-w-[unset]"
@@ -135,7 +135,7 @@ const sortedMovies = movies
                 Watched {numWatches} time{numWatches > 1 && "s"}
               </div>
               <div>Avg Rating: {avgRating}/4</div>
-              <p class="mt-2 border-l-2 border-red-500 pl-2 italic">{blurb}</p>
+              <p class="mt-2 border-l-2 border-red-600 pl-2 italic">{blurb}</p>
             </div>
           </div>
         ),

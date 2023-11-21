@@ -9,11 +9,29 @@ type Props = {
 
 const { active } = Astro.props;
 
-const navStyles = ["ml-2", "p-1", "md:ml-4", "md:p-2", "text-l", "md:text-xl"];
-const iconStyles = ["inline h-6 pr-1"];
+const buttonStyles = [
+  "text-center", // centers the svg
+  "mx-1",
+  "md:mx-2",
+  "last:mr-0",
+  "p-1",
+  "md:p-2",
+  "text-l",
+  "md:text-xl",
+];
+const iconStyles = ["inline h-6 md:pr-1"];
 ---
 
-<nav class="flex items-center border-b-2 border-sky-500">
+<nav
+  class:list={[
+    "flex items-center border-b-2",
+    {
+      "border-blue-600": active === "games",
+      "border-red-600": active === "movies",
+      "border-emerald-600": active === "books",
+    },
+  ]}
+>
   <h2 class="pl-2 text-xl md:text-2xl">
     <a class="hover:underline" href="/">david.reviews</a>:
   </h2>
@@ -21,7 +39,7 @@ const iconStyles = ["inline h-6 pr-1"];
   <a
     href="/games"
     class:list={[
-      navStyles,
+      buttonStyles,
       "fill-blue-600",
       "hover:shadow-insetGame",
       { "bg-blue-600 fill-white text-white": active === "games" },
@@ -32,7 +50,7 @@ const iconStyles = ["inline h-6 pr-1"];
   <a
     href="/movies"
     class:list={[
-      navStyles,
+      buttonStyles,
       "fill-red-600",
       "hover:shadow-insetMovie",
       {
@@ -45,7 +63,7 @@ const iconStyles = ["inline h-6 pr-1"];
   <a
     href="/books"
     class:list={[
-      navStyles,
+      buttonStyles,
       "fill-emerald-600",
       "hover:shadow-insetBook",
       { "bg-emerald-600 fill-white text-white": active === "books" },

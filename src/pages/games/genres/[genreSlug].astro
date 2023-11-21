@@ -106,7 +106,7 @@ const processedGames = games
   <div>
     {
       processedGames.map(({ title, rating, permalink, posterUrl, blurb }) => (
-        <div class="mb-4 flex rounded border-2 border-blue-500 p-2 even:bg-blue-50">
+        <div class="mb-4 flex rounded border-2 border-blue-600 p-2 even:bg-blue-50">
           <a href={permalink}>
             <Image
               class="max-w-[unset]"
@@ -124,7 +124,7 @@ const processedGames = games
             <div class="pt-1">
               <Rating rating={rating} />
             </div>
-            <p class="mt-2 border-l-2 border-blue-500 pl-2 italic">{blurb}</p>
+            <p class="mt-2 border-l-2 border-blue-600 pl-2 italic">{blurb}</p>
           </div>
         </div>
       ))
