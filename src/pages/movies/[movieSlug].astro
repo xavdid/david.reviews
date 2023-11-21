@@ -48,7 +48,7 @@ export const getStaticPaths = async (): Result => {
 
 const {
   watches,
-  movie: { title, posterUrl, award, collections, yearReleased },
+  movie: { title, posterUrl, award, collections, yearReleased, numWatches },
 } = Astro.props;
 ---
 
@@ -102,7 +102,7 @@ const {
   <div>
     {
       watches.map(({ dateWatched, rating, notes, isFirstWatch }, index) => {
-        const watchNumber = watches.length - index;
+        const watchNumber = numWatches - index;
         const notActuallyFirstWatch = watchNumber === 1 && !isFirstWatch;
 
         return (
@@ -110,7 +110,7 @@ const {
             <div class="flex justify-between border-b-2 border-red-600 px-2">
               <span>{dateWatched}</span>
               <span>
-                Watch #{watches.length - index}
+                Watch #{watchNumber}
                 {notActuallyFirstWatch && "*"}
               </span>
               <div>
@@ -123,4 +123,13 @@ const {
       })
     }
   </div>
+
+  {
+    !watches[watches.length - 1].isFirstWatch && (
+      <p>
+        * this is my first <em>logged</em> watch, but I had seen the movie
+        before.
+      </p>
+    )
+  }
 </Layout>
