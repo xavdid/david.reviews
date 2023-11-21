@@ -1,7 +1,7 @@
 ---
 import slugify from "@sindresorhus/slugify";
 import { Image } from "astro:assets";
-import { type Game } from "../../../airtable/data/games";
+import { type Game, GENRE_DESCRIPTIONS } from "../../../airtable/data/games";
 import { loadPlays, type Play } from "../../../airtable/data/plays";
 import Layout from "../../../layouts/Layout.astro";
 import { gamePermalink } from "../../../utils";
@@ -98,9 +98,9 @@ const processedGames = games
        Games I've Played
     </h1>
     <p class="pt-2">
-      I categorize games with TKTK as "{genre.name}" games. I've played {
-        games.length
-      } of them so far.
+      {genre.name} games are categorized by a primary gameplay loop of {
+        GENRE_DESCRIPTIONS[genre.slug] ?? "MISSING GENRE DESCRIPTION!"
+      } I've played {games.length} games in this genre so far.
     </p>
   </div>
   <div>

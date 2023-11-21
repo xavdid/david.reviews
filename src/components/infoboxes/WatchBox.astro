@@ -16,7 +16,12 @@ const { watch, numWatch } = Astro.props;
 const permalink = moviePermalink(watch.movie.slug);
 ---
 
-<BaseBox type="movie" notes={watch.notes} rating={watch.rating}>
+<BaseBox
+  type="movie"
+  notes={watch.notes}
+  rating={watch.rating}
+  shrinkFooterText
+>
   <a slot="image" href={permalink}>
     <Image
       class="max-w-[unset]"
@@ -46,9 +51,11 @@ const permalink = moviePermalink(watch.movie.slug);
   </Fragment>
 
   <Fragment slot="footer">
-    <span>
-      <span class="hidden md:inline">Watched on:{" "}</span>{watch.dateWatched}
-    </span>
-    <span>Watch #{numWatch}{numWatch === 1 && !watch.isFirstWatch && "*"}</span>
+    <span>{watch.dateWatched}</span>
+    <span
+      ><span class="hidden md:inline">Watch{" "}</span>#{numWatch}{
+        numWatch === 1 && !watch.isFirstWatch && "*"
+      }</span
+    >
   </Fragment>
 </BaseBox>

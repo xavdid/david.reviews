@@ -32,16 +32,13 @@ const permalink = gamePermalink(play.game.slug);
     <TitleLink href={permalink}>{play.game.title}</TitleLink>
   </span>
 
-  <div
-    class="flex justify-around border-b-2 border-l-2 border-blue-600 px-2"
-    slot="subtitle"
-  >
+  <div class="text-center md:text-end" slot="subtitle">
     <span
+      class="block border-b-2 border-l-2 border-blue-600 px-2 md:inline-block"
       ><SubtleLink href={genrePermalink(slugify(play.game.genre))}>
         {play.game.genre}
       </SubtleLink></span
     >
-    <span>{play.playType}</span>
   </div>
 
   <Fragment slot="icons">
@@ -54,6 +51,7 @@ const permalink = gamePermalink(play.game.slug);
 
   <Fragment slot="footer">
     <span>{play.dateFinished}</span>
+    <span>{play.playType}</span>
     <span>{minutesToDuration(play.minutesPlayed)}</span>
   </Fragment>
 </BaseBox>

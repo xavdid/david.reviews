@@ -46,7 +46,7 @@ export type Read = LocalFields & ForeignKeyFields;
 
 const materialize = (readRow: ReadRecord): LocalFields => ({
   rating: readRow[fields.rating],
-  notes: readRow[fields.notes],
+  notes: readRow[fields.notes] ?? "",
   dateFinished: readRow[fields.dateFinished],
   isReread: readRow[fields.isReread],
   medium: readRow[fields.medium],

@@ -7,18 +7,15 @@ type Props = {
   classes?: string[];
 };
 
-const { rating, classes = ["mb-[0.25em]", "h-4"] } = Astro.props;
+const { rating } = Astro.props;
+const classes = "mb-[0.25em] h-4 inline";
 ---
 
-<div>
-  {
-    Array.from({ length: rating }).map(() => (
-      <StarFilled classes={["inline", classes]} />
-    ))
-  }
+<div class="whitespace-nowrap">
+  {Array.from({ length: rating }).map(() => <StarFilled classes={[classes]} />)}
   {
     Array.from({ length: 4 - rating }).map(() => (
-      <StarEmpty classes={["inline", classes]} />
+      <StarEmpty classes={[classes]} />
     ))
   }
 </div>

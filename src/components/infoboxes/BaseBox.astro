@@ -8,6 +8,7 @@ type Props = {
   type: "book" | "movie" | "game";
   notes: string;
   rating: number;
+  shrinkFooterText?: boolean;
 };
 
 const configs: {
@@ -38,7 +39,7 @@ const configs: {
   },
 } as const;
 
-const { type, notes, rating } = Astro.props;
+const { type, notes, rating, shrinkFooterText } = Astro.props;
 const {
   icon: IconComponent,
   fillColor,
@@ -82,8 +83,9 @@ const {
     {/* footer area */}
     <div
       class:list={[
-        "flex justify-between border-l-2 border-t-2 px-2",
+        "flex flex-wrap justify-between border-l-2 border-t-2 px-2",
         borderColor,
+        shrinkFooterText && "text-sm md:text-base",
       ]}
     >
       <slot name="footer" />
