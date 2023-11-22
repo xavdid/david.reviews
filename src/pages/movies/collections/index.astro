@@ -29,7 +29,14 @@ const collections = Object.values(movies).reduce<
 }, {});
 ---
 
-<Layout title="Collections" active="movies">
+<Layout
+  pageTitle={`All Movie Collections`}
+  seoTitle={"All Movie Collections"}
+  seoDescription={`A list of the ${
+    Object.keys(collections).length
+  } the curated movie collections I've built.`}
+  activeTab="movies"
+>
   <div class="py-3">
     <h1 class="pt-2 text-2xl">Movie Collections</h1>
     <p class="pt-2">

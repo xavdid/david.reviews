@@ -3,7 +3,7 @@ import type { Movie, Collection } from "../../../airtable/data/movies";
 import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { moviePermalink } from "../../../utils";
+import { moviePermalink, seoTitle } from "../../../utils";
 import { Image } from "astro:assets";
 
 type Params = {
@@ -92,7 +92,12 @@ const sortedMovies = movies
   .toSorted((a, b) => b.numWatches - a.numWatches || b.avgRating - a.avgRating);
 ---
 
-<Layout title={collection.fullName} active="movies">
+<Layout
+  pageTitle={`${collection.fullName} Movies`}
+  seoTitle={seoTitle(`${collection.fullName} Movies`)}
+  seoDescription={`David's collection of his ${movies.length} favorite ${collection.fullName} movies.`}
+  activeTab="movies"
+>
   <div class="py-3">
     <h1 class="pt-2 text-2xl">
       My Favorite <span class="rounded border-2 border-black p-1">

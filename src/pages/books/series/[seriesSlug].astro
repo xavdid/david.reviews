@@ -5,6 +5,7 @@ import AuthorList from "../../../components/AuthorList.astro";
 import BookLegend from "../../../components/BookLegend.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import Layout from "../../../layouts/Layout.astro";
+import { seoTitle } from "../../../utils";
 
 type Params = {
   seriesSlug: string;
@@ -47,7 +48,14 @@ const { reads, name } = Astro.props;
 const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 ---
 
-<Layout title={`${name} - Reviews`} active="books">
+<Layout
+  pageTitle={`${name} Series - Books`}
+  seoTitle={seoTitle(`The ${name} Series`)}
+  seoDescription={`David shares thoughts about the ${numUniqueBooks} book${
+    numUniqueBooks > 1 ? "s" : ""
+  } he's read from the ${name} series.`}
+  activeTab="books"
+>
   <h1 class="pt-2 text-2xl">
     All reviews for The {name} series
   </h1>

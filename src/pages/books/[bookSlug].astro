@@ -8,7 +8,7 @@ import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
-import { seriesPermalnk } from "../../utils";
+import { seoTitle, seriesPermalnk } from "../../utils";
 
 type Params = {
   bookSlug: string;
@@ -50,7 +50,14 @@ const { title, reads, series, award, authors, gbid, numberInSeries } =
   Astro.props;
 ---
 
-<Layout title={title} active="books">
+<Layout
+  pageTitle={`${title} - Books`}
+  seoTitle={seoTitle(title)}
+  seoDescription={`David shares thoughts about the ${reads.length} time${
+    reads.length > 1 ? "s" : ""
+  } he's read ${title}, by ${authors.join(", ")}.`}
+  activeTab="books"
+>
   <div class="flex py-3">
     <Image
       src={`https://books.google.com/books/content/images/frontcover/${gbid}?fife=h225`}

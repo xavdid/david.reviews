@@ -1,12 +1,45 @@
 ---
+import { SEO, type Props as SEOProps } from "astro-seo";
+
 import Navbar from "../components/Navbar.astro";
 
 type Props = {
-  title: string;
-  active?: "games" | "movies" | "books";
+  pageTitle: string; // shown in the tab
+  seoTitle: string; // shown in the OG embed
+  seoDescription: `${string}.`;
+  activeTab?: "games" | "movies" | "books";
 };
 
-const { title, active } = Astro.props;
+const {
+  activeTab,
+  pageTitle: title,
+  seoTitle,
+  seoDescription: description,
+} = Astro.props;
+
+const groupedSeo: SEOProps = {
+  title,
+  titleTemplate: "%s | david.reviews",
+  description,
+  openGraph: {
+    basic: {
+      title: seoTitle,
+      type: "website",
+      // TODO: fix
+      image: "https://advent-of-code.xavd.id/python-ascii-banner.png",
+    },
+    optional: {
+      siteName: "david.reviews",
+    },
+    // TODO: fix
+    image: {
+      type: "image/png",
+      width: 1920,
+      height: 1080,
+      alt: "An ASCII image of a Christmas tree and the Python logo, plus the words 'Advent of Code'",
+    },
+  },
+};
 ---
 
 <!doctype html>
@@ -21,10 +54,11 @@ const { title, active } = Astro.props;
       type="image/x-icon"
     />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | david.reviews</title>
+
+    <SEO {...groupedSeo} />
   </head>
   <body>
-    <Navbar active={active} />
+    <Navbar active={activeTab} />
     <main class="mx-auto max-w-[95%] pb-4 md:max-w-xl">
       <slot />
     </main>

@@ -4,7 +4,7 @@ import { Image } from "astro:assets";
 import { type Game, GENRE_DESCRIPTIONS } from "../../../airtable/data/games";
 import { loadPlays, type Play } from "../../../airtable/data/plays";
 import Layout from "../../../layouts/Layout.astro";
-import { gamePermalink } from "../../../utils";
+import { gamePermalink, seoTitle } from "../../../utils";
 import Rating from "../../../components/Rating.astro";
 
 type Params = {
@@ -91,7 +91,14 @@ const processedGames = games
   );
 ---
 
-<Layout title={genre.name} active="games">
+<Layout
+  pageTitle={`${genre.name} Games`}
+  seoTitle={seoTitle(`${genre.name} Games`)}
+  seoDescription={`David shares thoughts about the ${processedGames.length} ${
+    genre.name
+  } game${games.length > 1 ? "s" : ""} he's played.`}
+  activeTab="games"
+>
   <div class="py-3">
     <h1 class="pt-2 text-2xl">
       <span class="rounded border-2 border-black p-1"> {genre.name}</span>

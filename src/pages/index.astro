@@ -1,8 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { seoTitle } from "../utils";
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout
+  pageTitle={`Home`}
+  seoTitle={seoTitle("Games, Movies, and Books")}
+  seoDescription={`Learn all about David's review site, where he shares his thoughts on the games he plays, the movies he watches, and the books he reads.`}
+>
   <div>s</div>
 </Layout>
 

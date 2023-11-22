@@ -6,7 +6,7 @@ import { loadWatches, type Watch } from "../../airtable/data/watches";
 import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
-import { collectionPermalink } from "../../utils";
+import { collectionPermalink, seoTitle } from "../../utils";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 
 type Params = {
@@ -52,7 +52,14 @@ const {
 } = Astro.props;
 ---
 
-<Layout title={title} active="movies">
+<Layout
+  pageTitle={`${title} - Movies`}
+  seoTitle={seoTitle(title)}
+  seoDescription={`David shares thoughts about the ${watches.length} time${
+    watches.length > 1 ? "s" : ""
+  } he's watched ${title}.`}
+  activeTab="movies"
+>
   <div class="flex py-3">
     <Image
       src={posterUrl}
@@ -81,7 +88,10 @@ const {
       {
         collections && (
           <div class="py-2">
-            <p>This movie is part of the following collection(s):</p>
+            <p>
+              This movie is part of the following collection
+              {collections.length > 1 && "s"} :
+            </p>
             <ul class="pt-2">
               {collections.map((collection) => (
                 <li class="pb-2 pl-4">

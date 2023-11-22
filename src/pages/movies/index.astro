@@ -4,7 +4,7 @@ import WatchBox from "../../components/infoboxes/WatchBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
-import { collectionPermalink } from "../../utils";
+import { collectionPermalink, seoTitle } from "../../utils";
 
 const watches = await loadWatches();
 const watchCounts: Record<string, number> = {};
@@ -25,7 +25,14 @@ const collectionEmoji = new Set<string>(
 );
 ---
 
-<Layout title="Movies!" active="movies">
+<Layout
+  pageTitle={`All Movies`}
+  seoTitle={seoTitle("Movies!")}
+  seoDescription={`David shares thoughts about the ${
+    Object.keys(watchCounts).length
+  } movies he's watched.`}
+  activeTab="movies"
+>
   <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Movie</h1>
   <p class="pb-3">
     There are {watchesWithCounts.length} reviews of {

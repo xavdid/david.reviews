@@ -15,3 +15,5 @@ export const minutesToDuration = (totalMinutes: number): string => {
   const minutes = totalMinutes - hours * 60;
   return `${hours}h ${minutes}m`;
 };
+
+export const seoTitle = (t: string): string => `david.reviews: ${t}`;

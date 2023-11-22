@@ -5,7 +5,7 @@ import type { Game } from "../../airtable/data/games";
 import AwardBlurb from "../../components/AwardBlurb.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
-import { genrePermalink, minutesToDuration } from "../../utils";
+import { genrePermalink, minutesToDuration, seoTitle } from "../../utils";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import { loadPlays, type Play } from "../../airtable/data/plays";
 import RoundedLink from "../../components/links/RoundedLink.astro";
@@ -54,7 +54,14 @@ const {
 } = Astro.props;
 ---
 
-<Layout title={title} active="games">
+<Layout
+  pageTitle={`${title} - Games`}
+  seoTitle={seoTitle(title)}
+  seoDescription={`David shares thoughts about the ${plays.length} time${
+    plays.length > 1 ? "s" : ""
+  } he's played the ${genre} game ${title}.`}
+  activeTab="games"
+>
   <div class="flex py-3">
     <Image
       src={posterUrl}

@@ -3,13 +3,19 @@ import { loadReads } from "../../airtable/data/reads";
 import BookLegend from "../../components/BookLegend.astro";
 import ReadBox from "../../components/infoboxes/ReadBox.astro";
 import Layout from "../../layouts/Layout.astro";
+import { seoTitle } from "../../utils";
 
 const rawReviews = await loadReads();
 
 const numUniqueBooks = new Set(rawReviews.map((r) => r.book.gbid)).size;
 ---
 
-<Layout title="Books!" active="books">
+<Layout
+  pageTitle={`All Books`}
+  seoTitle={seoTitle(`Books!`)}
+  seoDescription={`David shares thoughts about the ${rawReviews.length} books he's read.`}
+  activeTab="books"
+>
   <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Book</h1>
   <p class="pb-3">
     There are {rawReviews.length} reviews of {numUniqueBooks} books.

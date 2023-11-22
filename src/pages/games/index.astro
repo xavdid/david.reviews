@@ -4,13 +4,18 @@ import PlayBox from "../../components/infoboxes/PlayBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
-import { genrePermalink } from "../../utils";
+import { genrePermalink, seoTitle } from "../../utils";
 
 const plays = await loadPlays();
 const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
 ---
 
-<Layout title="Games!" active="games">
+<Layout
+  pageTitle={`All Games`}
+  seoTitle={seoTitle(`Games!`)}
+  seoDescription={`David shares thoughts about the ${numUniqueGames} games he's played.`}
+  activeTab="games"
+>
   <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Game</h1>
   <p class="py-2">
     There are {plays.length} reviews of {numUniqueGames}
