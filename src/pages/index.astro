@@ -1,6 +1,20 @@
 ---
+import ExternalLink from "../components/links/ExternalLink.astro";
 import Layout from "../layouts/Layout.astro";
 import { seoTitle } from "../utils";
+import { loadInProgessPlays } from "../airtable/data/inProgressPlays";
+import { loadInProgressReads } from "../airtable/data/inProgressReads";
+import { Image } from "astro:assets";
+
+const inProgressPlays = (await loadInProgessPlays()).toSorted(
+  (a, b) =>
+    new Date(b.dateStarted).valueOf() - new Date(a.dateStarted).valueOf(),
+);
+
+const inProgressReads = (await loadInProgressReads()).toSorted(
+  (a, b) =>
+    new Date(b.dateStarted).valueOf() - new Date(a.dateStarted).valueOf(),
+);
 ---
 
 <Layout
@@ -8,7 +22,82 @@ import { seoTitle } from "../utils";
   seoTitle={seoTitle("Games, Movies, and Books")}
   seoDescription={`Learn all about David's review site, where he shares his thoughts on the games he plays, the movies he watches, and the books he reads.`}
 >
-  <div>s</div>
+  <h1 class="py-3 text-2xl">Welcome to David's Review Site!</h1>
+  <p class="py-2">
+    Hi, I'm <ExternalLink href="https://xavd.id">{"David"}</ExternalLink>. Since
+    2016, I've used <ExternalLink href="https://airtable.com/">
+      {"Airtable"}
+    </ExternalLink> to track everything I play, watch, and read. I use that data
+    to write a <ExternalLink href="https://xavd.id/blog/tags/yearly-review">
+      {"yearly review"}
+    </ExternalLink> of the best things from that year. These micro-reviews have
+    always been publicly available, but they were hidden away in Airtable.
+    Friends would ask for recommendations but it wasn't easy to link them
+    directly to my thoughts.
+  </p>
+  <p class="py-2">
+    Enter <strong>david.reviews</strong>! Having a dedicated site makes it
+    simple to link individual reviews and easy to see all reviews for a piece of
+    media. I hope you find something new to enjoy!
+  </p>
+  <h3 class="pb-3 text-xl">Pick a category to dive in:</h3>
+  <div class="flex justify-around py-4">
+    <a
+      class="rounded border-2 border-blue-600 p-6 text-lg hover:bg-blue-600 hover:text-white"
+      href="/games">Games</a
+    >
+    <a
+      class="rounded border-2 border-red-600 p-6 text-lg hover:bg-red-600 hover:text-white"
+      href="/movies">Movies</a
+    >
+    <a
+      class="rounded border-2 border-emerald-600 p-6 text-lg hover:bg-emerald-600 hover:text-white"
+      href="/books">Books</a
+    >
+  </div>
+  <hr class="py-2" />
+  <h2 class="py-2 text-center text-xl">Now Playing</h2>
+  <div class="flex flex-wrap justify-around gap-y-2">
+    {
+      inProgressPlays.map(
+        ({ playType, dateStarted, game: { title, posterUrl } }) => (
+          <div class="align-center flex max-w-[140px] flex-col justify-between rounded border-2 border-blue-600 p-2 text-center">
+            <span class="h-14 text-lg">{title}</span>
+            <Image
+              class="max-w-[unset] py-1"
+              src={posterUrl}
+              alt={`poster for ${title}`}
+              height={160}
+              width={120}
+            />
+            <span class="py-1">{dateStarted}</span>
+            <span class="py-1">{playType}</span>
+          </div>
+        ),
+      )
+    }
+  </div>
+  <h2 class="pb-2 pt-4 text-center text-xl">Now Reading:</h2>
+  <div class="flex flex-wrap justify-around gap-y-2">
+    {
+      inProgressReads.map(
+        ({ dateStarted, book: { title, posterUrl }, medium }) => (
+          <div class="align-center flex max-w-[140px] flex-col justify-between rounded border-2 border-red-600 p-2 text-center">
+            <span class="h-14 text-lg">{title}</span>
+            <Image
+              class="max-w-[unset] py-1"
+              src={posterUrl}
+              alt={`poster for ${title}`}
+              height={160}
+              width={120}
+            />
+            <span class="py-1">{dateStarted}</span>
+            <span class="py-1">{medium}</span>
+          </div>
+        ),
+      )
+    }
+  </div>
 </Layout>
 
 <style></style>

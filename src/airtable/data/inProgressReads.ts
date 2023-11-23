@@ -1,29 +1,23 @@
 import type { AirtableBase, RecordBase } from "../types";
 import { loadBooks, type Book } from "./books";
 import { loadListedRecords } from "./common";
+import { type ReadMedium } from "./reads";
 
 const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
-  viewId: "viwaBGtdx8nc8I1Kp",
+  viewId: "viwCifli1mloUoAD8",
   tableName: "Reads",
   // https://airtable.com/appv2mhWOgkRhR4rK/api/docs#javascript/table:reads
   fields: {
-    rating: "fldcYBkA0w9G49ZRr",
-    notes: "fldt0Xy3ncrVOxGAI",
-    dateFinished: "fldqmKpPjPt6VNgAn",
-    isReread: "fldp6jjlmJ5BP7P6w",
+    dateStarted: "fldpTeBoUi700VdNH",
     medium: "fld00LRZuJkDXWMsg",
     book: "fldxbKcjUeeQG1e8G",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
 
-export type ReadMedium = "Paper" | "Digital" | "Audio";
-
 type FieldIds = (typeof fields)[keyof typeof fields];
 type NonStringFields = {
-  [fields.rating]: number;
-  [fields.isReread]: boolean;
   [fields.medium]: ReadMedium;
   [fields.book]: [string];
 };
@@ -33,26 +27,20 @@ type StringFields = {
 type ReadRecord = StringFields & NonStringFields & RecordBase;
 
 type LocalFields = {
-  rating: number;
-  notes: string;
-  dateFinished: string;
-  isReread: boolean;
+  dateStarted: string;
   medium: ReadMedium;
 };
 type ForeignKeyFields = {
   book: Book;
 };
-export type Read = LocalFields & ForeignKeyFields;
+export type InProgressRead = LocalFields & ForeignKeyFields;
 
 const materialize = (readRow: ReadRecord): LocalFields => ({
-  rating: readRow[fields.rating],
-  notes: readRow[fields.notes] ?? "",
-  dateFinished: readRow[fields.dateFinished],
-  isReread: readRow[fields.isReread],
+  dateStarted: readRow[fields.dateStarted],
   medium: readRow[fields.medium],
 });
 
-export const loadReads = async (): Promise<Read[]> =>
+export const loadInProgressReads = async (): Promise<InProgressRead[]> =>
   await loadListedRecords(SCHEMA, materialize, [
     {
       key: "book",

@@ -47,6 +47,7 @@ type LocalFields = {
   slug: string;
   award?: AwardDetails;
   numberInSeries?: number;
+  posterUrl: string;
 };
 type ForeignKeyFields = {
   authors: Author[];
@@ -60,6 +61,9 @@ const materialize = (bookRow: BookRecord): LocalFields => {
     slug: slugify(bookRow[fields.title]),
     gbid: bookRow[fields.gbid],
     numberInSeries: bookRow[fields.numberInSeries],
+    posterUrl: `https://books.google.com/books/content/images/frontcover/${
+      bookRow[fields.gbid]
+    }?fife=h188`,
   };
 
   if (bookRow[fields.awardTier]) {

@@ -25,7 +25,7 @@ const permalink = bookPermalink(read.book.slug);
   <a slot="image" href={permalink}>
     <Image
       class="max-w-[unset]"
-      src={`https://books.google.com/books/content/images/frontcover/${read.book.gbid}?fife=h188`}
+      src={read.book.posterUrl}
       alt={`cover for ${read.book.title}`}
       height={188}
       width={120}

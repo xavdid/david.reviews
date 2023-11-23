@@ -1,34 +1,23 @@
 import type { AirtableBase, RecordBase } from "../types";
 import { loadListedRecords } from "./common";
 import { loadGames, type Game } from "./games";
+import { type PlayTypes } from "./plays";
 
 const SCHEMA = {
   baseId: "appLZQMgewaSP7Gg3",
-  viewId: "viwkq3nYj6SIHuujT",
+  viewId: "viwRkRUty4cPtO2EK",
   tableName: "Playthroughs",
   fields: {
     playType: "fldTLUb4amLT7GfQr",
-    dateFinished: "fld1gZfopGuA6q13R",
-    minutesPlayed: "fldZxVhvYZ193CI3I",
-    rating: "fldbLmt1Rduq8odcx",
-    notes: "fldKvvBC2dQyQDX5X",
+    dateStarted: "fldfnzNqBRu8LSE9g",
     game: "fldTihZHDDFfttVoA",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
 
-export type PlayTypes =
-  | "First Time"
-  | "Replay"
-  | "DLC"
-  | "Platinum"
-  | "New Edition";
-
 type FieldIds = (typeof fields)[keyof typeof fields];
 type NonStringFields = {
-  [fields.rating]: number;
   [fields.game]: [string];
-  [fields.minutesPlayed]: number;
   [fields.playType]: PlayTypes;
 };
 type StringFields = {
@@ -37,26 +26,20 @@ type StringFields = {
 type PlayRecord = StringFields & NonStringFields & RecordBase;
 
 type LocalFields = {
-  rating: number;
-  notes: string;
-  dateFinished: string;
   playType: PlayTypes;
-  minutesPlayed: number;
+  dateStarted: string;
 };
 type ForeignKeyFields = {
   game: Game;
 };
-export type Play = LocalFields & ForeignKeyFields;
+export type InProgressPlay = LocalFields & ForeignKeyFields;
 
 const materialize = (playRow: PlayRecord): LocalFields => ({
-  rating: playRow[fields.rating],
-  notes: playRow[fields.notes] ?? "",
-  dateFinished: playRow[fields.dateFinished],
+  dateStarted: playRow[fields.dateStarted],
   playType: playRow[fields.playType],
-  minutesPlayed: playRow[fields.minutesPlayed],
 });
 
-export const loadPlays = async (): Promise<Play[]> =>
+export const loadInProgessPlays = async (): Promise<InProgressPlay[]> =>
   await loadListedRecords(SCHEMA, materialize, [
     {
       key: "game",
