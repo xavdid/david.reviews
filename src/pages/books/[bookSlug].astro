@@ -9,6 +9,7 @@ import Rating from "../../components/Rating.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { seoTitle, seriesPermalnk } from "../../utils";
+import RoundedLink from "../../components/links/RoundedLink.astro";
 
 type Params = {
   bookSlug: string;
@@ -84,12 +85,9 @@ const { title, reads, series, award, authors, gbid, numberInSeries } =
           <div class="py-2">
             <p>
               This is book #{numberInSeries} in the
-              <a
-                class="rounded bg-blue-200 p-1 hover:bg-blue-300"
-                href={seriesPermalnk(series.slug)}
-              >
+              <RoundedLink href={seriesPermalnk(series.slug)}>
                 {series.name}
-              </a>{" "}
+              </RoundedLink>{" "}
               series.
             </p>
           </div>

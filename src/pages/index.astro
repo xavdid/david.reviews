@@ -56,13 +56,13 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     >
   </div>
   <hr class="py-2" />
-  <h2 class="py-2 text-center text-xl">Now Playing</h2>
+  <h2 class="py-3 text-center text-xl">Now Playing</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
       inProgressPlays.map(
         ({ playType, dateStarted, game: { title, posterUrl } }) => (
           <div class="align-center flex max-w-[140px] flex-col justify-between rounded border-2 border-blue-600 p-2 text-center">
-            <span class="h-14 text-lg">{title}</span>
+            <span class="h-14 text-lg font-bold">{title}</span>
             <Image
               class="max-w-[unset] py-1"
               src={posterUrl}
@@ -77,13 +77,13 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
       )
     }
   </div>
-  <h2 class="pb-2 pt-4 text-center text-xl">Now Reading:</h2>
+  <h2 class="py-3 pt-4 text-center text-xl">Now Reading:</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
       inProgressReads.map(
         ({ dateStarted, book: { title, posterUrl }, medium }) => (
-          <div class="align-center flex max-w-[140px] flex-col justify-between rounded border-2 border-red-600 p-2 text-center">
-            <span class="h-14 text-lg">{title}</span>
+          <div class="align-center flex max-w-[140px] flex-col justify-between rounded border-2 border-emerald-600 p-2 text-center">
+            <span class="h-14 text-lg font-bold">{title}</span>
             <Image
               class="max-w-[unset] py-1"
               src={posterUrl}

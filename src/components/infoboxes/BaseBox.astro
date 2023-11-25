@@ -15,26 +15,26 @@ const configs: {
   [type in Props["type"]]: {
     fillColor: `fill-${string}-${number}`;
     borderColor: `border-${string}-${number}`;
-    evenColor: `even:bg-${string}-${number}`;
+    lightEvenColor: `even:bg-${string}-${number}`;
     icon: typeof MovieIcon;
   };
 } = {
   movie: {
     fillColor: "fill-red-600",
     borderColor: "border-red-600",
-    evenColor: "even:bg-red-50",
+    lightEvenColor: "even:bg-red-50",
     icon: MovieIcon,
   },
   book: {
     fillColor: "fill-emerald-600",
     borderColor: "border-emerald-600",
-    evenColor: "even:bg-emerald-50",
+    lightEvenColor: "even:bg-emerald-50",
     icon: BookIcon,
   },
   game: {
     fillColor: "fill-blue-600",
     borderColor: "border-blue-600",
-    evenColor: "even:bg-blue-50",
+    lightEvenColor: "even:bg-blue-50",
     icon: GameIcon,
   },
 } as const;
@@ -44,11 +44,18 @@ const {
   icon: IconComponent,
   fillColor,
   borderColor,
-  evenColor,
+  lightEvenColor,
 } = configs[type];
 ---
 
-<div class:list={["mb-6 flex rounded border-2", borderColor, evenColor]}>
+<div
+  class:list={[
+    "mb-6 flex rounded border-2",
+    borderColor,
+    lightEvenColor,
+    "even:dark:bg-zinc-700",
+  ]}
+>
   {/* image area */}
   <div class="p-2"><slot name="image" /></div>
 

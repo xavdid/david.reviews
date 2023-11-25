@@ -2,6 +2,7 @@
 import type { Movie, Collection } from "../../../airtable/data/movies";
 import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
+import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { moviePermalink, seoTitle } from "../../../utils";
 import { Image } from "astro:assets";
@@ -100,7 +101,9 @@ const sortedMovies = movies
 >
   <div class="py-3">
     <h1 class="pt-2 text-2xl">
-      My Favorite <span class="rounded border-2 border-black p-1">
+      My Favorite <span
+        class="rounded border-2 border-black p-1 dark:border-white"
+      >
         {collection.fullName}</span
       >
        Movies
@@ -121,7 +124,7 @@ const sortedMovies = movies
     {
       sortedMovies.map(
         ({ title, avgRating, numWatches, permalink, posterUrl, blurb }) => (
-          <div class="mb-4 flex rounded border-2 border-red-600 p-2 even:bg-red-50">
+          <div class="mb-4 flex rounded border-2 border-red-600 p-2 even:bg-red-50 dark:even:bg-zinc-700">
             <a slot="image" href={permalink}>
               <Image
                 class="max-w-[unset]"
@@ -132,8 +135,10 @@ const sortedMovies = movies
               />
             </a>
             <div class="pl-4">
-              <h3 class="inline text-xl font-bold text-blue-600 underline hover:bg-blue-100">
-                <a href={permalink}>{title}</a>
+              <h3 class="">
+                <TitleLink classes={["text-xl"]} href={permalink}>
+                  {title}
+                </TitleLink>
               </h3>
 
               <div>

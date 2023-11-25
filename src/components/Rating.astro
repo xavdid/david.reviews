@@ -15,7 +15,7 @@ const classes = "mb-[0.25em] h-4 inline";
   {Array.from({ length: rating }).map(() => <StarFilled classes={[classes]} />)}
   {
     Array.from({ length: 4 - rating }).map(() => (
-      <StarEmpty classes={[classes]} />
+      <StarEmpty classes={[classes, "dark:fill-white"]} />
     ))
   }
 </div>

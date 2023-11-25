@@ -8,6 +8,7 @@ import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
 import { collectionPermalink, seoTitle } from "../../utils";
 import ExternalLink from "../../components/links/ExternalLink.astro";
+import RoundedLink from "../../components/links/RoundedLink.astro";
 
 type Params = {
   movieSlug: string;
@@ -95,12 +96,9 @@ const {
             <ul class="pt-2">
               {collections.map((collection) => (
                 <li class="pb-2 pl-4">
-                  <a
-                    class="rounded bg-blue-200 p-1 hover:bg-blue-300"
-                    href={collectionPermalink(collection.slug)}
-                  >
+                  <RoundedLink href={collectionPermalink(collection.slug)}>
                     {collection.fullName}
-                  </a>
+                  </RoundedLink>
                 </li>
               ))}
             </ul>
