@@ -51,7 +51,13 @@ const genres = Object.values(games).reduce<Record<string, GenreRecord>>(
   <ul class="list-disc pl-4">
     {
       Object.values(genres)
-        .toSorted((a, b) => b.games.size - a.games.size)
+        .toSorted((a, b) =>
+          a.genre.name > b.genre.name
+            ? 1
+            : b.genre.name > a.genre.name
+              ? -1
+              : 0,
+        )
         .map(({ genre, games }) => (
           <li class="py-2">
             <RoundedLink href={genrePermalink(genre.slug)}>
