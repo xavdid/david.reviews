@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /** @type {import('tailwindcss').Config} */
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { blue, red, emerald } = require("tailwindcss/colors");
+const { blue, red, emerald, purple } = require("tailwindcss/colors");
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/explicit-function-return-type
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const insetShadow = (color) => `inset 0em -0.2em ${color["600"]}`;
 
 export default {
@@ -16,6 +18,7 @@ export default {
         insetGame: insetShadow(blue),
         insetMovie: insetShadow(red),
         insetBook: insetShadow(emerald),
+        insetSearch: insetShadow(purple),
       },
     },
   },

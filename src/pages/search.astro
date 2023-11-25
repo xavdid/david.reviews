@@ -1,0 +1,64 @@
+---
+import Fuse from "fuse.js/min-basic";
+
+import { loadMovies } from "../airtable/data/movies";
+import {
+  authorPermalink,
+  bookPermalink,
+  gamePermalink,
+  moviePermalink,
+  seriesPermalnk,
+} from "../utils";
+import { SearchBar } from "../components/SearchBar";
+import { type SearchItem } from "../utils";
+import Layout from "../layouts/Layout.astro";
+import { loadGames } from "../airtable/data/games";
+import { loadBooks } from "../airtable/data/books";
+import { loadSeries } from "../airtable/data/series";
+import { loadAuthors } from "../airtable/data/authors";
+
+const list: SearchItem[] = [
+  ...Object.values(await loadMovies()).map(({ title, slug, yearReleased }) => ({
+    title: `${title} (${yearReleased})`,
+    category: "movie" as SearchItem["category"],
+    permalink: moviePermalink(slug),
+  })),
+  ...Object.values(await loadGames()).map(({ title, slug }) => ({
+    title,
+    category: "game" as SearchItem["category"],
+    permalink: gamePermalink(slug),
+  })),
+  ...Object.values(await loadBooks()).map(({ title, slug }) => ({
+    title,
+    category: "book" as SearchItem["category"],
+    permalink: bookPermalink(slug),
+  })),
+  ...Object.values(await loadSeries()).map(({ name: title, slug }) => ({
+    title: `${title} (Series)`,
+    category: "book" as SearchItem["category"],
+    permalink: seriesPermalnk(slug),
+  })),
+  ...Object.values(await loadAuthors()).map(({ name: title, slug }) => ({
+    title: `${title} (Author)`,
+    category: "book" as SearchItem["category"],
+    permalink: authorPermalink(slug),
+  })),
+];
+const index = Fuse.createIndex(["title"], list);
+---
+
+<Layout
+  pageTitle="Search"
+  seoTitle={"Search"}
+  seoDescription="The search page, where you can jump to any reviewed media."
+  activeTab="search"
+>
+  <h1 class="py-2 text-2xl">Search</h1>
+
+  <p class="py-2">
+    This page lets you search for anything I've talked about. Search for titles,
+    authors, or series!
+  </p>
+
+  <SearchBar items={list} index={index} client:load />
+</Layout>

@@ -17,3 +17,9 @@ export const minutesToDuration = (totalMinutes: number): string => {
 };
 
 export const seoTitle = (t: string): string => `david.reviews: ${t}`;
+
+export type SearchItem = {
+  title: string;
+  category: "book" | "movie" | "game";
+  permalink: string;
+};

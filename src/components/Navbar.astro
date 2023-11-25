@@ -2,9 +2,11 @@
 import BookIcon from "./icons/book.astro";
 import GameIcon from "./icons/game.astro";
 import MovieIcon from "./icons/movie.astro";
+import SearchIcon from "./icons/search.astro";
+import SubtleLink from "./links/SubtleLink.astro";
 
 type Props = {
-  active?: "games" | "movies" | "books";
+  active?: "games" | "movies" | "books" | "search";
 };
 
 const { active } = Astro.props;
@@ -13,7 +15,6 @@ const buttonStyles = [
   "text-center", // centers the svg
   "mx-1",
   "md:mx-2",
-  "last:mr-0",
   "p-1",
   "md:p-2",
   "text-l",
@@ -24,11 +25,12 @@ const iconStyles = ["inline h-6 md:pr-1"];
 
 <nav
   class:list={[
-    "flex items-center border-b-2",
+    "flex items-center justify-around border-b-2",
     {
       "border-blue-600": active === "games",
       "border-red-600": active === "movies",
       "border-emerald-600": active === "books",
+      "border-purple-600": active === "search",
     },
   ]}
 >
@@ -66,10 +68,37 @@ const iconStyles = ["inline h-6 md:pr-1"];
       buttonStyles,
       "fill-emerald-600",
       "hover:shadow-insetBook",
+      // farthest right on mobile
+      "mr-0",
       { "bg-emerald-600 fill-white text-white": active === "books" },
     ]}
     ><BookIcon classes={iconStyles} />
     <span class="inline pl-1">books</span></a
   >
-  <!-- <input class="ml-4 bg-black text-white" type="text" /> -->
+  <a
+    href="/search"
+    class:list={[
+      "hidden",
+      "md:block", // desktop only
+      "mx-2",
+      "p-2",
+      "text-xl",
+      "fill-purple-600",
+      "hover:shadow-insetSearch",
+      // no clue why _only_ this fill has to be !important
+      { "bg-purple-600 !fill-white text-white": active === "search" },
+    ]}
+    ><SearchIcon classes={iconStyles} />
+    <span class="inline pl-1">Search</span></a
+  >
 </nav>
+<div
+  class:list={[
+    "pr-1 pt-1 text-end underline md:hidden",
+    "fill-purple-600",
+    { hidden: active === "search" },
+  ]}
+>
+  <SearchIcon classes={["inline", "h-4", "pr-1"]} />
+  <SubtleLink href="/search">Search</SubtleLink>
+</div>

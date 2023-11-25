@@ -99,7 +99,7 @@ const { title, reads, series, award, authors, gbid, numberInSeries } =
   <div>
     {
       reads.map(({ rating, medium, notes, dateFinished }) => (
-        <div class="mb-4 rounded border-2 border-emerald-600 even:bg-emerald-50">
+        <div class="mb-4 rounded border-2 border-emerald-600 even:bg-emerald-50 dark:even:bg-zinc-700">
           <div class="flex justify-between border-b-2 border-emerald-600 px-2">
             <span>{dateFinished}</span>
             {medium === "Audio" && <span>🔈 Audiobook</span>}
