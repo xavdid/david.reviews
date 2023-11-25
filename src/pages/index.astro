@@ -35,27 +35,12 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     Friends would ask for recommendations but it wasn't easy to link them
     directly to my thoughts.
   </p>
-  <p class="py-2">
+  <p class="pb-4 pt-2">
     Enter <strong>david.reviews</strong>! Having a dedicated site makes it
     simple to link individual reviews and easy to see all reviews for a piece of
     media. I hope you find something new to enjoy!
   </p>
-  <h3 class="pb-3 text-xl">Pick a category to dive in:</h3>
-  <div class="flex justify-around py-4">
-    <a
-      class="rounded border-2 border-blue-600 p-6 text-lg hover:bg-blue-600 hover:text-white"
-      href="/games">Games</a
-    >
-    <a
-      class="rounded border-2 border-red-600 p-6 text-lg hover:bg-red-600 hover:text-white"
-      href="/movies">Movies</a
-    >
-    <a
-      class="rounded border-2 border-emerald-600 p-6 text-lg hover:bg-emerald-600 hover:text-white"
-      href="/books">Books</a
-    >
-  </div>
-  <hr class="py-2" />
+  <hr />
   <h2 class="py-3 text-center text-xl">Now Playing</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
