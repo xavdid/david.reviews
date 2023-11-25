@@ -63,7 +63,9 @@ const materialize = (gameRow: GameRecord): Game => {
       tier: gameRow[fields.awardTier]!,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       year: gameRow[fields.awardYear]!,
-      anchor: gameRow[fields.awardAnchor],
+      anchor: gameRow[fields.awardAnchor]
+        ? `#${gameRow[fields.awardAnchor]}`
+        : undefined,
     };
   }
 

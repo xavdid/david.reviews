@@ -72,7 +72,9 @@ const materialize = (bookRow: BookRecord): LocalFields => {
       tier: bookRow[fields.awardTier]!,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       year: bookRow[fields.awardYear]!,
-      anchor: bookRow[fields.awardAnchor],
+      anchor: bookRow[fields.awardAnchor]
+        ? `#${bookRow[fields.awardAnchor]}`
+        : undefined,
     };
   }
 

@@ -81,7 +81,9 @@ const materialize = (movieRow: MovieRecord): Movie => {
       tier: movieRow[fields.awardTier]!,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       year: movieRow[fields.awardYear]!,
-      anchor: movieRow[fields.awardAnchor],
+      anchor: movieRow[fields.awardAnchor]
+        ? `#${movieRow[fields.awardAnchor]}`
+        : undefined,
     };
   }
 

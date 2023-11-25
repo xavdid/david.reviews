@@ -56,7 +56,7 @@ const { title, reads, series, award, authors, gbid, numberInSeries } =
   seoTitle={seoTitle(title)}
   seoDescription={`David shares thoughts about the ${reads.length} time${
     reads.length > 1 ? "s" : ""
-  } he's read ${title}, by ${authors.join(", ")}.`}
+  } he's read ${title}, by ${authors.map((a) => a.name).join(", ")}.`}
   activeTab="books"
 >
   <div class="flex py-3">
@@ -93,7 +93,7 @@ const { title, reads, series, award, authors, gbid, numberInSeries } =
           </div>
         )
       }
-      {award && <AwardBlurb {...award} />}
+      {award && <AwardBlurb {...award} category="book" />}
     </div>
   </div>
   <div>

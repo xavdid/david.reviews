@@ -2,7 +2,9 @@
 import { medals } from "../airtable/data/common";
 import { type AwardDetails } from "../airtable/types";
 
-export type Props = AwardDetails;
+export type Props = AwardDetails & {
+  category: "game" | "movie" | "book";
+};
 
 const lookbacks: Record<number, string> = {
   2022: "https://xavd.id/blog/post/favorite-media-2022/",
@@ -16,10 +18,10 @@ const lookbacks: Record<number, string> = {
 const buildAwardUrl = (year: number, anchor?: string): string =>
   `${lookbacks[year]}${anchor ?? ""}`;
 
-const { year, tier, anchor } = Astro.props;
+const { year, tier, anchor, category } = Astro.props;
 ---
 
-This movie won the {medals[tier]}{tier} medal in my
+This {category} won the {medals[tier]}{tier} medal in my
 <a
   class="text-blue-500 underline hover:text-blue-600"
   target="_blank"

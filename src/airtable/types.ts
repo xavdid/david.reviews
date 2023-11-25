@@ -10,7 +10,7 @@ export type AwardTier = "Gold" | "Silver" | "Bronze";
 export type AwardDetails = {
   year: number;
   tier: AwardTier;
-  anchor?: string;
+  anchor?: `#${string}`;
 };
 
 export type RecordBase = {
