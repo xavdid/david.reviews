@@ -13,8 +13,6 @@ const { active } = Astro.props;
 
 const buttonStyles = [
   "text-center", // centers the svg
-  "mx-1",
-  "md:mx-2",
   "p-1",
   "md:p-2",
   "text-l",
@@ -34,14 +32,26 @@ const iconStyles = ["inline h-6 md:pr-1"];
     },
   ]}
 >
-  <h2 class="pl-2 text-xl md:text-2xl">
-    <a class="hover:underline" href="/">david . reviews</a>:
+  <h2 class="mx-2 rounded text-xl md:text-2xl">
+    <a
+      class:list={[
+        "whitespace-nowrap",
+        "rounded",
+        "p-[0.15rem]",
+        {
+          "ring-1  ring-black dark:ring-white": !active,
+          "hover:underline": active,
+        },
+      ]}
+      href="/">david<span class="px-1">.</span>reviews</a
+    >
   </h2>
 
   <a
     href="/games/"
     class:list={[
       buttonStyles,
+      "ml-1",
       "fill-blue-600",
       "hover:shadow-insetGame",
       { "bg-blue-600 fill-white text-white": active === "games" },
@@ -80,7 +90,6 @@ const iconStyles = ["inline h-6 md:pr-1"];
     class:list={[
       "hidden",
       "md:block", // desktop only
-      "mx-2",
       "p-2",
       "text-xl",
       "fill-purple-600",
