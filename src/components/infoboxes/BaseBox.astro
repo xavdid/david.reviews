@@ -41,8 +41,8 @@ const configs: {
 
 const { type, notes, rating, shrinkFooterText } = Astro.props;
 const {
-  icon: IconComponent,
-  fillColor,
+  // icon: IconComponent,
+  // fillColor,
   borderColor,
   lightEvenColor,
 } = configs[type];
@@ -76,7 +76,7 @@ const {
         {/* icons */}
         <div class="whitespace-nowrap pl-1">
           <slot name="icons" />
-          <IconComponent classes={["pb-[0.10em] inline h-6 px-1", fillColor]} />
+          <!-- <IconComponent classes={["pb-[0.10em] inline h-6 px-1", fillColor]} /> -->
         </div>
       </div>
       {/* in a div so they're flexed together */}
