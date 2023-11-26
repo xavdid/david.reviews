@@ -1,5 +1,6 @@
 import Fuse, { type FuseIndex } from "fuse.js/min-basic";
-import { useMemo, useState } from "react";
+import { useMemo, useState } from "preact/hooks";
+
 import { type SearchItem } from "../utils";
 import { SearchResult } from "./SearchResult";
 
@@ -32,8 +33,8 @@ export const SearchBar = ({ items, index }: Props): JSX.Element => {
           type="text"
           value={searchTerm}
           placeholder="🔍 Enter a title or person..."
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
+          onInput={(e) => {
+            setSearchTerm((e.target as HTMLInputElement).value);
           }}
         />
         <button
