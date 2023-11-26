@@ -4,6 +4,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @_default:
 	just --list
 
+# run the dev server
 @dev:
 	astro dev
 
@@ -11,34 +12,26 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 @astro *options="":
 	astro {{options}}
 
-# to any checks to ensure the site is ready to go
+# run syle checks
 [no-exit-message]
-@validate: clean
+@lint:
 	eslint src
-	prettier -c src
-	astro check
-# tsc --noEmit
-# broken until ~ prettier 3.1 is out
-# https://github.com/prettier/prettier/issues/15079
-# prettier --check .
+	prettier --check src
 
-# don't need to test, since the only test so far is for an unused function
-# just test
-# eslint?
+# run pre-reqs for building
+[no-exit-message]
+@validate:
+	astro check
+
+# do both style and structural checks
+[no-exit-message]
+@ci: validate lint
 
 # do a production build
 [no-exit-message]
-@build: validate clean
+@build: clean validate
 	astro build
-
-[no-exit-message]
-@test:
-  vitest run
-
-@test-watch:
-  vitest watch
 
 # remove the build artifact & data cache
 @clean:
-	rm -rf dist
-	rm -rf src/airtable/_cache
+	rm -rf dist src/airtable/_cache

@@ -8,28 +8,26 @@
     "@astrojs/react": "^3.0.6",
     "@astrojs/tailwind": "^5.0.2",
     "@sindresorhus/slugify": "^2.2.1",
-    "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.17",
-    "@xavdid/eslint-config": "^1.0.0",
+    "@types/react": "^18.2.38",
     "airtable": "^0.12.2",
     "astro": "3.4.0",
     "astro-seo": "^0.8.0",
-    "eslint": "^8.54.0",
     "fuse.js": "^7.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sass": "^1.69.5",
     "tailwindcss": "^3.3.5",
     "typescript": "5.2.2"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^6.11.0",
+    "@xavdid/eslint-config": "^1.0.0",
     "eslint-plugin-astro": "^0.29.1",
-    "jest": "^29.7.0",
+    "eslint": "^8.54.0",
     "just-install": "1.0.11",
-    "prettier": "^3.1.0",
     "prettier-plugin-astro": "^0.12.1",
     "prettier-plugin-tailwindcss": "^0.5.6",
+    "prettier": "^3.1.0",
     "vitest": "0.34.6"
   }
 }
