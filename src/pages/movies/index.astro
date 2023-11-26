@@ -42,18 +42,18 @@ const collectionEmoji = new Set<string>(
   <ul
     class="mb-3 rounded bg-red-50 p-2 dark:bg-red-950 dark:ring-1 dark:ring-white"
   >
-    <li>
+    <li class="py-1">
       <code>*</code> - this is my first <em>logged</em> watch, but I had seen
       the movie before.
     </li>
-    <li>
+    <li class="py-1">
       {[...collectionEmoji].join(" / ")} - Member of a <RoundedLink
         href={collectionPermalink("")}
       >
         {"collection"}
       </RoundedLink>.
     </li>
-    <li>
+    <li class="py-1">
       🥇 / 🥈 / 🥉 -
       <ExternalLink href="https://xavd.id/blog/tags/yearly-review">
         {"Favorite of the Year"}
