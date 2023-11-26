@@ -22,7 +22,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
   seoTitle={seoTitle("Games, Movies, and Books")}
   seoDescription={`Learn all about David's review site, where he shares his thoughts on the games he plays, the movies he watches, and the books he reads.`}
 >
-  <h1 class="py-3 text-2xl">Welcome to my review site!</h1>
+  <h1 class="py-3 text-center text-2xl">Welcome to my review site!</h1>
   <p class="py-2">
     I'm <ExternalLink href="https://xavd.id">{"David"}</ExternalLink> and since
     2016, I've used <ExternalLink href="https://airtable.com/">
@@ -41,7 +41,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     media. I hope you find something new to enjoy!
   </p>
   <hr />
-  <h2 class="py-3 text-center text-xl">Now Playing</h2>
+  <h2 class="py-3 text-center text-xl underline">Now Playing</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
       inProgressPlays.map(
@@ -62,7 +62,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
       )
     }
   </div>
-  <h2 class="py-3 pt-4 text-center text-xl">Now Reading:</h2>
+  <h2 class="pb-3 pt-4 text-center text-xl underline">Now Reading</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
       inProgressReads.map(
@@ -83,6 +83,60 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
       )
     }
   </div>
+  <hr class="my-3" />
+  <h2 class="my-3 text-center text-xl underline">Acknowledgements</h2>
+  <p>
+    <ul class="list-disc">
+      <li>
+        This site is generated with <ExternalLink href="https://astro.build/">
+          {"Astro"}
+        </ExternalLink> and styled with <ExternalLink
+          href="https://tailwindcss.com/"
+        >
+          {"Tailwind"}
+        </ExternalLink>
+        <li>
+          The data is stored in <ExternalLink href="https://airtable.com/">
+            {"Airtable"}
+          </ExternalLink>
+        </li>
+        <li>
+          The source is available on <ExternalLink
+            href="https://github.com/xavdid/david.reviews"
+          >
+            {"GitHub"}
+          </ExternalLink>
+        </li>
+        <li>
+          The <ExternalLink href="/og.png">social media image</ExternalLink> was
+          created by <ExternalLink href="https://www.karenbrownman.com/">
+            Karen Brownman
+          </ExternalLink>
+        </li>
+        <li>
+          Game covers are sourced from <ExternalLink
+            href="https://www.igdb.com/"
+          >
+            {"IGDB"}
+          </ExternalLink>
+        </li>
+        <li>
+          Movie posters are sourced from <ExternalLink
+            href="https://www.themoviedb.org/"
+          >
+            {"TMDb"}
+          </ExternalLink>
+        </li>
+        <li>
+          Book covers are sourced from the Google<ExternalLink
+            href="https://developers.google.com/books"
+          >
+            {"Books API"}
+          </ExternalLink>
+        </li>
+      </li>
+    </ul>
+  </p>
 </Layout>
 
 <style></style>

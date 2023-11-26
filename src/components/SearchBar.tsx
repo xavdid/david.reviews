@@ -39,7 +39,7 @@ export const SearchBar = ({ items, index }: Props): JSX.Element => {
           }}
         />
         <button
-          className="my-1 ml-4 rounded  px-3 ring-1  ring-zinc-500 hover:bg-zinc-200 dark:ring-white dark:hover:bg-slate-700"
+          className="my-1 ml-4 rounded  px-3 ring-1  ring-zinc-500 hover:bg-zinc-200 dark:ring-white dark:hover:bg-zinc-700"
           onClick={() => {
             setSearchTerm("");
             document.getElementById("search-box")?.focus();

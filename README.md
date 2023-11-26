@@ -1,9 +1,5 @@
 # david.reviews
 
-TODO
+➡️ https://david.reviews ⬅️
 
-## ORM
-
-All data for this site is loaded via a custom ORM that maps Airtable rows to TS objects. It has a few neat features.
-
-TODO
+This is an [Astro](https://astro.build/) + [Tailwind](https://tailwindcss.com/) site which collects all of my media micro-reviews. Data is stored in [Airtable](https://airtable.com/) an loaded using a custom ORM. It ships remarkably little JS to the frontend.
