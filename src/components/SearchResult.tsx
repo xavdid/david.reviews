@@ -1,3 +1,5 @@
+import { type JSX } from "preact";
+
 import type { SearchItem } from "../utils";
 import { BookIcon, GameIcon, MovieIcon } from "./icons/allIcons";
 

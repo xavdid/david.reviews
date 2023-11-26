@@ -1,3 +1,5 @@
+import { type JSX } from "preact";
+
 // annoying to duplicate these, but I can't render Astro components from React?
 
 const sharedTWClasses = "inline h-6 px-1";
