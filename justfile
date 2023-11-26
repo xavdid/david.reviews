@@ -35,3 +35,6 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 # remove the build artifact & data cache
 @clean:
 	rm -rf dist src/airtable/_cache
+
+@prod-preview: build
+	astro preview

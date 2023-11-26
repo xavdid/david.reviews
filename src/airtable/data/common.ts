@@ -77,7 +77,7 @@ export const loadReferenceRecords = async <
         const fkIds = keyGrabber(record);
         if (fkIds) {
           // @ts-expect-error - I can index this with foreign keys
-          item[key] = materializeRecordIds(fkIds, foreignItems, condense);
+          item[key] = materializeRecordIds(fkIds, foreignItems, key, condense);
         }
       }
 
@@ -98,12 +98,15 @@ export const loadReferenceRecords = async <
 const materializeRecordIds = <T>(
   foreignKeys: string[],
   foreignObjects: Record<string, T>,
+  foreignObjectType: string,
   condense = true,
 ): T | T[] => {
   const result = foreignKeys.map((fk) => {
     const record = foreignObjects[fk] as T | undefined;
     if (record === undefined) {
-      throw new Error(`Failed to materialize record for ${fk}`);
+      throw new Error(
+        `Failed to materialize ${foreignObjectType} record for ${fk}`,
+      );
     }
     return record;
   });
@@ -156,7 +159,7 @@ export const loadListedRecords = async <
       const fkIds = keyGrabber(record);
       if (fkIds.length) {
         // @ts-expect-error - I can index this with foreign keys
-        item[key] = materializeRecordIds(fkIds, foreignItems, condense);
+        item[key] = materializeRecordIds(fkIds, foreignItems, key, condense);
       }
     }
     return item;

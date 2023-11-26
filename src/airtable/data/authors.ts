@@ -5,7 +5,7 @@ import { loadReferenceRecords } from "./common";
 
 const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
-  viewId: "viwst3tJ6W0nlO8tm",
+  viewId: "viwTO8dOPtZBndX34",
   tableName: "Authors",
   fields: {
     name: "fldKxzwvf9blINIWw",

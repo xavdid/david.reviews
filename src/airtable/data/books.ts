@@ -12,7 +12,7 @@ import { loadSeries, type Series } from "./series";
 
 const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
-  viewId: "viwaexsdFEWc0Hkew",
+  viewId: "viw11AUS4q6YsydXs",
   tableName: "Books",
   fields: {
     title: "fldbpYqMmVWPta1vH",
