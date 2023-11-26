@@ -3,7 +3,6 @@ import { Image } from "astro:assets";
 
 import { medals } from "../../airtable/data/common";
 import type { Watch } from "../../airtable/data/watches";
-import { moviePermalink } from "../../utils";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
 
@@ -12,8 +11,6 @@ type Props = {
   numWatch: number;
 };
 const { watch, numWatch } = Astro.props;
-
-const permalink = moviePermalink(watch.movie.slug);
 ---
 
 <BaseBox
@@ -22,7 +19,7 @@ const permalink = moviePermalink(watch.movie.slug);
   rating={watch.rating}
   shrinkFooterText
 >
-  <a slot="image" href={permalink}>
+  <a slot="image" href={watch.movie.permalink}>
     <Image
       class="max-w-[unset]"
       src={watch.movie.posterUrl}
@@ -33,7 +30,7 @@ const permalink = moviePermalink(watch.movie.slug);
   >
 
   <span slot="title">
-    <TitleLink href={permalink}>{watch.movie.title}</TitleLink>
+    <TitleLink href={watch.movie.permalink}>{watch.movie.title}</TitleLink>
      ({watch.movie.yearReleased})
   </span>
 

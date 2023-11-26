@@ -1,6 +1,5 @@
 ---
 import type { Author } from "../airtable/data/authors";
-import { authorPermalink } from "../utils";
 import RoundedLink from "./links/RoundedLink.astro";
 import SubtleLink from "./links/SubtleLink.astro";
 
@@ -19,9 +18,7 @@ const LinkComponent = style === "rounded" ? RoundedLink : SubtleLink;
       <>
         {/* little .join(", ") replacer */}
         {index > 0 && ", "}{" "}
-        <LinkComponent href={authorPermalink(author.slug)}>
-          {author.name}
-        </LinkComponent>
+        <LinkComponent href={author.permalink}>{author.name}</LinkComponent>
       </>
     ))
   }</span

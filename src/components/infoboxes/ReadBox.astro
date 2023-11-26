@@ -3,7 +3,6 @@ import { Image } from "astro:assets";
 
 import { medals } from "../../airtable/data/common";
 import type { Read } from "../../airtable/data/reads";
-import { bookPermalink, seriesPermalnk } from "../../utils";
 import AuthorList from "../AuthorList.astro";
 import SubtleLink from "../links/SubtleLink.astro";
 import TitleLink from "../links/TitleLink.astro";
@@ -17,12 +16,10 @@ const { read, omitAuthorIds } = Astro.props;
 const authors = read.book.authors.filter(
   (a) => !omitAuthorIds?.includes(a.recordId),
 );
-
-const permalink = bookPermalink(read.book.slug);
 ---
 
 <BaseBox type="book" notes={read.notes} rating={read.rating}>
-  <a slot="image" href={permalink}>
+  <a slot="image" href={read.book.permalink}>
     <Image
       class="max-w-[unset]"
       src={read.book.posterUrl}
@@ -33,7 +30,7 @@ const permalink = bookPermalink(read.book.slug);
   >
 
   <div slot="title">
-    <TitleLink href={permalink}>
+    <TitleLink href={read.book.permalink}>
       {read.book.title}
     </TitleLink>{" "}
     {
@@ -60,7 +57,7 @@ const permalink = bookPermalink(read.book.slug);
     read.book.series && (
       <div class="text-center md:text-end" slot="subtitle">
         <span class="block border-b-2 border-l-2 border-emerald-600 px-2 md:inline-block">
-          <SubtleLink href={seriesPermalnk(read.book.series.slug)}>
+          <SubtleLink href={read.book.series.permalink}>
             Book #{read.book.numberInSeries}
           </SubtleLink>
         </span>

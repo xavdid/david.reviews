@@ -4,7 +4,7 @@ import { Image } from "astro:assets";
 import { type Game, GENRE_DESCRIPTIONS } from "../../../airtable/data/games";
 import { loadPlays, type Play } from "../../../airtable/data/plays";
 import Layout from "../../../layouts/Layout.astro";
-import { gamePermalink, seoTitle } from "../../../utils";
+import { seoTitle } from "../../../utils";
 import Rating from "../../../components/Rating.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 
@@ -78,7 +78,7 @@ const processedGames = games
   .map(({ game, plays }) => ({
     title: game.title,
     rating: plays[0].rating,
-    permalink: gamePermalink(game.slug),
+    permalink: game.permalink,
     posterUrl: game.posterUrl,
     dateFinished: plays[0].dateFinished,
     // the longest review is probably the best one?

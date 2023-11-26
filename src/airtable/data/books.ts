@@ -4,6 +4,7 @@ import type {
   AirtableBase,
   AwardDetails,
   AwardTier,
+  Permalink,
   RecordBase,
 } from "../types";
 import { loadAuthors, type Author } from "./authors";
@@ -45,6 +46,7 @@ type LocalFields = {
   title: string;
   gbid: string;
   slug: string;
+  permalink: Permalink;
   award?: AwardDetails;
   numberInSeries?: number;
   posterUrl: string;
@@ -56,9 +58,11 @@ type ForeignKeyFields = {
 export type Book = LocalFields & ForeignKeyFields;
 
 const materialize = (bookRow: BookRecord): LocalFields => {
+  const slug = slugify(bookRow[fields.title]);
   const item: LocalFields = {
     title: bookRow[fields.title],
-    slug: slugify(bookRow[fields.title]),
+    slug,
+    permalink: `/books/${slug}/`,
     gbid: bookRow[fields.gbid],
     numberInSeries: bookRow[fields.numberInSeries],
     posterUrl: `https://books.google.com/books/content/images/frontcover/${

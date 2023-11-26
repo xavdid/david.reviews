@@ -4,6 +4,7 @@ import type {
   AirtableBase,
   AwardDetails,
   AwardTier,
+  Permalink,
   RecordBase,
 } from "../types";
 import { loadReferenceRecords } from "./common";
@@ -42,16 +43,19 @@ export type Game = {
   genre: string;
   igdbId: string;
   slug: string;
+  permalink: Permalink;
   posterUrl: string;
   award?: AwardDetails;
 };
 
 const materialize = (gameRow: GameRecord): Game => {
+  const slug = slugify(gameRow[fields.title]);
   const item: Game = {
     title: gameRow[fields.title],
     genre: gameRow[fields.simpleGenre] ?? "UNKNOWN",
     igdbId: gameRow[fields.igdbId],
-    slug: slugify(gameRow[fields.title]),
+    slug,
+    permalink: `/games/${slug}/`,
     posterUrl: `https://images.igdb.com/igdb/image/upload/t_cover_small_2x/${
       gameRow[fields.igdbCoverId]
     }.jpg`,

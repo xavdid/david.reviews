@@ -4,7 +4,7 @@ import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { moviePermalink, seoTitle } from "../../../utils";
+import { seoTitle } from "../../../utils";
 import { Image } from "astro:assets";
 
 type Params = {
@@ -83,7 +83,7 @@ const sortedMovies = movies
       watches.reduce((total, { rating }) => rating + total, 0) / watches.length
     ).toFixed(2),
     numWatches: watches.length,
-    permalink: moviePermalink(movie.slug),
+    permalink: movie.permalink,
     posterUrl: movie.posterUrl,
     // the longest review is probably the best one?
     blurb: watches.reduce<string>((result, { notes }) => {

@@ -2,13 +2,6 @@
 import Fuse from "fuse.js/min-basic";
 
 import { loadMovies } from "../airtable/data/movies";
-import {
-  authorPermalink,
-  bookPermalink,
-  gamePermalink,
-  moviePermalink,
-  seriesPermalnk,
-} from "../utils";
 import { SearchBar } from "../components/SearchBar";
 import { type SearchItem } from "../utils";
 import Layout from "../layouts/Layout.astro";
@@ -18,30 +11,32 @@ import { loadSeries } from "../airtable/data/series";
 import { loadAuthors } from "../airtable/data/authors";
 
 const list: SearchItem[] = [
-  ...Object.values(await loadMovies()).map(({ title, slug, yearReleased }) => ({
-    title: `${title} (${yearReleased})`,
-    category: "movie" as SearchItem["category"],
-    permalink: moviePermalink(slug),
-  })),
-  ...Object.values(await loadGames()).map(({ title, slug }) => ({
+  ...Object.values(await loadMovies()).map(
+    ({ title, yearReleased, permalink }) => ({
+      title: `${title} (${yearReleased})`,
+      category: "movie" as SearchItem["category"],
+      permalink,
+    }),
+  ),
+  ...Object.values(await loadGames()).map(({ title, permalink }) => ({
     title,
     category: "game" as SearchItem["category"],
-    permalink: gamePermalink(slug),
+    permalink,
   })),
-  ...Object.values(await loadBooks()).map(({ title, slug }) => ({
+  ...Object.values(await loadBooks()).map(({ title, permalink }) => ({
     title,
     category: "book" as SearchItem["category"],
-    permalink: bookPermalink(slug),
+    permalink,
   })),
-  ...Object.values(await loadSeries()).map(({ name: title, slug }) => ({
-    title: `${title} (Series)`,
+  ...Object.values(await loadSeries()).map(({ name, permalink }) => ({
+    title: `${name} (Series)`,
     category: "book" as SearchItem["category"],
-    permalink: seriesPermalnk(slug),
+    permalink,
   })),
-  ...Object.values(await loadAuthors()).map(({ name: title, slug }) => ({
-    title: `${title} (Author)`,
+  ...Object.values(await loadAuthors()).map(({ name, permalink }) => ({
+    title: `${name} (Author)`,
     category: "book" as SearchItem["category"],
-    permalink: authorPermalink(slug),
+    permalink,
   })),
 ];
 const index = Fuse.createIndex(["title"], list);

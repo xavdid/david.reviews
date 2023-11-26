@@ -16,3 +16,6 @@ export type AwardDetails = {
 export type RecordBase = {
   recordId: string;
 };
+
+// internal links should have a trailing slash to prevent redirects
+export type Permalink = `${string}/`;

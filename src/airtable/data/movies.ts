@@ -4,6 +4,7 @@ import type {
   AirtableBase,
   AwardDetails,
   AwardTier,
+  Permalink,
   RecordBase,
 } from "../types";
 import { loadReferenceRecords } from "./common";
@@ -52,6 +53,7 @@ export type Movie = {
   tmdbId: string;
   title: string;
   slug: string;
+  permalink: Permalink;
   yearReleased: number;
   numWatches: number;
   collections?: Collection[];
@@ -60,10 +62,14 @@ export type Movie = {
 };
 
 const materialize = (movieRow: MovieRecord): Movie => {
+  const slug = slugify(
+    `${movieRow[fields.title]} ${movieRow[fields.yearReleased]}`,
+  );
   const item: Movie = {
     tmdbId: movieRow[fields.tmdbId],
     title: movieRow[fields.title],
-    slug: slugify(`${movieRow[fields.title]} ${movieRow[fields.yearReleased]}`),
+    slug,
+    permalink: `/movies/${slug}/`,
     yearReleased: movieRow[fields.yearReleased],
     numWatches: movieRow[fields.numWatches],
     collections: movieRow[fields.collections]?.map((c) => ({

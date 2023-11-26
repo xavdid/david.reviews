@@ -1,5 +1,5 @@
 import slugify from "@sindresorhus/slugify";
-import type { AirtableBase, RecordBase } from "../types";
+import type { AirtableBase, Permalink, RecordBase } from "../types";
 import { loadReferenceRecords } from "./common";
 
 const SCHEMA = {
@@ -21,12 +21,17 @@ type SeriesRecord = StringFields & RecordBase;
 export type Series = {
   name: string;
   slug: string;
+  permalink: Permalink;
 };
 
-const materialize = (seriesRow: SeriesRecord): Series => ({
-  name: seriesRow[fields.name],
-  slug: slugify(seriesRow[fields.name]),
-});
+const materialize = (seriesRow: SeriesRecord): Series => {
+  const slug = slugify(seriesRow[fields.name]);
+  return {
+    name: seriesRow[fields.name],
+    slug,
+    permalink: `/books/series/${slug}/`,
+  };
+};
 
 export const loadSeries = async (): Promise<Record<string, Series>> =>
   await loadReferenceRecords<SeriesRecord, Series, never>(SCHEMA, materialize);

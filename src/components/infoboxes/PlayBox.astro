@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 
 import { medals } from "../../airtable/data/common";
 import type { Play } from "../../airtable/data/plays";
-import { gamePermalink, minutesToDuration, genrePermalink } from "../../utils";
+import { minutesToDuration, genrePermalink } from "../../utils";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
 import SubtleLink from "../links/SubtleLink.astro";
@@ -13,12 +13,10 @@ type Props = {
   play: Play;
 };
 const { play } = Astro.props;
-
-const permalink = gamePermalink(play.game.slug);
 ---
 
 <BaseBox type="game" notes={play.notes} rating={play.rating}>
-  <a slot="image" href={permalink}>
+  <a slot="image" href={play.game.permalink}>
     <Image
       class="max-w-[unset]"
       src={play.game.posterUrl}
@@ -29,7 +27,7 @@ const permalink = gamePermalink(play.game.slug);
   >
 
   <span slot="title">
-    <TitleLink href={permalink}>{play.game.title}</TitleLink>
+    <TitleLink href={play.game.permalink}>{play.game.title}</TitleLink>
   </span>
 
   <div class="text-center md:text-end" slot="subtitle">
