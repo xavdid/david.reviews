@@ -49,7 +49,15 @@ export const getStaticPaths = async (): Result => {
 
 const {
   watches,
-  movie: { title, posterUrl, award, collections, yearReleased, numWatches },
+  movie: {
+    title,
+    posterUrl,
+    award,
+    collections,
+    yearReleased,
+    numWatches,
+    averageScore,
+  },
 } = Astro.props;
 ---
 
@@ -76,10 +84,7 @@ const {
       </p>
       <p class="pr-2 pt-2">
         I've watched this movie {watches.length} time{watches.length > 1 && "s"}
-         and given it an average score of {
-          watches.reduce((total, { rating }) => rating + total, 0) /
-            watches.length
-        } (<ExternalLink
+         and given it an average score of {averageScore} (<ExternalLink
           href="https://xavd.id/blog/post/on-the-rating-of-media/"
         >
           {"out of 4"}

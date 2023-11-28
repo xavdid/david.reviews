@@ -55,6 +55,7 @@ export type Movie = {
   slug: string;
   permalink: Permalink;
   yearReleased: number;
+  averageScore: number;
   numWatches: number;
   collections?: Collection[];
   posterUrl: string;
@@ -72,6 +73,7 @@ const materialize = (movieRow: MovieRecord): Movie => {
     permalink: `/movies/${slug}/`,
     yearReleased: movieRow[fields.yearReleased],
     numWatches: movieRow[fields.numWatches],
+    averageScore: movieRow[fields.averageScore],
     collections: movieRow[fields.collections]?.map((c) => ({
       fullName: c,
       // need to split the string to find the emoji, don't just take the first character
