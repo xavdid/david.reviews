@@ -1,6 +1,6 @@
 import slugify from "@sindresorhus/slugify";
 import type { AirtableBase, Permalink, RecordBase } from "../types";
-import { loadReferenceRecords } from "./common";
+import { loadReferenceObjects } from "./common";
 
 const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
@@ -34,4 +34,4 @@ const materialize = (seriesRow: SeriesRecord): Series => {
 };
 
 export const loadSeries = async (): Promise<Record<string, Series>> =>
-  await loadReferenceRecords<SeriesRecord, Series, never>(SCHEMA, materialize);
+  await loadReferenceObjects<SeriesRecord, Series, never>(SCHEMA, materialize);

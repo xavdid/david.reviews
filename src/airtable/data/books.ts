@@ -8,7 +8,7 @@ import type {
   RecordBase,
 } from "../types";
 import { loadAuthors, type Author } from "./authors";
-import { loadReferenceRecords } from "./common";
+import { loadReferenceObjects } from "./common";
 import { loadSeries, type Series } from "./series";
 
 const SCHEMA = {
@@ -86,7 +86,7 @@ const materialize = (bookRow: BookRecord): LocalFields => {
 };
 
 export const loadBooks = async (): Promise<Record<string, Book>> =>
-  await loadReferenceRecords(SCHEMA, materialize, [
+  await loadReferenceObjects(SCHEMA, materialize, [
     {
       key: "series",
       foreignItems: await loadSeries(),

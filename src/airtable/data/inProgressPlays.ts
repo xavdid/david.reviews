@@ -1,5 +1,5 @@
 import type { AirtableBase, RecordBase } from "../types";
-import { loadListedRecords } from "./common";
+import { loadListedObjects } from "./common";
 import { loadGames, type Game } from "./games";
 import { type PlayTypes } from "./plays";
 
@@ -40,7 +40,7 @@ const materialize = (playRow: PlayRecord): LocalFields => ({
 });
 
 export const loadInProgessPlays = async (): Promise<InProgressPlay[]> =>
-  await loadListedRecords(SCHEMA, materialize, [
+  await loadListedObjects(SCHEMA, materialize, [
     {
       key: "game",
       foreignItems: await loadGames(),

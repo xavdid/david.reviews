@@ -1,6 +1,6 @@
 import type { AirtableBase, RecordBase } from "../types";
 import { loadBooks, type Book } from "./books";
-import { loadListedRecords } from "./common";
+import { loadListedObjects } from "./common";
 
 const SCHEMA = {
   baseId: "appv2mhWOgkRhR4rK",
@@ -53,7 +53,7 @@ const materialize = (readRow: ReadRecord): LocalFields => ({
 });
 
 export const loadReads = async (): Promise<Read[]> =>
-  await loadListedRecords(SCHEMA, materialize, [
+  await loadListedObjects(SCHEMA, materialize, [
     {
       key: "book",
       foreignItems: await loadBooks(),

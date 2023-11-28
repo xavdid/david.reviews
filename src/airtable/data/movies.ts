@@ -7,7 +7,7 @@ import type {
   Permalink,
   RecordBase,
 } from "../types";
-import { loadReferenceRecords } from "./common";
+import { loadReferenceObjects } from "./common";
 
 const SCHEMA = {
   baseId: "appctKQDyHbyqNJOY",
@@ -97,4 +97,4 @@ const materialize = (movieRow: MovieRecord): Movie => {
 };
 
 export const loadMovies = async (): Promise<Record<string, Movie>> =>
-  await loadReferenceRecords<MovieRecord, Movie, never>(SCHEMA, materialize);
+  await loadReferenceObjects<MovieRecord, Movie, never>(SCHEMA, materialize);

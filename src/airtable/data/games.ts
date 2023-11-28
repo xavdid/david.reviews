@@ -7,7 +7,7 @@ import type {
   Permalink,
   RecordBase,
 } from "../types";
-import { loadReferenceRecords } from "./common";
+import { loadReferenceObjects } from "./common";
 
 const SCHEMA = {
   baseId: "appLZQMgewaSP7Gg3",
@@ -77,7 +77,7 @@ const materialize = (gameRow: GameRecord): Game => {
 };
 
 export const loadGames = async (): Promise<Record<string, Game>> =>
-  await loadReferenceRecords<GameRecord, Game, never>(SCHEMA, materialize);
+  await loadReferenceObjects<GameRecord, Game, never>(SCHEMA, materialize);
 
 // map of genre slug => genre description
 // used in: "XXX games are categorized by a primary gameplay loop of YYY"

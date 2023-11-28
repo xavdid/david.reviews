@@ -1,5 +1,5 @@
 import type { AirtableBase, RecordBase } from "../types";
-import { loadListedRecords } from "./common";
+import { loadListedObjects } from "./common";
 import { loadGames, type Game } from "./games";
 
 const SCHEMA = {
@@ -57,7 +57,7 @@ const materialize = (playRow: PlayRecord): LocalFields => ({
 });
 
 export const loadPlays = async (): Promise<Play[]> =>
-  await loadListedRecords(SCHEMA, materialize, [
+  await loadListedObjects(SCHEMA, materialize, [
     {
       key: "game",
       foreignItems: await loadGames(),

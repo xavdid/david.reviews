@@ -14,7 +14,7 @@ const client = new Airtable({
   apiKey: import.meta.env.AIRTABLE_API_KEY as string,
 });
 
-const loadAllRecords = async <T>(
+const loadRecords = async <T>(
   { baseId, tableName, fields, viewId }: AirtableBase,
   { loadAll = false }: { loadAll?: boolean } = {},
 ): Promise<Array<{ recordId: string } & T>> => {
@@ -42,7 +42,7 @@ const loadAllRecords = async <T>(
  *
  * It caches the materialized result.
  */
-export const loadReferenceRecords = async <
+export const loadReferenceObjects = async <
   RecordType,
   MaterializedType,
   ForeignKeys extends keyof MaterializedType,
@@ -61,7 +61,7 @@ export const loadReferenceRecords = async <
     return data;
   }
 
-  const records = await loadAllRecords<RecordType>(schema, {
+  const records = await loadRecords<RecordType>(schema, {
     loadAll: true,
   });
 
@@ -126,7 +126,7 @@ const materializeRecordIds = <T>(
  * Loads all records with foreign keys. Actually respects size limits.
  * this is a little more complicated than I like, but it _does_ validate foreign keys correctly, which is cool
  */
-export const loadListedRecords = async <
+export const loadListedObjects = async <
   RecordType,
   MaterializedType,
   ForeignKeys extends keyof MaterializedType,
@@ -145,7 +145,7 @@ export const loadListedRecords = async <
     return data;
   }
 
-  const records = await loadAllRecords<RecordType>(schema);
+  const records = await loadRecords<RecordType>(schema);
 
   const result = records.map((record) => {
     const item = materializer(record);

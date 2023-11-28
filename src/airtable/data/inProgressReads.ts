@@ -1,6 +1,6 @@
 import type { AirtableBase, RecordBase } from "../types";
 import { loadBooks, type Book } from "./books";
-import { loadListedRecords } from "./common";
+import { loadListedObjects } from "./common";
 import { type ReadMedium } from "./reads";
 
 const SCHEMA = {
@@ -41,7 +41,7 @@ const materialize = (readRow: ReadRecord): LocalFields => ({
 });
 
 export const loadInProgressReads = async (): Promise<InProgressRead[]> =>
-  await loadListedRecords(SCHEMA, materialize, [
+  await loadListedObjects(SCHEMA, materialize, [
     {
       key: "book",
       foreignItems: await loadBooks(),
