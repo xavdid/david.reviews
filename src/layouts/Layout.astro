@@ -21,6 +21,7 @@ const groupedSeo: SEOProps = {
   title,
   titleTemplate: "%s | david.reviews",
   description,
+  canonical: `https://david.reviews${Astro.url.pathname}`,
   openGraph: {
     basic: {
       title: seoTitle,
