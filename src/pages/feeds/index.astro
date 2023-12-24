@@ -1,0 +1,53 @@
+---
+import type { JSX } from "preact";
+import {
+  GameIcon,
+  MovieIcon,
+  BookIcon,
+  StarIcon,
+} from "../../components/icons/allIcons";
+import ExternalLink from "../../components/links/ExternalLink.astro";
+import Layout from "../../layouts/Layout.astro";
+
+const icons: Record<string, () => JSX.Element> = {
+  Games: GameIcon,
+  Movies: MovieIcon,
+  Books: BookIcon,
+  Everything: StarIcon,
+};
+---
+
+<Layout
+  pageTitle="Feeds"
+  seoTitle="All Feeds"
+  seoDescription="RSS and JSON feeds for each review type (or everything)."
+>
+  <h1 class="py-3 text-center text-2xl">Feeds</h1>
+  <p class="py-2">
+    There are 4 RSS feeds available for my reviews: one for each media type and
+    a mixed "everything" feed. Enjoy!
+  </p>
+  <!-- Each is available in both <ExternalLink
+      href="https://zapier.com/blog/how-to-use-rss-feeds/"
+    >
+      {"RSS"}
+    </ExternalLink> and <ExternalLink href="https://www.jsonfeed.org/">
+      {"JSON"}
+    </ExternalLink> varieties. -->
+  <ul class="list-disc pl-4">
+    {
+      ["Everything", "Games", "Movies", "Books"].map((type) => {
+        const Icon = icons[type];
+        return (
+          <li class="py-1">
+            <Icon />
+            {type}:{" "}
+            <ExternalLink
+              href={`/feeds/${type.toLowerCase()}.xml`}
+            >{`https://david.reviews/feeds/${type.toLowerCase()}.xml`}</ExternalLink>
+          </li>
+        );
+      })
+    }
+  </ul>
+</Layout>

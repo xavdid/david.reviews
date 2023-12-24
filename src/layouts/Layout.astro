@@ -20,8 +20,10 @@ type Props = {
   ogImg?: ImageInfo;
 };
 
+const OG_IMG_URL = "https://david.reviews/og.png";
+
 const defaultOgImg: ImageInfo = {
-  url: "https://david.reviews/og.png",
+  url: OG_IMG_URL,
   height: 1080,
   width: 1920,
   type: "png",
@@ -52,7 +54,10 @@ const groupedSeo: SEOProps = {
       type: `image/${ogImg.type}`,
       width: ogImg.width,
       height: ogImg.height,
-      alt: "A banner for david.reviews, showing the site title and icons for games, movies, and books.",
+      alt:
+        ogImg.url === OG_IMG_URL
+          ? "A banner for david.reviews, showing the site title and icons for games, movies, and books."
+          : `The cover for the media being reviewed.`,
     },
   },
 };
@@ -71,6 +76,18 @@ const groupedSeo: SEOProps = {
     />
     <link rel="apple-touch-icon" href="/apple-icon-180.png" />
     <link rel="me" href="https://mastodon.social/@xavdid" />
+    <!-- advertise the feeds -->
+    {
+      ["everything", "games", "movies", "books"].map((type) => (
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`david.reviews: ${type}`}
+          href={`/feeds/${type}.xml`}
+        />
+      ))
+    }
+
     <meta name="generator" content={Astro.generator} />
     <script
       data-goatcounter="https://david-reviews.goatcounter.com/count"

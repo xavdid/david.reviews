@@ -121,14 +121,14 @@ const {
   </div>
   <div>
     {
-      watches.map(({ dateWatched, rating, notes, isFirstWatch }, index) => {
+      watches.map(({ dateFinished, rating, notes, isFirstWatch }, index) => {
         const watchNumber = numWatches - index;
         const notActuallyFirstWatch = watchNumber === 1 && !isFirstWatch;
 
         return (
           <div class="mb-4 rounded border-2 border-red-600 even:bg-red-50 dark:even:bg-zinc-700">
             <div class="flex justify-between border-b-2 border-red-600 px-2">
-              <span>{dateWatched}</span>
+              <span>{dateFinished}</span>
               <span>
                 Watch #{watchNumber}
                 {notActuallyFirstWatch && "*"}

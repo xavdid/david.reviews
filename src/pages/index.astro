@@ -3,7 +3,9 @@ import { Image } from "astro:assets";
 
 import { loadInProgessPlays } from "../airtable/data/inProgressPlays";
 import { loadInProgressReads } from "../airtable/data/inProgressReads";
+import RssIcon from "../components/icons/rss.astro";
 import ExternalLink from "../components/links/ExternalLink.astro";
+import SubtleLink from "../components/links/SubtleLink.astro";
 import Layout from "../layouts/Layout.astro";
 import { seoTitle } from "../utils";
 
@@ -36,10 +38,16 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     Friends would ask for recommendations but it wasn't easy to link them
     directly to my thoughts.
   </p>
-  <p class="pb-4 pt-2">
-    Enter <strong>david.reviews</strong>! Having a dedicated site makes it
+  <p class="py-2">
+    Enter <strong>david.reviews</strong>. Having a dedicated site makes it
     simple to link individual reviews and easy to see all reviews for a piece of
     media. I hope you find something new to enjoy!
+  </p>
+  <p class="pb-4 pt-2">
+    If you'd like to be notified every time a new review goes live, check out
+    the <SubtleLink href="/feeds" classes={["whitespace-nowrap"]}>
+      <RssIcon classes={["inline", "mr-1"]} />{"RSS Feeds"}
+    </SubtleLink>.
   </p>
   <hr />
   <h2 class="py-3 text-center text-xl underline">Now Playing</h2>
@@ -56,7 +64,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
           <ExternalLink href="https://airtable.com/appLZQMgewaSP7Gg3/shrMB1f0PQcfg1tnM/tbl0H4RdvzHEZWgdC">
             {"Play Soon"}
           </ExternalLink>
-          list) shortly!
+          list) shortly.
         </p>
       )
     }
@@ -89,7 +97,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
           <ExternalLink href="https://airtable.com/appv2mhWOgkRhR4rK/shrzRTbsZiBhVeugG">
             {"To Read"}
           </ExternalLink>{" "}
-          list shortly!
+          list shortly.
         </p>
       )
     }
@@ -162,6 +170,11 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
           >
             {"Books API"}
           </ExternalLink>
+        </li>
+        <li>
+          <SubtleLink href="/feeds" classes={["whitespace-nowrap"]}>
+            <RssIcon classes={["inline", "mr-1"]} />{"RSS Feeds"}
+          </SubtleLink> are available.
         </li>
       </li>
     </ul>

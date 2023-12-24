@@ -1,11 +1,15 @@
 ---
 type Props = {
   href: string;
+  classes?: Array<string | string[]>;
 };
 
-const { href } = Astro.props;
+const { href, classes = [] } = Astro.props;
 ---
 
-<a class="underline hover:bg-blue-100 dark:hover:bg-blue-700" href={href}>
+<a
+  class:list={["underline hover:bg-blue-100 dark:hover:bg-blue-700", classes]}
+  href={href}
+>
   <slot />
 </a>

@@ -1,5 +1,6 @@
 ---
 import { loadPlays } from "../../airtable/data/plays";
+import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import PlayBox from "../../components/infoboxes/PlayBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
@@ -28,6 +29,7 @@ const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
     </RoundedLink>, and you can click through to see all the others games from
     that genre I've played.
   </p>
+  <SubscribeBlurb mediaType="game" />
   <ul
     class="mb-3 rounded bg-blue-50 p-2 dark:bg-blue-950 dark:ring-1 dark:ring-white"
   >

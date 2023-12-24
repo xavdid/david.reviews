@@ -32,7 +32,7 @@ type WatchRecord = StringFields & NonStringFields & RecordBase;
 type LocalFields = {
   rating: number;
   notes: string;
-  dateWatched: string;
+  dateFinished: string;
   isFirstWatch: boolean;
 };
 type ForeignKeyFields = {
@@ -43,7 +43,7 @@ export type Watch = LocalFields & ForeignKeyFields;
 const materialize = (watchRow: WatchRecord): LocalFields => ({
   rating: watchRow[fields.rating],
   notes: watchRow[fields.notes] ?? "",
-  dateWatched: watchRow[fields.dateWatched],
+  dateFinished: watchRow[fields.dateWatched],
   isFirstWatch: watchRow[fields.isFirstWatch] === 1,
 });
 

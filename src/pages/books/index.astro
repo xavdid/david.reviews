@@ -1,6 +1,7 @@
 ---
 import { loadReads } from "../../airtable/data/reads";
 import BookLegend from "../../components/BookLegend.astro";
+import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import ReadBox from "../../components/infoboxes/ReadBox.astro";
 import Layout from "../../layouts/Layout.astro";
 import { seoTitle } from "../../utils";
@@ -20,6 +21,7 @@ const numUniqueBooks = new Set(rawReviews.map((r) => r.book.gbid)).size;
   <p class="pb-3">
     There are {rawReviews.length} reviews of {numUniqueBooks} books.
   </p>
+  <SubscribeBlurb mediaType="game" />
   <BookLegend />
   <div>
     {rawReviews.map((read) => <ReadBox read={read} />)}

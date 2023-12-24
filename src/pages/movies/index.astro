@@ -1,5 +1,6 @@
 ---
 import { loadWatches } from "../../airtable/data/watches";
+import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import WatchBox from "../../components/infoboxes/WatchBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
@@ -39,6 +40,7 @@ const collectionEmoji = new Set<string>(
       Object.keys(watchCounts).length
     } movies.
   </p>
+  <SubscribeBlurb mediaType="movie" />
   <ul
     class="mb-3 rounded bg-red-50 p-2 dark:bg-red-950 dark:ring-1 dark:ring-white"
   >

@@ -48,7 +48,7 @@ const { watch, numWatch } = Astro.props;
   </Fragment>
 
   <Fragment slot="footer">
-    <span>{watch.dateWatched}</span>
+    <span>{watch.dateFinished}</span>
     <span
       ><span class="hidden md:inline">Watch{" "}</span>#{numWatch}{
         numWatch === 1 && !watch.isFirstWatch && "*"

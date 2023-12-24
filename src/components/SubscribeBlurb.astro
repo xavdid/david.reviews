@@ -1,0 +1,18 @@
+---
+import RssIcon from "./icons/rss.astro";
+import SubtleLink from "./links/SubtleLink.astro";
+
+type Props = {
+  mediaType: "book" | "movie" | "game";
+};
+
+const { mediaType } = Astro.props;
+---
+
+<p class="pb-3">
+  To be notified of new {mediaType} reviews, check out the <SubtleLink
+    href="/feeds"
+  >
+    <RssIcon classes={["inline", "mr-1"]} />{"RSS Feed"}
+  </SubtleLink>.
+</p>
