@@ -4,6 +4,7 @@ import type {
   AirtableBase,
   AwardDetails,
   AwardTier,
+  ExternalUrl,
   Permalink,
   RecordBase,
 } from "../types";
@@ -58,7 +59,8 @@ export type Movie = {
   averageScore: number;
   numWatches: number;
   collections?: Collection[];
-  posterUrl: string;
+  posterUrl: ExternalUrl;
+  bigPosterUrl: ExternalUrl;
   award?: AwardDetails;
 };
 
@@ -81,6 +83,9 @@ const materialize = (movieRow: MovieRecord): Movie => {
       slug: slugify(c),
     })),
     posterUrl: `https://image.tmdb.org/t/p/w300${movieRow[fields.posterPath]}`,
+    bigPosterUrl: `https://image.tmdb.org/t/p/w500${
+      movieRow[fields.posterPath]
+    }`,
   };
 
   if (movieRow[fields.awardTier]) {

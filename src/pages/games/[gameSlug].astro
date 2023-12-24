@@ -50,7 +50,7 @@ export const getStaticPaths = async (): Result => {
 
 const {
   plays,
-  game: { title, posterUrl, award, genre },
+  game: { title, posterUrl, award, genre, bigPosterUrl },
 } = Astro.props;
 ---
 
@@ -61,6 +61,13 @@ const {
     plays.length > 1 ? "s" : ""
   } he's played the ${genre} game ${title}.`}
   activeTab="games"
+  ogImg={{
+    url: bigPosterUrl,
+    // this is the size, idk
+    height: 724,
+    width: 528,
+    type: "jpeg",
+  }}
 >
   <div class="flex py-3">
     <Image

@@ -4,6 +4,7 @@ import type {
   AirtableBase,
   AwardDetails,
   AwardTier,
+  ExternalUrl,
   Permalink,
   RecordBase,
 } from "../types";
@@ -44,7 +45,8 @@ export type Game = {
   igdbId: string;
   slug: string;
   permalink: Permalink;
-  posterUrl: string;
+  posterUrl: ExternalUrl;
+  bigPosterUrl: ExternalUrl;
   award?: AwardDetails;
 };
 
@@ -57,6 +59,9 @@ const materialize = (gameRow: GameRecord): Game => {
     slug,
     permalink: `/games/${slug}/`,
     posterUrl: `https://images.igdb.com/igdb/image/upload/t_cover_small_2x/${
+      gameRow[fields.igdbCoverId]
+    }.jpg`,
+    bigPosterUrl: `https://images.igdb.com/igdb/image/upload/t_cover_big_2x/${
       gameRow[fields.igdbCoverId]
     }.jpg`,
   };

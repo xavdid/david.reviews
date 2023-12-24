@@ -58,6 +58,12 @@ const { title, reads, series, award, authors, gbid, numberInSeries } =
     reads.length > 1 ? "s" : ""
   } he's read ${title}, by ${authors.map((a) => a.name).join(", ")}.`}
   activeTab="books"
+  ogImg={{
+    url: `https://books.google.com/books/content/images/frontcover/${gbid}?fife=h700`,
+    height: 700,
+    width: 461,
+    type: "jpeg",
+  }}
 >
   <div class="flex py-3">
     <Image

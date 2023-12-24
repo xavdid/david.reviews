@@ -19,3 +19,5 @@ export type RecordBase = {
 
 // internal links should have a trailing slash to prevent redirects
 export type Permalink = `${string}/`;
+
+export type ExternalUrl = `https://${string}`;

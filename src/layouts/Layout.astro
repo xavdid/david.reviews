@@ -2,12 +2,29 @@
 import { SEO, type Props as SEOProps } from "astro-seo";
 
 import Navbar from "../components/Navbar.astro";
+import type { ExternalUrl } from "../airtable/types";
+
+type ImageInfo = {
+  url: ExternalUrl;
+  height: number;
+  width: number;
+  // https://en.wikipedia.org/wiki/Media_type#Common_examples
+  type: "png" | "jpeg";
+};
 
 type Props = {
   pageTitle: string; // shown in the tab
   seoTitle: string; // shown in the OG embed
   seoDescription: `${string}.`;
   activeTab?: "games" | "movies" | "books" | "search";
+  ogImg?: ImageInfo;
+};
+
+const defaultOgImg: ImageInfo = {
+  url: "https://david.reviews/og.png",
+  height: 1080,
+  width: 1920,
+  type: "png",
 };
 
 const {
@@ -15,26 +32,26 @@ const {
   pageTitle: title,
   seoTitle,
   seoDescription: description,
+  ogImg = defaultOgImg,
 } = Astro.props;
 
 const groupedSeo: SEOProps = {
   title,
   titleTemplate: "%s | david.reviews",
   description,
-  canonical: `https://david.reviews${Astro.url.pathname}`,
   openGraph: {
     basic: {
       title: seoTitle,
       type: "website",
-      image: "https://david.reviews/og.png",
+      image: ogImg.url,
     },
     optional: {
       siteName: "david.reviews",
     },
     image: {
-      type: "image/png",
-      width: 1920,
-      height: 1080,
+      type: `image/${ogImg.type}`,
+      width: ogImg.width,
+      height: ogImg.height,
       alt: "A banner for david.reviews, showing the site title and icons for games, movies, and books.",
     },
   },

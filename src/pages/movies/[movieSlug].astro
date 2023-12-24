@@ -52,6 +52,7 @@ const {
   movie: {
     title,
     posterUrl,
+    bigPosterUrl,
     award,
     collections,
     yearReleased,
@@ -68,6 +69,12 @@ const {
     watches.length > 1 ? "s" : ""
   } he's watched ${title}.`}
   activeTab="movies"
+  ogImg={{
+    url: bigPosterUrl,
+    height: 750,
+    width: 500,
+    type: "jpeg",
+  }}
 >
   <div class="flex py-3">
     <Image
