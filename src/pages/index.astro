@@ -1,10 +1,11 @@
 ---
+import { Image } from "astro:assets";
+
+import { loadInProgessPlays } from "../airtable/data/inProgressPlays";
+import { loadInProgressReads } from "../airtable/data/inProgressReads";
 import ExternalLink from "../components/links/ExternalLink.astro";
 import Layout from "../layouts/Layout.astro";
 import { seoTitle } from "../utils";
-import { loadInProgessPlays } from "../airtable/data/inProgressPlays";
-import { loadInProgressReads } from "../airtable/data/inProgressReads";
-import { Image } from "astro:assets";
 
 const inProgressPlays = (await loadInProgessPlays()).toSorted(
   (a, b) =>
@@ -44,6 +45,22 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
   <h2 class="py-3 text-center text-xl underline">Now Playing</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
+      inProgressPlays.length === 0 && (
+        <p>
+          I'm not playing anything at the moment but I'll be starting something
+          from my
+          <ExternalLink href="https://airtable.com/appLZQMgewaSP7Gg3/shrajGTisjQqBwxLf/tbl0H4RdvzHEZWgdC">
+            {"Play Next"}
+          </ExternalLink>{" "}
+          list (or the{" "}
+          <ExternalLink href="https://airtable.com/appLZQMgewaSP7Gg3/shrMB1f0PQcfg1tnM/tbl0H4RdvzHEZWgdC">
+            {"Play Soon"}
+          </ExternalLink>
+          list) shortly!
+        </p>
+      )
+    }
+    {
       inProgressPlays.map(
         ({ playType, dateStarted, game: { title, posterUrl } }) => (
           <div class="align-center flex max-w-[140px] flex-col justify-between rounded border-2 border-blue-600 p-2 text-center">
@@ -64,6 +81,18 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
   </div>
   <h2 class="pb-3 pt-4 text-center text-xl underline">Now Reading</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
+    {
+      inProgressReads.length === 0 && (
+        <p>
+          I'm not reading anything at the moment but I'll be starting something
+          from my
+          <ExternalLink href="https://airtable.com/appv2mhWOgkRhR4rK/shrzRTbsZiBhVeugG">
+            {"To Read"}
+          </ExternalLink>{" "}
+          list shortly!
+        </p>
+      )
+    }
     {
       inProgressReads.map(
         ({ dateStarted, book: { title, posterUrl }, medium }) => (
