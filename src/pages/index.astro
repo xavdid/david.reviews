@@ -50,7 +50,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     </SubtleLink>.
   </p>
   <hr />
-  <h2 class="py-3 text-center text-xl underline">Now Playing</h2>
+  <h2 class="py-3 text-center text-2xl underline">Now Playing</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
       inProgressPlays.length === 0 && (
@@ -71,8 +71,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     {
       inProgressPlays.map(
         ({ playType, dateStarted, game: { title, posterUrl } }) => (
-          <div class="align-center flex max-w-[140px] flex-col justify-between rounded border-2 border-blue-600 p-2 text-center">
-            <span class="h-14 text-lg font-bold">{title}</span>
+          <div class="align-center flex w-full rounded border-2 border-blue-600 p-2">
             <Image
               class="max-w-[unset] py-1"
               src={posterUrl}
@@ -80,14 +79,17 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
               height={160}
               width={120}
             />
-            <span class="py-1">{dateStarted}</span>
-            <span class="py-1">{playType}</span>
+            <div class="flex flex-col pl-4">
+              <span class="pb-2 text-xl font-bold">{title}</span>
+              <span class="py-1">{dateStarted}</span>
+              <span>{playType}</span>
+            </div>
           </div>
         ),
       )
     }
   </div>
-  <h2 class="pb-3 pt-4 text-center text-xl underline">Now Reading</h2>
+  <h2 class="pb-3 pt-4 text-center text-2xl underline">Now Reading</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
       inProgressReads.length === 0 && (
@@ -104,8 +106,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     {
       inProgressReads.map(
         ({ dateStarted, book: { title, posterUrl }, medium }) => (
-          <div class="align-center flex max-w-[140px] flex-col justify-between rounded border-2 border-emerald-600 p-2 text-center">
-            <span class="h-14 text-lg font-bold">{title}</span>
+          <div class="align-center flex w-full rounded border-2 border-emerald-600 p-2">
             <Image
               class="max-w-[unset] py-1"
               src={posterUrl}
@@ -113,14 +114,17 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
               height={160}
               width={120}
             />
-            <span class="py-1">{dateStarted}</span>
-            <span class="py-1">{medium}</span>
+            <div class="flex flex-col pl-4">
+              <span class="pb-2 text-xl font-bold">{title}</span>
+              <span class="py-1">{dateStarted}</span>
+              <span>{medium}</span>
+            </div>
           </div>
         ),
       )
     }
   </div>
-  <hr class="my-3" />
+  <hr class="mb-4 mt-4" />
   <h2 class="my-3 text-center text-xl underline">Acknowledgements</h2>
   <p>
     <ul class="list-disc">
