@@ -49,7 +49,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
       <RssIcon classes={["inline", "mr-1"]} />{"RSS Feeds"}
     </SubtleLink>.
   </p>
-  <hr />
+
   <h2 class="py-3 text-center text-2xl underline">Now Playing</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
@@ -81,7 +81,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
             />
             <div class="flex flex-col pl-4">
               <span class="pb-2 text-xl font-bold">{title}</span>
-              <span class="py-1">{dateStarted}</span>
+              <span>since: {dateStarted}</span>
               <span>{playType}</span>
             </div>
           </div>
@@ -105,7 +105,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     }
     {
       inProgressReads.map(
-        ({ dateStarted, book: { title, posterUrl }, medium }) => (
+        ({ dateStarted, book: { title, posterUrl, authors }, medium }) => (
           <div class="align-center flex w-full rounded border-2 border-emerald-600 p-2">
             <Image
               class="max-w-[unset] py-1"
@@ -116,16 +116,17 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
             />
             <div class="flex flex-col pl-4">
               <span class="pb-2 text-xl font-bold">{title}</span>
-              <span class="py-1">{dateStarted}</span>
-              <span>{medium}</span>
+              <span>by: {authors.map((a) => a.name).join(", ")}</span>
+              <span>since: {dateStarted}</span>
+              {medium === "Audio" && <span>{medium}</span>}
             </div>
           </div>
         ),
       )
     }
   </div>
-  <hr class="mb-4 mt-4" />
-  <h2 class="my-3 text-center text-xl underline">Acknowledgements</h2>
+
+  <h2 class="my-3 text-center text-2xl underline">Acknowledgements</h2>
   <p>
     <ul class="list-disc">
       <li>
