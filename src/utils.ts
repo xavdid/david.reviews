@@ -55,3 +55,8 @@ export const buildRssFeed = async <T extends { dateFinished: string }>(
 
 export const slimReview = (rating: number, notes: string): string =>
   `${"★".repeat(rating)}${"☆".repeat(4 - rating)}: ${notes || "no review"}`;
+
+export const averageRating = (items: Array<{ rating: number }>): number =>
+  +(
+    items.reduce((total, { rating }) => rating + total, 0) / items.length
+  ).toFixed(2);

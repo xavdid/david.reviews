@@ -1,7 +1,7 @@
 export type AwardTier = "Gold" | "Silver" | "Bronze";
 
 export const lookbackLinks: Record<number, string> = {
-  // 2023: "https://xavd.id/blog/post/favorite-media-2023/",
+  2023: "https://xavd.id/blog/post/favorite-media-2023/",
   2022: "https://xavd.id/blog/post/favorite-media-2022/",
   2021: "https://xavd.id/blog/post/favorite-media-2021/",
   2020: "https://xavd.id/blog/post/favorite-media-2020/",

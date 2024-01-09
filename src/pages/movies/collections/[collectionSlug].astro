@@ -4,7 +4,7 @@ import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { seoTitle } from "../../../utils";
+import { averageRating, seoTitle } from "../../../utils";
 import { Image } from "astro:assets";
 
 type Params = {
@@ -79,9 +79,7 @@ const { movies, collection } = Astro.props;
 const sortedMovies = movies
   .map(({ movie, watches }) => ({
     title: movie.title,
-    avgRating: +(
-      watches.reduce((total, { rating }) => rating + total, 0) / watches.length
-    ).toFixed(2),
+    avgRating: averageRating(watches),
     numWatches: watches.length,
     permalink: movie.permalink,
     posterUrl: movie.posterUrl,
