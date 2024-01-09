@@ -10,16 +10,26 @@ type Props = {
 
 const { authors, style = "rounded" } = Astro.props;
 const LinkComponent = style === "rounded" ? RoundedLink : SubtleLink;
+
+// https://stackoverflow.com/a/23619085/1825390
+const intersperse = (arr: string[], sep: string): string[] => {
+  if (arr.length === 0) {
+    return [];
+  }
+
+  return arr
+    .slice(1)
+    .reduce((result, elem) => result.concat([sep, elem]), [arr[0]]);
+};
 ---
 
 <span
   >{
-    authors.map((author, index) => (
-      <>
-        {/* little .join(", ") replacer */}
-        {index > 0 && ", "}{" "}
+    intersperse(
+      authors.map((author) => (
         <LinkComponent href={author.permalink}>{author.name}</LinkComponent>
-      </>
-    ))
+      )),
+      ", ",
+    )
   }</span
 >

@@ -9,7 +9,5 @@ const { href, classes = [] } = Astro.props;
 
 <a
   class:list={["underline hover:bg-blue-100 dark:hover:bg-blue-700", classes]}
-  href={href}
+  href={href}><slot /></a
 >
-  <slot />
-</a>
