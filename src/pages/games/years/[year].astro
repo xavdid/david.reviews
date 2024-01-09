@@ -1,0 +1,63 @@
+---
+import { loadPlays } from "../../../airtable/data/plays";
+import { awardYears, buildAwardUrl } from "../../../awards";
+import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
+import PlayBox from "../../../components/infoboxes/PlayBox.astro";
+import ExternalLink from "../../../components/links/ExternalLink.astro";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
+import Layout from "../../../layouts/Layout.astro";
+import { genrePermalink, seoTitle } from "../../../utils";
+
+type Params = { year: string };
+
+export const getStaticPaths: () => Array<{ params: Params }> = () => {
+  return awardYears.map((year) => ({ params: { year: year.toString() } }));
+};
+
+const plays = await loadPlays();
+
+const { year } = Astro.params as Params;
+
+const filteredPlays = plays
+  .filter((p) => p.dateFinished.startsWith(year) && p.playType === "First Time")
+  .toReversed();
+
+const awardUrl = buildAwardUrl(parseInt(year), "#videogames");
+---
+
+<Layout
+  pageTitle={`${year} Games`}
+  seoTitle={seoTitle(`Games he played for the first time in ${year}!`)}
+  seoDescription={`David shares thoughts about the ${filteredPlays.length} games he played in ${year}.`}
+  activeTab="games"
+>
+  <h1 class="pb-3 pt-2 text-2xl">Every Game I Played in {year}</h1>
+  <p class="py-2">
+    I played {filteredPlays.length} new-to-me games in {year}. I <ExternalLink
+      href={awardUrl}
+    >
+      {"wrote in more detail"}
+    </ExternalLink> about my favorites.
+  </p>
+  <p class="py-2">
+    Each game notes its <RoundedLink href={genrePermalink("")}>
+      {"genre"}
+    </RoundedLink>, and you can click through to see all the others games from
+    that genre I've played.
+  </p>
+  <SubscribeBlurb mediaType="game" />
+  <ul
+    class="mb-3 rounded bg-blue-50 p-2 dark:bg-blue-950 dark:ring-1 dark:ring-white"
+  >
+    <li>🛑 - Neglected to finish a beatable game</li>
+    <li>
+      🥇 / 🥈 / 🥉 -
+      <ExternalLink href={awardUrl}>
+        {"Favorite of the Year"}
+      </ExternalLink> honoree.
+    </li>
+  </ul>
+  <div>
+    {filteredPlays.map((play) => <PlayBox play={play} />)}
+  </div>
+</Layout>

@@ -8,16 +8,16 @@ import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { collectionPermalink, seoTitle } from "../../../utils";
 
-type XYZ = { year: string };
+type Params = { year: string };
 
-export const getStaticPaths: () => Array<{ params: XYZ }> = () => {
+export const getStaticPaths: () => Array<{ params: Params }> = () => {
   return awardYears.map((year) => ({ params: { year: year.toString() } }));
 };
 
 const watches = await loadWatches();
 const watchCounts: Record<string, number> = {};
 
-const { year } = Astro.params as XYZ;
+const { year } = Astro.params as Params;
 
 const watchesWithCounts = watches
   .map((watch) => {
@@ -32,7 +32,7 @@ const watchesWithCounts = watches
     (w) =>
       w.watch.dateFinished.startsWith(year.toString()) && w.watch.isFirstWatch,
   )
-  .reverse();
+  .toReversed();
 
 const collectionEmoji = new Set<string>(
   watchesWithCounts
@@ -40,24 +40,25 @@ const collectionEmoji = new Set<string>(
     .flat()
     .filter(Boolean) as string[],
 );
+
+const awardUrl = buildAwardUrl(parseInt(year), "#movies");
 ---
 
 <Layout
-  pageTitle={`All Movies`}
-  seoTitle={seoTitle("Movies!")}
+  pageTitle={`${year} Movies`}
+  seoTitle={seoTitle(`Movies he saw for the first time in ${year}!`)}
   seoDescription={`David shares thoughts about the ${
     Object.keys(watchCounts).length
-  } movies he's watched.`}
+  } movies he watched in ${year}.`}
   activeTab="movies"
 >
-  <h1 class="pb-3 pt-2 text-2xl">Every New {year} Movie</h1>
+  <h1 class="pb-3 pt-2 text-2xl">Every Movie I Watched in {year}</h1>
   <p class="pb-3">
-    I watched {watchesWithCounts.length} new-to-me movies in {year}. I wrote
-    about my favorites in my <ExternalLink
-      href={buildAwardUrl(parseInt(year), "#movies")}
+    I watched {watchesWithCounts.length} new-to-me movies in {year}. I <ExternalLink
+      href={awardUrl}
     >
-      {`${year} Media Review`}
-    </ExternalLink>.
+      {"wrote in more detail"}
+    </ExternalLink> about my favorites.
   </p>
   <SubscribeBlurb mediaType="movie" />
   <ul
@@ -72,7 +73,7 @@ const collectionEmoji = new Set<string>(
     </li>
     <li class="py-1">
       🥇 / 🥈 / 🥉 -
-      <ExternalLink href="https://xavd.id/blog/tags/yearly-review">
+      <ExternalLink href={awardUrl}>
         {"Favorite of the Year"}
       </ExternalLink> honoree.
     </li>

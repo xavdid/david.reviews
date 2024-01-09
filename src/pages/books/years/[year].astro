@@ -1,0 +1,47 @@
+---
+import { loadReads } from "../../../airtable/data/reads";
+import { awardYears, buildAwardUrl } from "../../../awards";
+import BookLegend from "../../../components/BookLegend.astro";
+import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
+import ReadBox from "../../../components/infoboxes/ReadBox.astro";
+import ExternalLink from "../../../components/links/ExternalLink.astro";
+import Layout from "../../../layouts/Layout.astro";
+import { seoTitle } from "../../../utils";
+
+type Params = { year: string };
+
+export const getStaticPaths: () => Array<{ params: Params }> = () => {
+  return awardYears.map((year) => ({ params: { year: year.toString() } }));
+};
+
+const rawReviews = await loadReads();
+
+const { year } = Astro.params as Params;
+
+const filteredReads = rawReviews.filter(
+  (r) => r.dateFinished.startsWith(year) && !r.isReread,
+);
+
+const awardUrl = buildAwardUrl(parseInt(year), "#books");
+---
+
+<Layout
+  pageTitle={`${year} Books`}
+  seoTitle={seoTitle(`Books he read for the first time in ${year}!`)}
+  seoDescription={`David shares thoughts about the ${rawReviews.length} books he's read.`}
+  activeTab="books"
+>
+  <h1 class="pb-3 pt-2 text-2xl">Every Book I Read in {year}</h1>
+  <p class="pb-3">
+    I read {filteredReads.length} books in {year}. I <ExternalLink
+      href={awardUrl}
+    >
+      {"wrote in more detail"}
+    </ExternalLink> about my favorites.
+  </p>
+  <SubscribeBlurb mediaType="game" />
+  <BookLegend awardUrl={awardUrl} showRereads={false} />
+  <div>
+    {filteredReads.map((read) => <ReadBox read={read} />)}
+  </div>
+</Layout>
