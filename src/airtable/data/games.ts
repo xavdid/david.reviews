@@ -1,9 +1,8 @@
 import slugify from "@sindresorhus/slugify";
 
+import { type AwardDetails, type AwardTier } from "../../awards";
 import type {
   AirtableBase,
-  AwardDetails,
-  AwardTier,
   ExternalUrl,
   Permalink,
   RecordBase,

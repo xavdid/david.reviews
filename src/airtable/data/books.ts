@@ -1,12 +1,7 @@
 import slugify from "@sindresorhus/slugify";
 
-import type {
-  AirtableBase,
-  AwardDetails,
-  AwardTier,
-  Permalink,
-  RecordBase,
-} from "../types";
+import { type AwardDetails, type AwardTier } from "../../awards";
+import type { AirtableBase, Permalink, RecordBase } from "../types";
 import { loadAuthors, type Author } from "./authors";
 import { loadReferenceObjects } from "./common";
 import { loadSeries, type Series } from "./series";

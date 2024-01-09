@@ -1,30 +1,18 @@
 ---
 import { medals } from "../airtable/data/common";
-import { type AwardDetails } from "../airtable/types";
+import { type AwardDetails } from "../awards";
+import { buildAwardUrl } from "../awards";
+import ExternalLink from "./links/ExternalLink.astro";
 
 export type Props = AwardDetails & {
   category: "game" | "movie" | "book";
 };
 
-const lookbacks: Record<number, string> = {
-  2022: "https://xavd.id/blog/post/favorite-media-2022/",
-  2021: "https://xavd.id/blog/post/favorite-media-2021/",
-  2020: "https://xavd.id/blog/post/favorite-media-2020/",
-  2019: "https://xavd.id/blog/post/my-favorite-media-of-the-year-2019-edition/",
-  2018: "https://xavd.id/blog/post/my-favorite-media-2018-edition/",
-  2017: "https://xavd.id/blog/post/a-few-more-favorites/",
-  2016: "https://xavd.id/blog/post/a-few-of-my-favorite-things/",
-};
-const buildAwardUrl = (year: number, anchor?: string): string =>
-  `${lookbacks[year]}${anchor ?? ""}`;
-
 const { year, tier, anchor, category } = Astro.props;
 ---
 
-This {category} won the {medals[tier]}{tier} medal in my
-<a
-  class="text-blue-500 underline hover:text-blue-600"
-  target="_blank"
-  rel="noopener"
-  href={buildAwardUrl(year, anchor)}>{year} Media Yearly Review</a
->.
+This {category} won the {medals[tier]}{tier} medal in my <ExternalLink
+  href={buildAwardUrl(year, anchor)}
+>
+  {`${year} Yearly Media Review`}
+</ExternalLink>.

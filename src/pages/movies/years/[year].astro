@@ -1,0 +1,87 @@
+---
+import { loadWatches } from "../../../airtable/data/watches";
+import { awardYears, buildAwardUrl } from "../../../awards";
+import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
+import WatchBox from "../../../components/infoboxes/WatchBox.astro";
+import ExternalLink from "../../../components/links/ExternalLink.astro";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
+import Layout from "../../../layouts/Layout.astro";
+import { collectionPermalink, seoTitle } from "../../../utils";
+
+type XYZ = { year: string };
+
+export const getStaticPaths: () => Array<{ params: XYZ }> = () => {
+  return awardYears.map((year) => ({ params: { year: year.toString() } }));
+};
+
+const watches = await loadWatches();
+const watchCounts: Record<string, number> = {};
+
+const { year } = Astro.params as XYZ;
+
+const watchesWithCounts = watches
+  .map((watch) => {
+    const thisWatchNum = watchCounts[watch.movie.tmdbId] ?? 0;
+    watchCounts[watch.movie.tmdbId] = thisWatchNum + 1;
+    return {
+      watch,
+      numWatch: watch.movie.numWatches - thisWatchNum,
+    };
+  })
+  .filter(
+    (w) =>
+      w.watch.dateFinished.startsWith(year.toString()) && w.watch.isFirstWatch,
+  )
+  .reverse();
+
+const collectionEmoji = new Set<string>(
+  watchesWithCounts
+    .map(({ watch: w }) => w.movie.collections?.map((c) => c.emoji))
+    .flat()
+    .filter(Boolean) as string[],
+);
+---
+
+<Layout
+  pageTitle={`All Movies`}
+  seoTitle={seoTitle("Movies!")}
+  seoDescription={`David shares thoughts about the ${
+    Object.keys(watchCounts).length
+  } movies he's watched.`}
+  activeTab="movies"
+>
+  <h1 class="pb-3 pt-2 text-2xl">Every New {year} Movie</h1>
+  <p class="pb-3">
+    I watched {watchesWithCounts.length} new-to-me movies in {year}. I wrote
+    about my favorites in my <ExternalLink
+      href={buildAwardUrl(parseInt(year), "#movies")}
+    >
+      {`${year} Media Review`}
+    </ExternalLink>.
+  </p>
+  <SubscribeBlurb mediaType="movie" />
+  <ul
+    class="mb-3 rounded bg-red-50 p-2 dark:bg-red-950 dark:ring-1 dark:ring-white"
+  >
+    <li class="py-1">
+      {[...collectionEmoji].join(" / ")} - Member of a <RoundedLink
+        href={collectionPermalink("")}
+      >
+        {"collection"}
+      </RoundedLink>.
+    </li>
+    <li class="py-1">
+      🥇 / 🥈 / 🥉 -
+      <ExternalLink href="https://xavd.id/blog/tags/yearly-review">
+        {"Favorite of the Year"}
+      </ExternalLink> honoree.
+    </li>
+  </ul>
+  <div>
+    {
+      watchesWithCounts.map(({ watch, numWatch }) => (
+        <WatchBox watch={watch} numWatch={numWatch} />
+      ))
+    }
+  </div>
+</Layout>

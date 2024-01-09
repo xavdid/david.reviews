@@ -5,19 +5,11 @@ export type AirtableBase = {
   fields: Record<string, `fld${string}`>;
 };
 
-export type AwardTier = "Gold" | "Silver" | "Bronze";
-
-export type AwardDetails = {
-  year: number;
-  tier: AwardTier;
-  anchor?: `#${string}`;
-};
-
 export type RecordBase = {
   recordId: string;
 };
 
-// internal links should have a trailing slash to prevent redirects
+// internal links should have a trailing slash to prevent browser redirects
 export type Permalink = `${string}/`;
 
 export type ExternalUrl = `https://${string}`;

@@ -1,6 +1,7 @@
 import Airtable from "airtable";
+import { type AwardTier } from "../../awards";
 import { readCache, writeCache } from "../cache";
-import type { AirtableBase, AwardTier } from "../types";
+import type { AirtableBase } from "../types";
 
 export const isProdBuild = import.meta.env.MODE === "production";
 
