@@ -1,3 +1,4 @@
-// this was added by astro, so I'm ignoring complaints
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+// these was added by astro, so I'm ignoring complaints
+/// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />

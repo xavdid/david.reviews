@@ -17,7 +17,9 @@ export const SearchBar = ({ items, index }: Props): JSX.Element => {
       items,
       {
         // has to match fairly closely
-        threshold: 0.4,
+        threshold: 0.2,
+        // but can be anywhere in the string
+        ignoreLocation: true,
       },
       Fuse.parseIndex(index),
     );
