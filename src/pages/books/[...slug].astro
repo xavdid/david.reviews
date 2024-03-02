@@ -1,0 +1,57 @@
+---
+import { loadReads } from "../../airtable/data/reads";
+import BookLegend from "../../components/BookLegend.astro";
+import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
+import ReadBox from "../../components/infoboxes/ReadBox.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
+import Layout from "../../layouts/Layout.astro";
+import { seoTitle } from "../../utils";
+
+// this controls the /books and /books/all routes
+type Result = Array<{ params: { slug: string | undefined } }>;
+export const getStaticPaths = (): Result => [
+  {
+    params: {
+      slug: undefined,
+    },
+  },
+  {
+    params: {
+      slug: "all",
+    },
+  },
+];
+
+const showAll = !!Astro.params.slug;
+
+const rawReviews = await loadReads();
+
+const numUniqueBooks = new Set(rawReviews.map((r) => r.book.gbid)).size;
+
+const title = showAll ? "Every Reviewed Book" : "Recently Reviewed Books";
+const limit = showAll ? undefined : 100;
+---
+
+<Layout
+  pageTitle={`All Books`}
+  seoTitle={seoTitle(`Books!`)}
+  seoDescription={`David shares thoughts about the ${rawReviews.length} books he's read.`}
+  activeTab="books"
+>
+  <h1 class="pb-3 pt-2 text-2xl">{title}</h1>
+  <p class="pb-3">
+    There are {rawReviews.length} reviews of {numUniqueBooks} books.{
+      !showAll && (
+        <>
+          This is the most recent {limit}; you can also{" "}
+          <SubtleLink href="/books/all/">see all</SubtleLink>.
+        </>
+      )
+    }
+  </p>
+  <SubscribeBlurb mediaType="book" />
+  <BookLegend />
+  <div>
+    {rawReviews.map((read) => <ReadBox read={read} />)}
+  </div>
+</Layout>

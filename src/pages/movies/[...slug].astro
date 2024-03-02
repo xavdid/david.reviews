@@ -4,8 +4,26 @@ import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import WatchBox from "../../components/infoboxes/WatchBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { collectionPermalink, seoTitle } from "../../utils";
+
+// this controls the /movies and /movies/all routes
+type Result = Array<{ params: { slug: string | undefined } }>;
+export const getStaticPaths = (): Result => [
+  {
+    params: {
+      slug: undefined,
+    },
+  },
+  {
+    params: {
+      slug: "all",
+    },
+  },
+];
+
+const showAll = !!Astro.params.slug;
 
 const watches = await loadWatches();
 const watchCounts: Record<string, number> = {};
@@ -24,6 +42,9 @@ const collectionEmoji = new Set<string>(
     .flat()
     .filter(Boolean) as string[],
 );
+
+const title = showAll ? "Every Reviewed Movie" : "Recently Reviewed Movies";
+const limit = showAll ? undefined : 100;
 ---
 
 <Layout
@@ -34,11 +55,18 @@ const collectionEmoji = new Set<string>(
   } movies he's watched.`}
   activeTab="movies"
 >
-  <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Movie</h1>
+  <h1 class="pb-3 pt-2 text-2xl">{title}</h1>
   <p class="pb-3">
     There are {watchesWithCounts.length} reviews of {
       Object.keys(watchCounts).length
-    } movies.
+    } movies. {
+      !showAll && (
+        <>
+          This is the most recent {limit}; you can also{" "}
+          <SubtleLink href="/movies/all/">see all</SubtleLink>.
+        </>
+      )
+    }
   </p>
   <SubscribeBlurb mediaType="movie" />
   <ul
@@ -64,9 +92,11 @@ const collectionEmoji = new Set<string>(
   </ul>
   <div>
     {
-      watchesWithCounts.map(({ watch, numWatch }) => (
-        <WatchBox watch={watch} numWatch={numWatch} />
-      ))
+      watchesWithCounts
+        .slice(0, limit)
+        .map(({ watch, numWatch }) => (
+          <WatchBox watch={watch} numWatch={numWatch} />
+        ))
     }
   </div>
 </Layout>

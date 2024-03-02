@@ -4,11 +4,32 @@ import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import PlayBox from "../../components/infoboxes/PlayBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { genrePermalink, seoTitle } from "../../utils";
 
+// this controls the /games and /games/all routes
+type Result = Array<{ params: { slug: string | undefined } }>;
+export const getStaticPaths = (): Result => [
+  {
+    params: {
+      slug: undefined,
+    },
+  },
+  {
+    params: {
+      slug: "all",
+    },
+  },
+];
+
+const showAll = !!Astro.params.slug;
+
 const plays = await loadPlays();
 const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
+
+const title = showAll ? "Every Reviewed Game" : "Recently Reviewed Games";
+const limit = showAll ? undefined : 100;
 ---
 
 <Layout
@@ -17,13 +38,20 @@ const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
   seoDescription={`David shares thoughts about the ${numUniqueGames} games he's played.`}
   activeTab="games"
 >
-  <h1 class="pb-3 pt-2 text-2xl">Every Reviewed Game</h1>
-  <p class="py-2">
+  <h1 class="pb-3 pt-2 text-2xl">{title}</h1>
+  <p class="pb-3">
     There are {plays.length} reviews of {numUniqueGames}
      games. Each game notes a simple genre and play type (first time, replays,
-    DLC, etc).
+    DLC, etc). {
+      !showAll && (
+        <>
+          This is the most recent {limit}; you can also{" "}
+          <SubtleLink href="/games/all/">see all</SubtleLink>.
+        </>
+      )
+    }
   </p>
-  <p class="py-2">
+  <p class="pb-3">
     Each game notes its <RoundedLink href={genrePermalink("")}>
       {"genre"}
     </RoundedLink>, and you can click through to see all the others games from
@@ -42,6 +70,6 @@ const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
     </li>
   </ul>
   <div>
-    {plays.map((play) => <PlayBox play={play} />)}
+    {plays.slice(0, limit).map((play) => <PlayBox play={play} />)}
   </div>
 </Layout>
