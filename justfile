@@ -25,7 +25,7 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
     # this only checks .astro files, but not .ts
     astro check
     # so we do this instead
-    tsc
+    tsc --noEmit
 
 # do both style and structural checks
 [no-exit-message]

@@ -2,11 +2,16 @@
 import slugify from "@sindresorhus/slugify";
 import { Image } from "astro:assets";
 import { type Game, GENRE_DESCRIPTIONS } from "../../../airtable/data/games";
-import { loadPlays, type Play } from "../../../airtable/data/plays";
+import {
+  loadPlays,
+  type Play,
+  type PlayTypes,
+} from "../../../airtable/data/plays";
 import Layout from "../../../layouts/Layout.astro";
-import { seoTitle } from "../../../utils";
+import { genrePermalink, seoTitle } from "../../../utils";
 import Rating from "../../../components/Rating.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
 
 type Params = {
   genreSlug: string;
@@ -27,8 +32,12 @@ export const getStaticPaths = async (): Result => {
   const plays = await loadPlays();
 
   const games = plays.reduce<Record<string, GameAndPlays>>((result, play) => {
-    // these shouldn't count towards an average score
-    if (play.playType !== "First Time") {
+    // for review/average, only note full plays
+    if (
+      !(["First Time", "Replay", "New Edition"] as PlayTypes[]).includes(
+        play.playType,
+      )
+    ) {
       return result;
     }
 
@@ -75,19 +84,27 @@ export const getStaticPaths = async (): Result => {
 
 const { games, genre } = Astro.props;
 const processedGames = games
-  .map(({ game, plays }) => ({
-    title: game.title,
-    rating: plays[0].rating,
-    permalink: game.permalink,
-    posterUrl: game.posterUrl,
-    dateFinished: plays[0].dateFinished,
-    // the longest review is probably the best one?
-    blurb: plays.reduce<string>((result, { notes }) => {
-      return result.length > notes.length ? result : notes;
-    }, ""),
-  }))
+  .map(({ game, plays }) => {
+    // i'm going to show info about the most relevant play, which is probably the one I had the most to say about
+    const bestPlay = plays.reduce((result, item) =>
+      result.notes.length > item.notes.length ? result : item,
+    );
+
+    return {
+      title: game.title,
+      rating: bestPlay.rating,
+      permalink: game.permalink,
+      posterUrl: game.posterUrl,
+      dateFinished: bestPlay.dateFinished,
+      // the longest review is probably the best one?
+      blurb: bestPlay.notes,
+    };
+  })
+  // if someone is reading this page, we can assume they'd sort by score
+  // in ties, it's most recent first, which should be fine
   .toSorted(
     (a, b) =>
+      b.rating - a.rating ||
       new Date(b.dateFinished).valueOf() - new Date(a.dateFinished).valueOf(),
   );
 ---
@@ -110,7 +127,13 @@ const processedGames = games
     <p class="pt-2">
       {genre.name} games are categorized by a primary gameplay loop of {
         GENRE_DESCRIPTIONS[genre.slug] ?? "MISSING GENRE DESCRIPTION!"
-      } I've played {games.length} games in this genre so far.
+      } I've played {games.length} game{games.length > 1 ? "s" : ""} in this
+      genre so far.
+    </p>
+    <p class="pt-2">
+      You can also go back to <RoundedLink href={genrePermalink("")}>
+        {"all genres"}
+      </RoundedLink>.
     </p>
   </div>
   <div>
