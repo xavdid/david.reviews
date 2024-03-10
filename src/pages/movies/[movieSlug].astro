@@ -97,10 +97,16 @@ const {
           {"out of 4"}
         </ExternalLink>).
       </p>
-      {award && <AwardBlurb {...award} category="movie" />}
+      {
+        award && (
+          <div class="pt-2">
+            <AwardBlurb {...award} category="movie" />
+          </div>
+        )
+      }
       {
         collections && (
-          <div class="py-2">
+          <div class="pt-2">
             <p>
               This movie is part of the following collection
               {collections.length > 1 && "s"} :
