@@ -25,6 +25,9 @@ export type PlayTypes =
   | "Platinum"
   | "New Edition";
 
+const ETCPlayTypes: PlayTypes[] = ["DLC", "Platinum"];
+export const isEtcPlay = (s: PlayTypes): boolean => ETCPlayTypes.includes(s);
+
 type FieldIds = (typeof fields)[keyof typeof fields];
 type NonStringFields = {
   [fields.rating]: number;

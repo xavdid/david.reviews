@@ -1,15 +1,15 @@
 ---
 import { Image } from "astro:assets";
 
-import type { Game } from "../../airtable/data/games";
-import AwardBlurb from "../../components/AwardBlurb.astro";
-import Rating from "../../components/Rating.astro";
-import Layout from "../../layouts/Layout.astro";
-import { genrePermalink, minutesToDuration, seoTitle } from "../../utils";
-import ExternalLink from "../../components/links/ExternalLink.astro";
-import { loadPlays, type Play } from "../../airtable/data/plays";
-import RoundedLink from "../../components/links/RoundedLink.astro";
 import slugify from "@sindresorhus/slugify";
+import type { Game } from "../../airtable/data/games";
+import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
+import AwardBlurb from "../../components/AwardBlurb.astro";
+import PlaySummary from "../../components/infoboxes/PlaySummary.astro";
+import ExternalLink from "../../components/links/ExternalLink.astro";
+import RoundedLink from "../../components/links/RoundedLink.astro";
+import Layout from "../../layouts/Layout.astro";
+import { genrePermalink, seoTitle } from "../../utils";
 
 type Params = {
   gameSlug: string;
@@ -17,7 +17,10 @@ type Params = {
 
 type Props = {
   game: Game;
+  // first time, replay; used for headline info
   plays: Play[];
+  // dlc, etc
+  etcPlays: Play[];
 };
 
 // own row for weird export reasons
@@ -27,17 +30,16 @@ export const getStaticPaths = async (): Result => {
 
   const movies = watches.reduce<Record<string, Props>>((result, play) => {
     const igdbId = play.game.igdbId;
-    const gameRecord = result[igdbId] as Props | undefined;
+    const gameRecord = result[igdbId] ?? {
+      game: play.game,
+      plays: [],
+      etcPlays: [],
+    };
 
-    if (gameRecord) {
-      gameRecord.plays.push(play);
-    } else {
-      const item: Props = {
-        game: play.game,
-        plays: [play],
-      };
-      result[igdbId] = item;
-    }
+    (isEtcPlay(play.playType) ? gameRecord.etcPlays : gameRecord.plays).push(
+      play,
+    );
+    result[igdbId] = gameRecord;
 
     return result;
   }, {});
@@ -50,6 +52,7 @@ export const getStaticPaths = async (): Result => {
 
 const {
   plays,
+  etcPlays,
   game: { title, posterUrl, award, genre, bigPosterUrl },
 } = Astro.props;
 ---
@@ -80,15 +83,13 @@ const {
     <div class="pl-3">
       <h1 class="pt-2 text-2xl">{title}</h1>
       <p class="pt-2">
-        I've categorized this as a <RoundedLink
-          href={genrePermalink(slugify(genre))}
-        >
+        Genre: <RoundedLink href={genrePermalink(slugify(genre))}>
           {genre}
-        </RoundedLink> game.
+        </RoundedLink>
       </p>
       <p class="pr-2 pt-2">
-        I've played this game {plays.length} time{plays.length > 1 && "s"} and
-        given it an average score of {
+        I've played the main story {plays.length} time{plays.length > 1 && "s"}
+         and given it an average score of {
           plays.reduce((total, { rating }) => rating + total, 0) / plays.length
         } (<ExternalLink
           href="https://xavd.id/blog/post/on-the-rating-of-media/"
@@ -96,36 +97,28 @@ const {
           {"out of 4"}
         </ExternalLink>).
       </p>
-      {award && <AwardBlurb {...award} category="game" />}
+      {
+        award && (
+          <div class="pt-2">
+            <AwardBlurb {...award} category="game" />
+          </div>
+        )
+      }
     </div>
   </div>
   <div>
-    {
-      plays.map(
-        ({
-          rating,
-          notes,
-          playType,
-          minutesPlayed,
-          dateFinished,
-          didNotFinish,
-        }) => {
-          return (
-            <div class="mb-4 rounded border-2 border-blue-600 even:bg-blue-50 dark:even:bg-zinc-700">
-              <div class="flex justify-between border-b-2 border-blue-600 px-2">
-                <span>{dateFinished}</span>
-                <span>{minutesToDuration(minutesPlayed)}</span>
-                <span>{playType}</span>
-                <div>
-                  <Rating rating={rating} />
-                </div>
-              </div>
-              <p class="p-2">{notes || <em>no review</em>}</p>
-              {didNotFinish && <p class="p-2">Did not roll credits.</p>}
-            </div>
-          );
-        },
-      )
-    }
+    {plays.map((play) => <PlaySummary play={play} />)}
   </div>
+  {
+    etcPlays.length > 0 && (
+      <>
+        <h2 class="pb-0 text-xl">DLC, etc.</h2>
+        <div class="pt-2">
+          {etcPlays.map((play) => (
+            <PlaySummary play={play} />
+          ))}
+        </div>
+      </>
+    )
+  }
 </Layout>
