@@ -5,11 +5,11 @@ import type { Book } from "../../airtable/data/books";
 import { loadReads, type Read } from "../../airtable/data/reads";
 import AuthorList from "../../components/AuthorList.astro";
 import AwardBlurb from "../../components/AwardBlurb.astro";
-import Rating from "../../components/Rating.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
-import Layout from "../../layouts/Layout.astro";
-import { seoTitle } from "../../utils";
 import RoundedLink from "../../components/links/RoundedLink.astro";
+import Rating from "../../components/Rating.astro";
+import Layout from "../../layouts/Layout.astro";
+import { pluralize, seoTitle } from "../../utils";
 
 type Params = {
   bookSlug: string;
@@ -79,12 +79,15 @@ const { title, reads, series, award, authors, gbid, numberInSeries } =
         by <AuthorList authors={authors} style="rounded" />
       </p>
       <p class="pb-2">
-        I've read this book {reads.length} time{reads.length > 1 && "s"} and
-        given it an average score of {
+        I've read this book {reads.length} time{pluralize(reads)} and given it
+        an average score of {
           reads.reduce((total, { rating }) => rating + total, 0) / reads.length
         }
-         (<!-- prettier-ignore -->
-        <ExternalLink href="https://xavd.id/blog/post/on-the-rating-of-media/">out of 4</ExternalLink>).
+         (<ExternalLink
+          href="https://xavd.id/blog/post/on-the-rating-of-media/"
+        >
+          {"out of 4"}
+        </ExternalLink>).
       </p>
       {
         series && (

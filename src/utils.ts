@@ -60,3 +60,21 @@ export const averageRating = (items: Array<{ rating: number }>): number =>
   +(
     items.reduce((total, { rating }) => rating + total, 0) / items.length
   ).toFixed(2);
+
+/**
+ * a function that returns an `s` based on whether a word should be pluralized. Example:
+ * ```js
+ * `book${pluralize(books)}`
+ * ```
+ * Will return `book` or `books` correctly depending on the length of a `books` array.
+ */
+export const pluralize = (l: unknown[] | number): string => {
+  let calc;
+  if (Array.isArray(l)) {
+    calc = l.length > 1;
+  } else {
+    calc = l > 1;
+  }
+
+  return calc ? "s" : "";
+};

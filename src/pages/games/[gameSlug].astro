@@ -9,7 +9,7 @@ import PlaySummary from "../../components/infoboxes/PlaySummary.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
-import { genrePermalink, seoTitle } from "../../utils";
+import { genrePermalink, pluralize, seoTitle } from "../../utils";
 
 type Params = {
   gameSlug: string;
@@ -88,7 +88,7 @@ const {
         </RoundedLink>
       </p>
       <p class="pr-2 pt-2">
-        I've played the main story {plays.length} time{plays.length > 1 && "s"}
+        I've played the main story {plays.length} time{pluralize(plays)}
          and given it an average score of {
           plays.reduce((total, { rating }) => rating + total, 0) / plays.length
         } (<ExternalLink

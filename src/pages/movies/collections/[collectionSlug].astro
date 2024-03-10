@@ -1,11 +1,11 @@
 ---
-import type { Movie, Collection } from "../../../airtable/data/movies";
+import { Image } from "astro:assets";
+import type { Collection, Movie } from "../../../airtable/data/movies";
 import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { averageRating, seoTitle } from "../../../utils";
-import { Image } from "astro:assets";
+import { averageRating, pluralize, seoTitle } from "../../../utils";
 
 type Params = {
   collectionSlug: string;
@@ -114,7 +114,7 @@ const sortedMovies = movies
       >. Either way, these are the cream of their respective crop. Please <ExternalLink
         href="https://xavd.id/contact"
       >
-        {"Let me know"}
+        {"let me know"}
       </ExternalLink> if you'd like to nominate an addition!
     </p>
   </div>
@@ -140,7 +140,7 @@ const sortedMovies = movies
               </h3>
 
               <div>
-                Watched {numWatches} time{numWatches > 1 && "s"}
+                Watched {numWatches} time{pluralize(numWatches)}
               </div>
               <div>Avg Rating: {avgRating}/4</div>
               <p class="mt-2 border-l-2 border-red-600 pl-2 italic">{blurb}</p>
