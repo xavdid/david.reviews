@@ -6,7 +6,7 @@ import BookLegend from "../../../components/BookLegend.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { pluralize, seoTitle } from "../../../utils";
+import { averageRating, pluralize, seoTitle } from "../../../utils";
 
 type Params = {
   seriesSlug: string;
@@ -68,7 +68,7 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
     There {reads.length > 1 ? "are" : "is"}{" "}
     {reads.length} review{pluralize(reads)} of {numUniqueBooks}
      book{pluralize(numUniqueBooks)} for an average score of {
-      reads.reduce((total, { rating }) => rating + total, 0) / reads.length
+      averageRating(reads)
     }
      (<ExternalLink href="https://xavd.id/blog/post/on-the-rating-of-media/">
       {"out of 4"}
