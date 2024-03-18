@@ -30,10 +30,11 @@ const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
 
 const title = showAll ? "Every Reviewed Game" : "Recently Reviewed Games";
 const limit = showAll ? undefined : 100;
+const tabTitle = showAll ? "All Games" : "Recent Games";
 ---
 
 <Layout
-  pageTitle={`All Games`}
+  pageTitle={tabTitle}
   seoTitle={seoTitle(`Games!`)}
   seoDescription={`David shares thoughts about the ${numUniqueGames} games he's played.`}
   activeTab="games"

@@ -40,15 +40,16 @@ const collectionEmoji = new Set<string>(
   watches
     .map((w) => w.movie.collections?.map((c) => c.emoji))
     .flat()
-    .filter(Boolean) as string[],
+    .filter(Boolean) as string[]
 );
 
 const title = showAll ? "Every Reviewed Movie" : "Recently Reviewed Movies";
 const limit = showAll ? undefined : 100;
+const tabTitle = showAll ? "All Moies" : "Recent Moies";
 ---
 
 <Layout
-  pageTitle={`All Movies`}
+  pageTitle={tabTitle}
   seoTitle={seoTitle("Movies!")}
   seoDescription={`David shares thoughts about the ${
     Object.keys(watchCounts).length

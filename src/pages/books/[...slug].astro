@@ -30,10 +30,11 @@ const numUniqueBooks = new Set(rawReviews.map((r) => r.book.gbid)).size;
 
 const title = showAll ? "Every Reviewed Book" : "Recently Reviewed Books";
 const limit = showAll ? undefined : 100;
+const tabTitle = showAll ? "All Books" : "Recent Books";
 ---
 
 <Layout
-  pageTitle={`All Books`}
+  pageTitle={tabTitle}
   seoTitle={seoTitle(`Books!`)}
   seoDescription={`David shares thoughts about the ${rawReviews.length} books he's read.`}
   activeTab="books"
