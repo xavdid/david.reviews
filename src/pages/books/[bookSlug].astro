@@ -107,20 +107,22 @@ const authorsStr = authors.map((a) => a.name).join(", ");
       {award && <AwardBlurb {...award} category="book" />}
     </div>
   </div>
-  <div>
-    {
-      reads.map(({ rating, medium, notes, dateFinished }) => (
-        <div class="mb-4 rounded border-2 border-emerald-600 even:bg-emerald-50 dark:even:bg-zinc-700">
-          <div class="flex justify-between border-b-2 border-emerald-600 px-2">
-            <span>{dateFinished}</span>
-            {medium === "Audio" && <span>🔈 Audiobook</span>}
-            <div>
-              <Rating rating={rating} />
-            </div>
+
+  {
+    reads.map(({ rating, medium, notes, dateFinished }) => (
+      <div
+        id={dateFinished}
+        class="mb-4 rounded border-2 border-emerald-600 even:bg-emerald-50 dark:even:bg-zinc-700"
+      >
+        <div class="flex justify-between border-b-2 border-emerald-600 px-2">
+          <span>{dateFinished}</span>
+          {medium === "Audio" && <span>🔈 Audiobook</span>}
+          <div>
+            <Rating rating={rating} />
           </div>
-          <p class="p-2">{notes || <em>no review</em>}</p>
         </div>
-      ))
-    }
-  </div>
+        <p class="p-2">{notes || <em>no review</em>}</p>
+      </div>
+    ))
+  }
 </Layout>
