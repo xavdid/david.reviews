@@ -49,14 +49,16 @@ export const getStaticPaths = async (): Result => {
 
 const { title, reads, series, award, authors, gbid, numberInSeries } =
   Astro.props;
+
+const authorsStr = authors.map((a) => a.name).join(", ");
 ---
 
 <Layout
   pageTitle={`${title} - Books`}
-  seoTitle={seoTitle(title)}
+  seoTitle={`${seoTitle(title)}, by ${authorsStr}`}
   seoDescription={`David shares thoughts about the ${reads.length} time${
     reads.length > 1 ? "s" : ""
-  } he's read ${title}, by ${authors.map((a) => a.name).join(", ")}.`}
+  } he's read ${title}, by ${authorsStr}.`}
   activeTab="books"
   ogImg={{
     url: `https://books.google.com/books/content/images/frontcover/${gbid}?fife=h700`,
