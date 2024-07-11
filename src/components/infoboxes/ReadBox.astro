@@ -11,10 +11,11 @@ import BaseBox from "./BaseBox.astro";
 type Props = {
   read: Read;
   omitAuthorIds?: string[];
+  linkToSeries?: boolean;
 };
-const { read, omitAuthorIds } = Astro.props;
+const { read, omitAuthorIds, linkToSeries = true } = Astro.props;
 const authors = read.book.authors.filter(
-  (a) => !omitAuthorIds?.includes(a.recordId),
+  (a) => !omitAuthorIds?.includes(a.recordId)
 );
 ---
 
@@ -57,9 +58,13 @@ const authors = read.book.authors.filter(
     read.book.series && (
       <div class="text-center md:text-end" slot="subtitle">
         <span class="block border-b-2 border-l-2 border-emerald-600 px-2 md:inline-block">
-          <SubtleLink href={read.book.series.permalink}>
-            Book #{read.book.numberInSeries}
-          </SubtleLink>
+          {linkToSeries ? (
+            <SubtleLink href={read.book.series.permalink}>
+              Book #{read.book.numberInSeries}
+            </SubtleLink>
+          ) : (
+            <span>Book #{read.book.numberInSeries}</span>
+          )}
         </span>
       </div>
     )
