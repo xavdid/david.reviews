@@ -5,6 +5,7 @@ import AuthorList from "../../../components/AuthorList.astro";
 import BookLegend from "../../../components/BookLegend.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
+import Rating from "../../../components/Rating.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { averageRating, pluralize, seoTitle } from "../../../utils";
 
@@ -66,7 +67,7 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
     {/* all series are by a single set of authors, for now */}
      by <AuthorList authors={reads[0].book.authors} style="rounded" />
   </p>
-  <p class="pb-2">
+  <p class="pb-3 pt-2">
     {
       seriesComplete ? (
         <>
@@ -94,10 +95,13 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   {
     remarks && (
       <div class="pb-3">
-        <p class="pb-1">
-          I rated this series {remarks.rating}⭐ overall and said:
+        {/* stack everything inline to get nice star ratings */}
+        <p class="inline">
+          I rated this series{" "}
+          <Rating rating={remarks.rating} classes={["inline"]} /> overall and
+          said:
         </p>
-        <p class="border-s-4 border-emerald-950 pl-4 italic dark:border-emerald-50">
+        <p class="mt-2 border-s-4 border-emerald-950 pl-4 italic dark:border-emerald-50">
           {remarks.notes}
         </p>
       </div>

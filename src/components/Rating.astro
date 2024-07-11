@@ -7,11 +7,11 @@ type Props = {
   classes?: string[];
 };
 
-const { rating } = Astro.props;
+const { rating, classes: componentClasses } = Astro.props;
 const classes = "mb-[0.25em] h-4 inline";
 ---
 
-<div class="whitespace-nowrap">
+<div class:list={[componentClasses, "whitespace-nowrap"]}>
   {
     Array.from({ length: rating }).map(() => <StarFilled classes={[classes]} />)
   }{
