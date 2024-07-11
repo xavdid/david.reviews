@@ -45,7 +45,9 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { reads, name } = Astro.props;
+const { reads, name, numBooksInSeries, remarks, percentComplete } = Astro.props;
+const seriesComplete = (numBooksInSeries ?? 0) > 0;
+const readAll = percentComplete === 100;
 const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 ---
 
@@ -58,22 +60,49 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   activeTab="books"
 >
   <h1 class="pt-2 text-2xl">
-    All reviews for The {name} series
+    All reviews for The <span class="underline">{name}</span> series
   </h1>
   <p class="pb-3 pt-2">
     {/* all series are by a single set of authors, for now */}
      by <AuthorList authors={reads[0].book.authors} style="rounded" />
   </p>
-  <p class="pb-3">
-    There {reads.length > 1 ? "are" : "is"}{" "}
-    {reads.length} review{pluralize(reads)} of {numUniqueBooks}
-     book{pluralize(numUniqueBooks)} for an average score of {
+  <p class="pb-2">
+    {
+      seriesComplete ? (
+        <>
+          I've read {readAll ? "all" : numUniqueBooks} of the {numBooksInSeries}
+          book{pluralize(numUniqueBooks)} in this series.
+          {/* {readAll ? null : <span> ({percentComplete?.toFixed(2)}%)</span>} */}
+        </>
+      ) : (
+        <>
+          I've read {numUniqueBooks} book{pluralize(numUniqueBooks)} in this
+          series so far.
+        </>
+      )
+    }
+     There {reads.length > 1 ? "are" : "is"}{" "}
+    {reads.length} review{pluralize(reads)} of {
+      numUniqueBooks > 1 ? "those" : "that"
+    } book{pluralize(numUniqueBooks)} for an average score of {
       averageRating(reads)
     }
      (<ExternalLink href="https://xavd.id/blog/post/on-the-rating-of-media/">
       {"out of 4"}
     </ExternalLink>).
   </p>
+  {
+    remarks && (
+      <div class="pb-3">
+        <p class="pb-1">
+          I rated this series {remarks.rating}⭐ overall and said:
+        </p>
+        <p class="border-s-4 border-emerald-950 pl-4 italic dark:border-emerald-50">
+          {remarks.notes}
+        </p>
+      </div>
+    )
+  }
   <BookLegend />
   <div>
     {
