@@ -3,6 +3,7 @@ import { loadReads } from "../../airtable/data/reads";
 import BookLegend from "../../components/BookLegend.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import ReadBox from "../../components/infoboxes/ReadBox.astro";
+import RoundedLink from "../../components/links/RoundedLink.astro";
 import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { seoTitle } from "../../utils";
@@ -40,16 +41,27 @@ const tabTitle = showAll ? "All Books" : "Recent Books";
   activeTab="books"
 >
   <h1 class="pb-3 pt-2 text-2xl">{title}</h1>
-  <p class="pb-3">
+  <p>
     There are {rawReviews.length} reviews of {numUniqueBooks} books.{
+      !showAll && <> This is the most recent {limit}.</>
+    } You can also:
+  </p>
+  <ul class="list-disc pl-8 pt-2">
+    <li class="pb-3">
+      See <RoundedLink href="/books/series/">all series</RoundedLink>
+    </li>
+    <li class="pb-3">
+      See <RoundedLink href="/books/authors/">all authors</RoundedLink>
+    </li>
+    {
       !showAll && (
-        <>
-          This is the most recent {limit}; you can also{" "}
-          <SubtleLink href="/books/all/">see all</SubtleLink>.
-        </>
+        <li class="pb-3">
+          See <RoundedLink href="/books/all/">everything</RoundedLink>
+        </li>
       )
     }
-  </p>
+  </ul>
+
   <SubscribeBlurb mediaType="book" />
   <BookLegend />
   <div>

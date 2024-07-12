@@ -50,7 +50,7 @@ export const getStaticPaths = async (): Result => {
 const { title, reads, series, award, authors, gbid, numberInSeries } =
   Astro.props;
 
-const authorsStr = authors.map((a) => a.name).join(", ");
+const authorsStr = authors.map((a) => a.fullName).join(", ");
 ---
 
 <Layout
@@ -77,7 +77,7 @@ const authorsStr = authors.map((a) => a.name).join(", ");
     />
     <div class="pl-3">
       <h1 class="pt-2 text-2xl">{title}</h1>
-      <p class="pb-2">
+      <p class="py-2">
         by <AuthorList authors={authors} style="rounded" />
       </p>
       <p class="pb-2">

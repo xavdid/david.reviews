@@ -1,0 +1,84 @@
+---
+import type { Author } from "../../../airtable/data/authors";
+import { loadBooks } from "../../../airtable/data/books";
+import type { Series } from "../../../airtable/data/series";
+import AuthorList from "../../../components/AuthorList.astro";
+import Rating from "../../../components/Rating.astro";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
+import SubtleLink from "../../../components/links/SubtleLink.astro";
+import Layout from "../../../layouts/Layout.astro";
+
+const books = await loadBooks();
+
+const series = Object.values(books).reduce<
+  Record<string, Series & { authors: Author[]; numReads: number }>
+>((result, book) => {
+  if (book.series) {
+    if (book.series.slug in result) {
+      result[book.series.slug].numReads += 1;
+    } else {
+      result[book.series.slug] = {
+        ...book.series,
+        authors: book.authors,
+        numReads: 1,
+      };
+    }
+  }
+  return result;
+}, {});
+---
+
+<Layout
+  pageTitle={`Book Series`}
+  seoTitle={"All Book Series"}
+  seoDescription={`A list of the ${
+    Object.keys(series).length
+  } book series I've read at least one book in.`}
+  activeTab="books"
+>
+  <h1 class="pt-2 text-2xl">All Series</h1>
+  <p class="py-3">
+    I've read at least one book in {Object.keys(series).length} different
+    series. You can also:
+  </p>
+  <ul class="list-disc pl-8 pt-2">
+    <li class="pb-3">
+      See <RoundedLink href="/books/">recent reads</RoundedLink>
+    </li>
+    <li class="pb-3">
+      See <RoundedLink href="/books/authors/">all authors</RoundedLink>
+    </li>
+  </ul>
+  <table class="w-fit table-auto border-separate">
+    <thead class="sticky top-0 bg-white dark:bg-zinc-800">
+      <tr>
+        <th>Rating</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th class="px-1"># Books Read</th>
+        <th class="px-1"># Books</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        Object.values(series)
+          .toSorted((a, b) => (a.name > b.name ? 1 : -1))
+          .map((s) => (
+            <tr class=" odd:bg-green-100 dark:odd:bg-green-900">
+              <td class="px-1">
+                {s.remarks && <Rating rating={s.remarks.rating} />}
+              </td>
+              <td class="px-2 py-3">
+                <SubtleLink href={s.permalink}>{s.name}</SubtleLink>
+              </td>
+              <td class="px-2 py-3">
+                <AuthorList authors={s.authors} style="subtle" />
+              </td>
+              <td class="px-3">{s.numReads}</td>
+              <td class="px-3">{s.numBooksInSeries ?? "?"}</td>
+            </tr>
+          ))
+      }
+    </tbody>
+  </table>
+</Layout>

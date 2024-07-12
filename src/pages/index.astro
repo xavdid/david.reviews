@@ -121,7 +121,7 @@ const now = new Date().toISOString();
             />
             <div class="flex flex-col pl-4">
               <span class="pb-2 text-xl font-bold">{title}</span>
-              <span>by: {authors.map((a) => a.name).join(", ")}</span>
+              <span>by: {authors.map((a) => a.fullName).join(", ")}</span>
               <span>since: {dateStarted}</span>
               {medium === "Audio" && <span>{medium}</span>}
             </div>

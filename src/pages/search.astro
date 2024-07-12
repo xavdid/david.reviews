@@ -16,7 +16,7 @@ const list: SearchItem[] = [
       title: `${title} (${yearReleased})`,
       category: "movie" as SearchItem["category"],
       permalink,
-    }),
+    })
   ),
   ...Object.values(await loadGames()).map(({ title, permalink }) => ({
     title,
@@ -33,11 +33,13 @@ const list: SearchItem[] = [
     category: "book" as SearchItem["category"],
     permalink,
   })),
-  ...Object.values(await loadAuthors()).map(({ name, permalink }) => ({
-    title: `${name} (Author)`,
-    category: "book" as SearchItem["category"],
-    permalink,
-  })),
+  ...Object.values(await loadAuthors()).map(
+    ({ fullName: name, permalink }) => ({
+      title: `${name} (Author)`,
+      category: "book" as SearchItem["category"],
+      permalink,
+    })
+  ),
 ];
 const index = Fuse.createIndex(["title"], list);
 ---

@@ -42,7 +42,7 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { reads, name, recordId: authorId } = Astro.props;
+const { reads, fullName: name, recordId: authorId } = Astro.props;
 const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 ---
 
@@ -50,12 +50,12 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   pageTitle={`${name} - Books`}
   seoTitle={seoTitle(`Books by ${name}`)}
   seoDescription={`David shares thoughts about the ${numUniqueBooks} book${pluralize(
-    numUniqueBooks,
+    numUniqueBooks
   )} he's read by ${name}.`}
   activeTab="books"
 >
   <h1 class="pb-3 pt-2 text-2xl">
-    Reviews for {name}
+    Reviews for <span class="underline">{name}</span>
   </h1>
   <p class="pb-3">
     There {reads.length > 1 ? "are" : "is"}{" "}

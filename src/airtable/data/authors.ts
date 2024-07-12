@@ -9,6 +9,7 @@ const SCHEMA = {
   tableName: "Authors",
   fields: {
     name: "fldKxzwvf9blINIWw",
+    lastName: "flduQlOUeqoUhO4FW",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
@@ -24,7 +25,8 @@ type StringFields = {
 type AuthorRecord = StringFields & NonStringFields & RecordBase;
 
 export type Author = {
-  name: string;
+  fullName: string;
+  lastName: string;
   recordId: string;
   slug: string;
   permalink: Permalink;
@@ -33,7 +35,8 @@ export type Author = {
 const materialize = (authorRow: AuthorRecord): Author => {
   const slug = slugify(authorRow[fields.name]);
   return {
-    name: authorRow[fields.name],
+    fullName: authorRow[fields.name],
+    lastName: authorRow[fields.lastName],
     slug,
     permalink: `/books/authors/${slug}/`,
     recordId: authorRow.recordId,
