@@ -50,7 +50,7 @@ export const getStaticPaths = async (): Result => {
 const { title, reads, series, award, authors, gbid, numberInSeries } =
   Astro.props;
 
-const authorsStr = authors.map((a) => a.fullName).join(", ");
+const authorsStr = authors.map((a) => a.name).join(", ");
 ---
 
 <Layout

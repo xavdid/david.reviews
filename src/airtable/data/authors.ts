@@ -25,7 +25,9 @@ type StringFields = {
 type AuthorRecord = StringFields & NonStringFields & RecordBase;
 
 export type Author = {
-  fullName: string;
+  // for an unknown reason, it's important that both `Author` and `Series` have a `name` key.
+  // They don't need to agree on every key, but if this is renamed to `fullName`, TS complains (in `loadBooks`)
+  name: string;
   lastName: string;
   recordId: string;
   slug: string;
@@ -35,7 +37,7 @@ export type Author = {
 const materialize = (authorRow: AuthorRecord): Author => {
   const slug = slugify(authorRow[fields.fullName]);
   return {
-    fullName: authorRow[fields.fullName],
+    name: authorRow[fields.fullName],
     lastName: authorRow[fields.lastName],
     slug,
     permalink: `/books/authors/${slug}/`,

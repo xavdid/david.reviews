@@ -63,9 +63,7 @@ const authors = Object.values(reads).reduce<
           .map((author) => (
             <tr class=" odd:bg-green-100 dark:odd:bg-green-900">
               <td class="px-2 py-3">
-                <SubtleLink href={author.permalink}>
-                  {author.fullName}
-                </SubtleLink>
+                <SubtleLink href={author.permalink}>{author.name}</SubtleLink>
               </td>
               <td class="pl-3">{author.books.size}</td>
               <td class="pl-3">{author.numReads}</td>

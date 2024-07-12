@@ -27,7 +27,7 @@ const intersperse = (arr: string[], sep: string): string[] => {
   >{
     intersperse(
       authors.map((author) => (
-        <LinkComponent href={author.permalink}>{author.fullName}</LinkComponent>
+        <LinkComponent href={author.permalink}>{author.name}</LinkComponent>
       )),
       ", "
     )
