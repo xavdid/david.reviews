@@ -38,14 +38,14 @@ const authors = Object.values(reads).reduce<
   <h1 class="pt-2 text-2xl">All Authors</h1>
   <p class="py-3">
     I've read at least one book by {Object.keys(authors).length} different
-    authors.You can also:
+    authors. See also:
   </p>
-  <ul class="list-disc pl-8 pt-2">
+  <ul class="list-disc pb-1 pl-8">
     <li class="pb-3">
-      See <RoundedLink href="/books/">recent reads</RoundedLink>
+      <RoundedLink href="/books/">recent reads</RoundedLink>
     </li>
     <li class="pb-3">
-      See <RoundedLink href="/books/series/">all series</RoundedLink>
+      <RoundedLink href="/books/series/">all series</RoundedLink>
     </li>
   </ul>
   <table class="w-fit table-auto border-separate">

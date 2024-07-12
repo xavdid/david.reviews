@@ -8,7 +8,7 @@ const SCHEMA = {
   viewId: "viwTO8dOPtZBndX34",
   tableName: "Authors",
   fields: {
-    name: "fldKxzwvf9blINIWw",
+    fullName: "fldKxzwvf9blINIWw",
     lastName: "flduQlOUeqoUhO4FW",
   },
 } as const satisfies AirtableBase;
@@ -33,9 +33,9 @@ export type Author = {
 };
 
 const materialize = (authorRow: AuthorRecord): Author => {
-  const slug = slugify(authorRow[fields.name]);
+  const slug = slugify(authorRow[fields.fullName]);
   return {
-    fullName: authorRow[fields.name],
+    fullName: authorRow[fields.fullName],
     lastName: authorRow[fields.lastName],
     slug,
     permalink: `/books/authors/${slug}/`,
