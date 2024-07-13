@@ -1,8 +1,8 @@
 ---
 import type { Author } from "../../../airtable/data/authors";
 import { loadReads } from "../../../airtable/data/reads";
+import StickyTable from "../../../components/StickyTable.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
-import SubtleLink from "../../../components/links/SubtleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 
 const reads = await loadReads();
@@ -48,28 +48,31 @@ const authors = Object.values(reads).reduce<
       <RoundedLink href="/books/series/">all series</RoundedLink>
     </li>
   </ul>
-  <table class="w-fit table-auto border-separate">
-    <thead class="sticky top-0 bg-white dark:bg-zinc-800">
-      <tr>
-        <th>Name</th>
-        <th class="px-2"># Books</th>
-        <th class="px-2"># Books Read</th>
-      </tr>
-    </thead>
-    <tbody>
+
+  <StickyTable
+    header={[
       {
-        Object.values(authors)
-          .toSorted((a, b) => (a.lastName > b.lastName ? 1 : -1))
-          .map((author) => (
-            <tr class=" odd:bg-green-100 dark:odd:bg-green-900">
-              <td class="px-2 py-3">
-                <SubtleLink href={author.permalink}>{author.name}</SubtleLink>
-              </td>
-              <td class="pl-3">{author.books.size}</td>
-              <td class="pl-3">{author.numReads}</td>
-            </tr>
-          ))
-      }
-    </tbody>
-  </table>
+        text: "Name",
+      },
+      {
+        text: "# Books",
+        classes: ["px-2"],
+      },
+      {
+        text: "# Books Read",
+        classes: ["px-2"],
+      },
+    ]}
+    rows={Object.values(authors)
+      .toSorted((a, b) => (a.lastName > b.lastName ? 1 : -1))
+      .map((author) => [
+        {
+          text: author.name,
+          linkTo: author.permalink,
+          classes: ["px-2", "py-3"],
+        },
+        { text: author.books.size, classes: ["pl-3"] },
+        { text: author.numReads, classes: ["pl-3"] },
+      ])}
+  />
 </Layout>

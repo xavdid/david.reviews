@@ -1,0 +1,55 @@
+---
+import type { Author } from "../airtable/data/authors";
+import AuthorList from "./AuthorList.astro";
+import Rating from "./Rating.astro";
+import SubtleLink from "./links/SubtleLink.astro";
+
+type TableItem = {
+  text?: string | number;
+  classes?: string[];
+  linkTo?: string;
+  rating?: number;
+  authors?: Author[];
+};
+
+type Props = {
+  header: TableItem[];
+  rows: TableItem[][];
+};
+
+const { header, rows } = Astro.props;
+---
+
+<table class="table-auto border-separate">
+  <thead>
+    <tr class="sticky top-0 bg-white dark:bg-zinc-800">
+      {
+        header.map(({ text, classes = [] }) => (
+          <th class:list={classes}>{text}</th>
+        ))
+      }
+    </tr>
+  </thead>
+
+  <tbody>
+    {
+      rows.map((row) => (
+        <tr class="odd:bg-green-100 dark:odd:bg-green-900">
+          {row.map(({ text, classes = [], linkTo, rating, authors }) => (
+            <td class:list={classes}>
+              {authors ? (
+                <AuthorList authors={authors} style="subtle" />
+              ) : rating != null ? (
+                <Rating rating={rating} />
+              ) : linkTo ? (
+                <SubtleLink href={linkTo}>{text}</SubtleLink>
+              ) : (
+                text
+              )}
+            </td>
+          ))}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>

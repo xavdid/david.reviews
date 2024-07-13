@@ -2,10 +2,8 @@
 import type { Author } from "../../../airtable/data/authors";
 import { loadBooks } from "../../../airtable/data/books";
 import type { Series } from "../../../airtable/data/series";
-import AuthorList from "../../../components/AuthorList.astro";
-import Rating from "../../../components/Rating.astro";
+import StickyTable from "../../../components/StickyTable.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
-import SubtleLink from "../../../components/links/SubtleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 
 const books = await loadBooks();
@@ -49,36 +47,39 @@ const series = Object.values(books).reduce<
       <RoundedLink href="/books/authors/">all authors</RoundedLink>
     </li>
   </ul>
-  <table class="w-fit table-auto border-separate">
-    <thead class="sticky top-0 bg-white dark:bg-zinc-800">
-      <tr>
-        <th>Rating</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th class="px-1"># Books Read</th>
-        <th class="px-1"># Books</th>
-      </tr>
-    </thead>
-    <tbody>
-      {
-        Object.values(series)
-          .toSorted((a, b) => (a.name > b.name ? 1 : -1))
-          .map((s) => (
-            <tr class=" odd:bg-green-100 dark:odd:bg-green-900">
-              <td class="px-1">
-                {s.remarks && <Rating rating={s.remarks.rating} />}
-              </td>
-              <td class="px-2 py-3">
-                <SubtleLink href={s.permalink}>{s.name}</SubtleLink>
-              </td>
-              <td class="px-2 py-3">
-                <AuthorList authors={s.authors} style="subtle" />
-              </td>
-              <td class="px-3">{s.numReads}</td>
-              <td class="px-3">{s.numBooksInSeries ?? "?"}</td>
-            </tr>
-          ))
-      }
-    </tbody>
-  </table>
+
+  <StickyTable
+    header={[
+      { text: "Rating" },
+      { text: "Title" },
+      { text: "Author" },
+      { text: "# Books Read", classes: ["px-1"] },
+      { text: "# Books", classes: ["px-1"] },
+    ]}
+    rows={Object.values(series)
+      .toSorted((a, b) => (a.name > b.name ? 1 : -1))
+      .map((s) => [
+        {
+          rating: s.remarks?.rating,
+          classes: ["px-1"],
+        },
+        {
+          text: s.name,
+          linkTo: s.permalink,
+          classes: ["px-2", " py-3"],
+        },
+        {
+          authors: s.authors,
+          classes: ["px-2", " py-3"],
+        },
+        {
+          text: s.numReads,
+          classes: ["px-3"],
+        },
+        {
+          text: s.numBooksInSeries ?? "?",
+          classes: ["px-3"],
+        },
+      ])}
+  />
 </Layout>
