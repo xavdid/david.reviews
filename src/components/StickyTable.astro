@@ -20,36 +20,38 @@ type Props = {
 const { header, rows } = Astro.props;
 ---
 
-<table class="table-auto border-separate">
-  <thead>
-    <tr class="sticky top-0 bg-white dark:bg-zinc-800">
+<div class="overflow-x-scroll">
+  <table class="table-auto border-separate">
+    <thead>
+      <tr class="sticky top-0 bg-white dark:bg-zinc-800">
+        {
+          header.map(({ text, classes = [] }) => (
+            <th class:list={classes}>{text}</th>
+          ))
+        }
+      </tr>
+    </thead>
+
+    <tbody>
       {
-        header.map(({ text, classes = [] }) => (
-          <th class:list={classes}>{text}</th>
+        rows.map((row) => (
+          <tr class="odd:bg-green-100 dark:odd:bg-green-900">
+            {row.map(({ text, classes = [], linkTo, rating, authors }) => (
+              <td class:list={classes}>
+                {authors ? (
+                  <AuthorList authors={authors} style="subtle" />
+                ) : rating != null ? (
+                  <Rating rating={rating} />
+                ) : linkTo ? (
+                  <SubtleLink href={linkTo}>{text}</SubtleLink>
+                ) : (
+                  text
+                )}
+              </td>
+            ))}
+          </tr>
         ))
       }
-    </tr>
-  </thead>
-
-  <tbody>
-    {
-      rows.map((row) => (
-        <tr class="odd:bg-green-100 dark:odd:bg-green-900">
-          {row.map(({ text, classes = [], linkTo, rating, authors }) => (
-            <td class:list={classes}>
-              {authors ? (
-                <AuthorList authors={authors} style="subtle" />
-              ) : rating != null ? (
-                <Rating rating={rating} />
-              ) : linkTo ? (
-                <SubtleLink href={linkTo}>{text}</SubtleLink>
-              ) : (
-                text
-              )}
-            </td>
-          ))}
-        </tr>
-      ))
-    }
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
