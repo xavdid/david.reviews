@@ -1,24 +1,25 @@
 ---
 import type { Author } from "../../../airtable/data/authors";
-import { loadReads } from "../../../airtable/data/reads";
+import { loadReads, type Read } from "../../../airtable/data/reads";
 import StickyTable from "../../../components/StickyTable.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
+import { averageRating } from "../../../utils";
 
 const reads = await loadReads();
 
 const authors = Object.values(reads).reduce<
-  Record<string, Author & { books: Set<string>; numReads: number }>
+  Record<string, Author & { books: Set<string>; reads: Read[] }>
 >((result, read) => {
   read.book.authors.forEach((a) => {
     if (a.slug in result) {
-      result[a.slug].numReads += 1;
+      result[a.slug].reads.push(read);
       result[a.slug].books.add(read.book.gbid);
     } else {
       result[a.slug] = {
         ...a,
         books: new Set([read.book.gbid]),
-        numReads: 1,
+        reads: [read],
       };
     }
   });
@@ -55,11 +56,11 @@ const authors = Object.values(reads).reduce<
         text: "Name",
       },
       {
-        text: "# Books",
+        text: "# Reads",
         classes: ["px-2"],
       },
       {
-        text: "# Books Read",
+        text: "Average Rating",
         classes: ["px-2"],
       },
     ]}
@@ -69,10 +70,10 @@ const authors = Object.values(reads).reduce<
         {
           text: author.name,
           linkTo: author.permalink,
-          classes: ["px-2", "py-3"],
+          classes: ["p-2"],
         },
-        { text: author.books.size, classes: ["pl-3"] },
-        { text: author.numReads, classes: ["pl-3"] },
+        { text: author.reads.length, classes: ["pl-3"] },
+        { text: averageRating(author.reads), classes: ["pl-3"] },
       ])}
   />
 </Layout>

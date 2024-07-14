@@ -2,6 +2,7 @@
 import type { Author } from "../airtable/data/authors";
 import AuthorList from "./AuthorList.astro";
 import Rating from "./Rating.astro";
+import StarFilled from "./icons/star-filled.astro";
 import SubtleLink from "./links/SubtleLink.astro";
 
 type TableItem = {
@@ -20,38 +21,42 @@ type Props = {
 const { header, rows } = Astro.props;
 ---
 
-<div class="overflow-x-scroll">
-  <table class="table-auto border-separate">
-    <thead>
-      <tr class="sticky top-0 bg-white dark:bg-zinc-800">
-        {
-          header.map(({ text, classes = [] }) => (
-            <th class:list={classes}>{text}</th>
-          ))
-        }
-      </tr>
-    </thead>
-
-    <tbody>
+<table class="table-auto border-separate">
+  <thead>
+    <tr class="sticky top-0 bg-white dark:bg-zinc-800">
       {
-        rows.map((row) => (
-          <tr class="odd:bg-green-100 dark:odd:bg-green-900">
-            {row.map(({ text, classes = [], linkTo, rating, authors }) => (
-              <td class:list={classes}>
-                {authors ? (
-                  <AuthorList authors={authors} style="subtle" />
-                ) : rating != null ? (
-                  <Rating rating={rating} />
-                ) : linkTo ? (
-                  <SubtleLink href={linkTo}>{text}</SubtleLink>
-                ) : (
-                  text
-                )}
-              </td>
-            ))}
-          </tr>
+        header.map(({ text, classes = [] }) => (
+          <th class:list={classes}>{text}</th>
         ))
       }
-    </tbody>
-  </table>
-</div>
+    </tr>
+  </thead>
+
+  <tbody>
+    {
+      rows.map((row) => (
+        <tr class="odd:bg-green-100 dark:odd:bg-green-900">
+          {row.map(({ text, classes = [], linkTo, rating, authors }) => (
+            <td class:list={classes}>
+              {authors ? (
+                <AuthorList authors={authors} style="subtle" />
+              ) : rating != null ? (
+                <>
+                  <Rating rating={rating} classes={["hidden", "md:block"]} />
+                  <div class="md:hidden">
+                    {rating}
+                    <StarFilled classes={["mb-[0.35em]", "h-4", "inline"]} />
+                  </div>
+                </>
+              ) : linkTo ? (
+                <SubtleLink href={linkTo}>{text}</SubtleLink>
+              ) : (
+                text
+              )}
+            </td>
+          ))}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>

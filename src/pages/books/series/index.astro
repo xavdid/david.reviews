@@ -50,35 +50,30 @@ const series = Object.values(books).reduce<
 
   <StickyTable
     header={[
-      { text: "Rating" },
+      { text: "Rating", classes: ["px-1"] },
       { text: "Title" },
       { text: "Author" },
-      { text: "# Books Read", classes: ["px-1"] },
-      { text: "# Books", classes: ["px-1"] },
+      { text: "Progress", classes: ["px-1"] },
     ]}
     rows={Object.values(series)
       .toSorted((a, b) => (a.name > b.name ? 1 : -1))
       .map((s) => [
         {
           rating: s.remarks?.rating,
-          classes: ["px-1"],
+          classes: ["p-2"],
         },
         {
           text: s.name,
           linkTo: s.permalink,
-          classes: ["px-2", " py-3"],
+          classes: ["px-1", "py-2", "md:px-2"],
         },
         {
           authors: s.authors,
-          classes: ["px-2", " py-3"],
+          classes: ["p-2"],
         },
         {
-          text: s.numReads,
-          classes: ["px-3"],
-        },
-        {
-          text: s.numBooksInSeries ?? "?",
-          classes: ["px-3"],
+          text: `${s.numReads} / ${s.numBooksInSeries ?? "?"}`,
+          classes: ["p-2"],
         },
       ])}
   />
