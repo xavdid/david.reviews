@@ -103,7 +103,7 @@ export const GENRE_DESCRIPTIONS: Record<string, `${string}.`> = {
   racing: "going fast.",
   rhythm: "doing something rhythmically.",
   roguelike: "a repetitious gameplay loop where you improve or grow over time.",
-  rts: "making split-second decisions to achieve your load; pausing may be possible.",
+  rts: "making split-second decisions to achieve your goal; pausing may be possible.",
   shooting: "aiming and firing.",
   sports: "playing matches where someone wins.",
   stealth: "doing your best not to be seen or caught.",
