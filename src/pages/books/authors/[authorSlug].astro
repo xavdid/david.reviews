@@ -42,7 +42,7 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { reads, name: name, recordId: authorId } = Astro.props;
+const { reads, name, recordId: authorId } = Astro.props;
 const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 ---
 
