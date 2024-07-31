@@ -1,36 +1,97 @@
 ---
-import { loadPlays } from "../../airtable/data/plays";
+import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
+import ButtonGroup from "../../components/ButtonGroup.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import PlayBox from "../../components/infoboxes/PlayBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
-import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { genrePermalink, seoTitle } from "../../utils";
 
+type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
+type PlayFilter = (p: Play) => boolean;
+const DEFAULT_FILTER: PlayFilter = () => true;
+
 // this controls the /games and /games/all routes
-type Result = Array<{ params: { slug: string | undefined } }>;
-export const getStaticPaths = (): Result => [
+type Result = Array<{ params: { slug: Subpaths | undefined } }>;
+export const getStaticPaths = (): Result =>
+  (
+    [undefined, "all", "awarded", "recommended", "unrecommended"] as Subpaths[]
+  ).map((slug: Subpaths | undefined) => ({
+    params: { slug },
+  }));
+
+const subPages: Array<{
+  buttonLabel: string;
+  pageTitle: string;
+  tabTitle: string;
+  limit?: number;
+  filter?: PlayFilter;
+  subpath: Subpaths | null;
+  introText?: `${string}.`;
+}> = [
   {
-    params: {
-      slug: undefined,
-    },
+    subpath: "all",
+    buttonLabel: "All",
+    tabTitle: "All Reviews",
+    pageTitle: "Every Reviewed Game",
   },
   {
-    params: {
-      slug: "all",
-    },
+    subpath: null,
+    buttonLabel: "Recent",
+    pageTitle: "Recently Reviewed Games",
+    tabTitle: "Recent Games",
+    limit: 100,
+    introText: "Showing the most recent 100 reviews.",
+  },
+  {
+    subpath: "awarded",
+    buttonLabel: "🥇🥈🥉",
+    tabTitle: "Awarded Games",
+    pageTitle: "Every Award-Winning Game",
+    introText:
+      "Showing reviews of games that were Favorite of the Year honorees.",
+    filter: (p) => !!p.game.award && !isEtcPlay(p.playType),
+  },
+  {
+    subpath: "recommended",
+    buttonLabel: "👍",
+    tabTitle: "Recommended Games",
+    pageTitle: "All Recommended Games",
+    introText: "Showing games that I broadly recommend (rated 3+ stars).",
+    filter: (p) => p.rating >= 3,
+  },
+  {
+    subpath: "unrecommended",
+    buttonLabel: "👎",
+    tabTitle: "Unrecommended Games",
+    pageTitle: "All Unrecommended Games",
+    introText:
+      "Showing games you should avoid unless you're a big fan of the genre (anything rated 1 or 2 stars). There aren't that many of these, since I mostly play things I like.",
+    filter: (p) => p.rating < 3,
   },
 ];
 
-const showAll = !!Astro.params.slug;
+if (getStaticPaths().length !== subPages.length) {
+  throw new Error("Subpage without a matching static path!");
+}
+
+const slug = Astro.params.slug ?? null;
+
+const {
+  filter = DEFAULT_FILTER,
+  limit = undefined,
+  pageTitle,
+  tabTitle = "",
+  introText,
+} = subPages.find(({ subpath: subpageSlug }) => subpageSlug === slug) ?? {};
+if (!pageTitle) {
+  throw new Error(`Unable to find page details for slug "${slug}"`);
+}
 
 const plays = await loadPlays();
-const numUniqueGames = new Set(plays.map((p) => p.game.igdbId)).size;
-
-const title = showAll ? "Every Reviewed Game" : "Recently Reviewed Games";
-const limit = showAll ? undefined : 100;
-const tabTitle = showAll ? "All Games" : "Recent Games";
+const filteredPlays = plays.filter(filter).slice(0, limit);
+const numUniqueGames = new Set(filteredPlays.map((p) => p.game.igdbId)).size;
 ---
 
 <Layout
@@ -39,28 +100,37 @@ const tabTitle = showAll ? "All Games" : "Recent Games";
   seoDescription={`David shares thoughts about the ${numUniqueGames} games he's played.`}
   activeTab="games"
 >
-  <h1 class="pb-3 pt-2 text-2xl">{title}</h1>
+  <h1 class="pb-3 pt-2 text-2xl">{pageTitle}</h1>
   <p class="pb-3">
-    There are {plays.length} reviews of {numUniqueGames}
-     games. Each game notes a simple genre and play type (first time, replays,
-    DLC, etc). {
-      !showAll && (
-        <>
-          This is the most recent {limit}; you can also{" "}
-          <SubtleLink href="/games/all/">see all</SubtleLink>.
-        </>
-      )
+    {
+      slug === "all"
+        ? `Showing every single review (${filteredPlays.length} reviews for ${numUniqueGames} games).`
+        : introText
     }
   </p>
-  <p class="pb-3">
-    Each game notes its <RoundedLink href={genrePermalink("")}>
-      {"genre"}
-    </RoundedLink>, and you can click through to see all the others games from
-    that genre I've played.
-  </p>
+   Each game notes its:
+  <ul class="list-disc pb-3 pl-8">
+    <li class="py-1">Play type (first time, replays, DLC, etc)</li>
+    <li class="py-1">
+      <RoundedLink href={genrePermalink("")}>
+        {"genre"}
+      </RoundedLink>, and you can click through to see all the others games from
+      that genre I've played.
+    </li>
+  </ul>
   <SubscribeBlurb mediaType="game" />
+
+  <ButtonGroup
+    pathRoot="games"
+    currentSubpath={slug ?? null}
+    buttons={subPages.map(({ buttonLabel: label, subpath }) => ({
+      subpath,
+      label,
+    }))}
+  />
+
   <ul
-    class="mb-3 rounded bg-blue-50 p-2 dark:bg-blue-950 dark:ring-1 dark:ring-white"
+    class="mb-4 rounded bg-blue-50 p-2 dark:bg-blue-950 dark:ring-1 dark:ring-white"
   >
     <li>🛑 - Neglected to finish a beatable game</li>
     <li>
@@ -70,7 +140,8 @@ const tabTitle = showAll ? "All Games" : "Recent Games";
       </ExternalLink> honoree.
     </li>
   </ul>
+
   <div>
-    {plays.slice(0, limit).map((play) => <PlayBox play={play} />)}
+    {filteredPlays.map((play) => <PlayBox play={play} />)}
   </div>
 </Layout>

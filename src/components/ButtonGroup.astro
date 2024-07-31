@@ -1,0 +1,42 @@
+---
+type Props = {
+  pathRoot: "games" | "movies" | "books";
+  currentSubpath: string | null;
+  buttons: Array<{
+    label: string;
+    subpath: string | null;
+    // active?: boolean;
+  }>;
+};
+
+const { buttons, pathRoot, currentSubpath } = Astro.props;
+buttons.forEach(({ subpath }) => {
+  if (!subpath) {
+    return;
+  }
+
+  if (subpath.endsWith("/") || subpath.includes(pathRoot)) {
+    throw new Error(
+      `subpaths should not include the pathroot ("${pathRoot}") or end with a slash, got "${subpath}"`
+    );
+  }
+});
+---
+
+<div class="mb-6 mt-3 text-center">
+  <div class="inline-flex rounded-md">
+    {
+      buttons.map(({ label, subpath }) => (
+        <a
+          href={`/${pathRoot}${subpath ? `/${subpath}` : ""}/`}
+          class:list={[
+            "border-r border-gray-400 px-4 py-2 text-sm first:rounded-s-lg first:border last:rounded-e-lg last:border last:border-l-0 hover:bg-blue-600 dark:border-white [&:not(:first-child):not(:last-child)]:border-y",
+            subpath === currentSubpath && "bg-blue-600  text-white",
+          ]}
+        >
+          {label}
+        </a>
+      ))
+    }
+  </div>
+</div>
