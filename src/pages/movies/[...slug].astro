@@ -1,29 +1,90 @@
 ---
-import { loadWatches } from "../../airtable/data/watches";
+import { loadWatches, type Watch } from "../../airtable/data/watches";
+import ButtonGroup from "../../components/ButtonGroup.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import WatchBox from "../../components/infoboxes/WatchBox.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
-import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { collectionPermalink, seoTitle } from "../../utils";
 
-// this controls the /movies and /movies/all routes
-type Result = Array<{ params: { slug: string | undefined } }>;
-export const getStaticPaths = (): Result => [
+type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
+type WatchFilter = (W: { watch: Watch; numWatch: number }) => boolean;
+const DEFAULT_FILTER: WatchFilter = () => true;
+
+// this controls the /movies and /movies/... routes
+type Result = Array<{ params: { slug: Subpaths | undefined } }>;
+export const getStaticPaths = (): Result =>
+  (
+    [undefined, "all", "awarded", "recommended", "unrecommended"] as Subpaths[]
+  ).map((slug: Subpaths | undefined) => ({
+    params: { slug },
+  }));
+
+const subPages: Array<{
+  buttonLabel: string;
+  pageTitle: string;
+  tabTitle: string;
+  limit?: number;
+  filter?: WatchFilter;
+  subpath: Subpaths | null;
+  introText?: `${string}.` | `${string}!`;
+}> = [
   {
-    params: {
-      slug: undefined,
-    },
+    subpath: "all",
+    buttonLabel: "All",
+    tabTitle: "All Reviews",
+    pageTitle: "Every Reviewed Movie",
   },
   {
-    params: {
-      slug: "all",
-    },
+    subpath: null,
+    buttonLabel: "Recent",
+    pageTitle: "Recently Reviewed Movies",
+    tabTitle: "Recent Movies",
+    limit: 100,
+    introText: "Showing the 100 most recent reviews.",
+  },
+  {
+    subpath: "awarded",
+    buttonLabel: "🥇🥈🥉",
+    tabTitle: "Awarded Movies",
+    pageTitle: "Every Favorite-of-the-Year Honoree",
+    introText:
+      "Showing reviews of movies that were one of my favorite things I watched that year.",
+    filter: ({ watch }) => !!watch.movie.award,
+  },
+  {
+    subpath: "recommended",
+    buttonLabel: "👍",
+    tabTitle: "Recommended Movies",
+    pageTitle: "All Recommended Movies",
+    introText:
+      "Showing reviews of movies that I broadly recommend. Those I've seen a bunch may not have text reviews.",
+    filter: ({ watch }) => watch.rating >= 3,
+  },
+  {
+    subpath: "unrecommended",
+    buttonLabel: "👎",
+    tabTitle: "Unrecommended Movies",
+    pageTitle: "All Unrecommended Movies",
+    introText:
+      "Showing reviews of movies you should avoid unless you're a big fan of the genre or like watching bad movies (like I do).",
+    filter: ({ watch }) => watch.rating < 3,
   },
 ];
 
-const showAll = !!Astro.params.slug;
+const slug = Astro.params.slug ?? null;
+
+const {
+  filter = DEFAULT_FILTER,
+  limit = undefined,
+  pageTitle,
+  tabTitle = "",
+  introText,
+} = subPages.find(({ subpath: subpageSlug }) => subpageSlug === slug) ?? {};
+if (!pageTitle) {
+  throw new Error(`Unable to find page details for slug "${slug}"`);
+}
 
 const watches = await loadWatches();
 const watchCounts: Record<string, number> = {};
@@ -36,16 +97,13 @@ const watchesWithCounts = watches.map((watch) => {
     numWatch: watch.movie.numWatches - thisWatchNum,
   };
 });
+const filteredWatches = watchesWithCounts.filter(filter).slice(0, limit);
 const collectionEmoji = new Set<string>(
   watches
     .map((w) => w.movie.collections?.map((c) => c.emoji))
     .flat()
     .filter(Boolean) as string[]
 );
-
-const title = showAll ? "Every Reviewed Movie" : "Recently Reviewed Movies";
-const limit = showAll ? undefined : 100;
-const tabTitle = showAll ? "All Movies" : "Recent Movies";
 ---
 
 <Layout
@@ -56,20 +114,29 @@ const tabTitle = showAll ? "All Movies" : "Recent Movies";
   } movies he's watched.`}
   activeTab="movies"
 >
-  <h1 class="pb-3 pt-2 text-2xl">{title}</h1>
-  <p class="pb-3">
-    There are {watchesWithCounts.length} reviews of {
-      Object.keys(watchCounts).length
-    } movies. {
-      !showAll && (
-        <>
-          This is the most recent {limit}; you can also{" "}
-          <SubtleLink href="/movies/all/">see all</SubtleLink>.
-        </>
-      )
+  <h1 class="pb-3 pt-2 text-2xl">{pageTitle}</h1>
+  <!-- fixed-height box so content doesn't jump around -->
+  <!-- <p class="min-h-[5rem]"> -->
+  <p class="mb-2">
+    {
+      slug === "all"
+        ? `Showing every single review (${filteredWatches.length} reviews for ${
+            Object.keys(watchCounts).length
+          } movies).`
+        : introText
     }
   </p>
   <SubscribeBlurb mediaType="movie" />
+
+  <ButtonGroup
+    pathRoot="movies"
+    currentSubpath={slug ?? null}
+    buttons={subPages.map(({ buttonLabel: label, subpath }) => ({
+      subpath,
+      label,
+    }))}
+  />
+
   <ul
     class="mb-3 rounded bg-red-50 p-2 dark:bg-red-950 dark:ring-1 dark:ring-white"
   >
@@ -93,11 +160,9 @@ const tabTitle = showAll ? "All Movies" : "Recent Movies";
   </ul>
   <div>
     {
-      watchesWithCounts
-        .slice(0, limit)
-        .map(({ watch, numWatch }) => (
-          <WatchBox watch={watch} numWatch={numWatch} />
-        ))
+      filteredWatches.map(({ watch, numWatch }) => (
+        <WatchBox watch={watch} numWatch={numWatch} />
+      ))
     }
   </div>
 </Layout>

@@ -12,7 +12,7 @@ type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
 type PlayFilter = (p: Play) => boolean;
 const DEFAULT_FILTER: PlayFilter = () => true;
 
-// this controls the /games and /games/all routes
+// this controls the /games and /games/... routes
 type Result = Array<{ params: { slug: Subpaths | undefined } }>;
 export const getStaticPaths = (): Result =>
   (
@@ -20,7 +20,6 @@ export const getStaticPaths = (): Result =>
   ).map((slug: Subpaths | undefined) => ({
     params: { slug },
   }));
-
 const subPages: Array<{
   buttonLabel: string;
   pageTitle: string;
@@ -28,7 +27,7 @@ const subPages: Array<{
   limit?: number;
   filter?: PlayFilter;
   subpath: Subpaths | null;
-  introText?: `${string}.`;
+  introText?: `${string}.` | `${string}!`;
 }> = [
   {
     subpath: "all",
@@ -42,15 +41,15 @@ const subPages: Array<{
     pageTitle: "Recently Reviewed Games",
     tabTitle: "Recent Games",
     limit: 100,
-    introText: "Showing the most recent 100 reviews.",
+    introText: "Showing the 100 most recent reviews.",
   },
   {
     subpath: "awarded",
     buttonLabel: "🥇🥈🥉",
     tabTitle: "Awarded Games",
-    pageTitle: "Every Award-Winning Game",
+    pageTitle: "Every Favorite-of-the-Year Honoree",
     introText:
-      "Showing reviews of games that were Favorite of the Year honorees.",
+      "Showing reviews of games that were one of my favorite things I played that year. The cream of the crop!",
     filter: (p) => !!p.game.award && !isEtcPlay(p.playType),
   },
   {
@@ -58,7 +57,8 @@ const subPages: Array<{
     buttonLabel: "👍",
     tabTitle: "Recommended Games",
     pageTitle: "All Recommended Games",
-    introText: "Showing games that I broadly recommend (rated 3+ stars).",
+    introText:
+      "Showing reviews of games that I broadly recommend (rated 3+ stars). Games at the bottom of the list may not have notes.",
     filter: (p) => p.rating >= 3,
   },
   {
@@ -67,7 +67,7 @@ const subPages: Array<{
     tabTitle: "Unrecommended Games",
     pageTitle: "All Unrecommended Games",
     introText:
-      "Showing games you should avoid unless you're a big fan of the genre (anything rated 1 or 2 stars). There aren't that many of these, since I mostly play things I like.",
+      "Showing reviews of games you should avoid unless you're a big fan of the genre (anything rated 1 or 2 stars). There aren't that many of these, since I mostly play things I like.",
     filter: (p) => p.rating < 3,
   },
 ];

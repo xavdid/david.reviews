@@ -5,11 +5,18 @@ type Props = {
   buttons: Array<{
     label: string;
     subpath: string | null;
-    // active?: boolean;
   }>;
 };
 
 const { buttons, pathRoot, currentSubpath } = Astro.props;
+
+const colors = {
+  games: ["bg-blue-600", "hover:bg-blue-600"],
+  movies: ["bg-red-600", "hover:bg-red-600"],
+  books: ["bg-emerald-600", "hover:bg-emerald-600"],
+} as const;
+const [activeColor, hoverColor] = colors[pathRoot];
+
 buttons.forEach(({ subpath }) => {
   if (!subpath) {
     return;
@@ -30,8 +37,10 @@ buttons.forEach(({ subpath }) => {
         <a
           href={`/${pathRoot}${subpath ? `/${subpath}` : ""}/`}
           class:list={[
-            "border-r border-gray-400 px-4 py-2 text-sm first:rounded-s-lg first:border last:rounded-e-lg last:border last:border-l-0 hover:bg-blue-600 dark:border-white [&:not(:first-child):not(:last-child)]:border-y",
-            subpath === currentSubpath && "bg-blue-600  text-white",
+            "border-r border-gray-400 px-4 py-2 text-sm first:rounded-s-lg first:border last:rounded-e-lg last:border last:border-l-0",
+            hoverColor,
+            "dark:border-white [&:not(:first-child):not(:last-child)]:border-y",
+            subpath === currentSubpath && [activeColor, " text-white"],
           ]}
         >
           {label}

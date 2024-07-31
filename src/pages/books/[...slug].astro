@@ -1,69 +1,133 @@
 ---
-import { loadReads } from "../../airtable/data/reads";
+import { loadReads, type Read } from "../../airtable/data/reads";
 import BookLegend from "../../components/BookLegend.astro";
+import ButtonGroup from "../../components/ButtonGroup.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import ReadBox from "../../components/infoboxes/ReadBox.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { seoTitle } from "../../utils";
 
-// this controls the /books and /books/all routes
-type Result = Array<{ params: { slug: string | undefined } }>;
-export const getStaticPaths = (): Result => [
+type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
+type WatchFilter = (read: Read) => boolean;
+const DEFAULT_FILTER: WatchFilter = () => true;
+
+// this controls the /books and /books/... routes
+type Result = Array<{ params: { slug: Subpaths | undefined } }>;
+export const getStaticPaths = (): Result =>
+  (
+    [undefined, "all", "awarded", "recommended", "unrecommended"] as Subpaths[]
+  ).map((slug: Subpaths | undefined) => ({
+    params: { slug },
+  }));
+
+const subPages: Array<{
+  buttonLabel: string;
+  pageTitle: string;
+  tabTitle: string;
+  limit?: number;
+  filter?: WatchFilter;
+  subpath: Subpaths | null;
+  introText?: `${string}.` | `${string}!`;
+}> = [
   {
-    params: {
-      slug: undefined,
-    },
+    subpath: "all",
+    buttonLabel: "All",
+    tabTitle: "All Reviews",
+    pageTitle: "Every Reviewed Book",
   },
   {
-    params: {
-      slug: "all",
-    },
+    subpath: null,
+    buttonLabel: "Recent",
+    pageTitle: "Recently Reviewed Books",
+    tabTitle: "Recent Books",
+    limit: 100,
+    introText: "Showing the 100 most recent reviews.",
+  },
+  {
+    subpath: "awarded",
+    buttonLabel: "🥇🥈🥉",
+    tabTitle: "Awarded Books",
+    pageTitle: "Every Favorite-of-the-Year Honoree",
+    introText:
+      "Showing reviews of books that were one of my favorite things I watched that year.",
+    filter: (read) => !!read.book.award,
+  },
+  {
+    subpath: "recommended",
+    buttonLabel: "👍",
+    tabTitle: "Recommended Books",
+    pageTitle: "All Recommended Books",
+    introText: "Showing reviews of books that I broadly recommend.",
+    filter: (read) => read.rating >= 3,
+  },
+  {
+    subpath: "unrecommended",
+    buttonLabel: "👎",
+    tabTitle: "Unrecommended Books",
+    pageTitle: "All Unrecommended Books",
+    introText:
+      "Showing reviews of books you should avoid unless you're a big fan of the genre.",
+    filter: (read) => read.rating < 3,
   },
 ];
 
-const showAll = !!Astro.params.slug;
+const slug = Astro.params.slug ?? null;
 
-const rawReviews = await loadReads();
+const {
+  filter = DEFAULT_FILTER,
+  limit = undefined,
+  pageTitle,
+  tabTitle = "",
+  introText,
+} = subPages.find(({ subpath: subpageSlug }) => subpageSlug === slug) ?? {};
+if (!pageTitle) {
+  throw new Error(`Unable to find page details for slug "${slug}"`);
+}
 
-const numUniqueBooks = new Set(rawReviews.map((r) => r.book.gbid)).size;
+const reads = await loadReads();
+const filteredReads = reads.filter(filter).slice(0, limit);
 
-const title = showAll ? "Every Reviewed Book" : "Recently Reviewed Books";
-const limit = showAll ? undefined : 100;
-const tabTitle = showAll ? "All Books" : "Recent Books";
+const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 ---
 
 <Layout
   pageTitle={tabTitle}
   seoTitle={seoTitle(`Books!`)}
-  seoDescription={`David shares thoughts about the ${rawReviews.length} books he's read.`}
+  seoDescription={`David shares thoughts about the ${reads.length} books he's read.`}
   activeTab="books"
 >
-  <h1 class="pb-3 pt-2 text-2xl">{title}</h1>
-  <p>
-    There are {rawReviews.length} reviews of {numUniqueBooks} books.{
-      !showAll && <> This is the most recent {limit}.</>
-    } See also:
+  <h1 class="pb-3 pt-2 text-2xl">{pageTitle}</h1>
+
+  <p class="pb-3">
+    {
+      slug === "all"
+        ? `Showing every single review (${reads.length} reviews for ${numUniqueBooks} books).`
+        : introText
+    } You can also see lists of:
   </p>
-  <ul class="list-disc pl-8 pt-2">
+  <ul class="list-disc pl-8">
     <li class="pb-3">
       <RoundedLink href="/books/series/">all series</RoundedLink>
     </li>
     <li class="pb-3">
       <RoundedLink href="/books/authors/">all authors</RoundedLink>
     </li>
-    {
-      !showAll && (
-        <li class="pb-3">
-          <RoundedLink href="/books/all/">all reads</RoundedLink>
-        </li>
-      )
-    }
   </ul>
 
   <SubscribeBlurb mediaType="book" />
+
+  <ButtonGroup
+    pathRoot="books"
+    currentSubpath={slug ?? null}
+    buttons={subPages.map(({ buttonLabel: label, subpath }) => ({
+      subpath,
+      label,
+    }))}
+  />
+
   <BookLegend />
   <div>
-    {rawReviews.map((read) => <ReadBox read={read} />)}
+    {filteredReads.map((read) => <ReadBox read={read} />)}
   </div>
 </Layout>
