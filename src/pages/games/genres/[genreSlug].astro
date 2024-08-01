@@ -12,6 +12,7 @@ import { genrePermalink, seoTitle } from "../../../utils";
 import Rating from "../../../components/Rating.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
+import RoundedText from "../../../components/RoundedText.astro";
 
 type Params = {
   genreSlug: string;
@@ -35,7 +36,7 @@ export const getStaticPaths = async (): Result => {
     // for review/average, only note full plays
     if (
       !(["First Time", "Replay", "New Edition"] as PlayTypes[]).includes(
-        play.playType,
+        play.playType
       )
     ) {
       return result;
@@ -73,7 +74,7 @@ export const getStaticPaths = async (): Result => {
 
       return result;
     },
-    {},
+    {}
   );
 
   return Object.entries(genres).map(([genreSlug, props]) => ({
@@ -87,7 +88,7 @@ const processedGames = games
   .map(({ game, plays }) => {
     // i'm going to show info about the most relevant play, which is probably the one I had the most to say about
     const bestPlay = plays.reduce((result, item) =>
-      result.notes.length > item.notes.length ? result : item,
+      result.notes.length > item.notes.length ? result : item
     );
 
     return {
@@ -105,7 +106,7 @@ const processedGames = games
   .toSorted(
     (a, b) =>
       b.rating - a.rating ||
-      new Date(b.dateFinished).valueOf() - new Date(a.dateFinished).valueOf(),
+      new Date(b.dateFinished).valueOf() - new Date(a.dateFinished).valueOf()
   );
 ---
 
@@ -119,14 +120,14 @@ const processedGames = games
 >
   <div class="py-3">
     <h1 class="pt-2 text-2xl">
-      <span class="rounded border-2 border-black p-1 dark:border-white">
-        {genre.name}</span
-      >
-       Games I've Played
+      <RoundedText text={genre.name} /> Games I've Played
     </h1>
-    <p class="pt-2">
+    <p class="pt-3">
       {genre.name} games are categorized by a primary gameplay loop of {
-        GENRE_DESCRIPTIONS[genre.slug] ?? "MISSING GENRE DESCRIPTION!"
+        GENRE_DESCRIPTIONS[genre.slug] ??
+          (() => {
+            throw new Error("MISSING GENRE DESCRIPTION!");
+          })()
       } I've played {games.length} game{games.length > 1 ? "s" : ""} in this
       genre so far.
     </p>

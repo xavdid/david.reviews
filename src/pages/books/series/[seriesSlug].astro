@@ -6,6 +6,7 @@ import BookLegend from "../../../components/BookLegend.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
 import Rating from "../../../components/Rating.astro";
+import RoundedText from "../../../components/RoundedText.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { averageRating, pluralize, seoTitle } from "../../../utils";
 
@@ -60,10 +61,10 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   } he's read from the ${name} series.`}
   activeTab="books"
 >
-  <h1 class="pt-2 text-2xl">
-    All reviews for The <span class="underline">{name}</span> series
+  <h1 class="pt-5 text-2xl">
+    All reviews for The <RoundedText text={name} /> series
   </h1>
-  <p class="pb-3 pt-2">
+  <p class="py-3">
     {/* all series are by a single set of authors, for now */}
      by <AuthorList authors={reads[0].book.authors} style="rounded" />
   </p>
@@ -73,7 +74,6 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
         <>
           I've read {readAll ? "all" : numUniqueBooks} of the {numBooksInSeries}
           book{pluralize(numUniqueBooks)} in this series.
-          {/* {readAll ? null : <span> ({percentComplete?.toFixed(2)}%)</span>} */}
         </>
       ) : (
         <>
@@ -94,7 +94,7 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   </p>
   {
     remarks && (
-      <div class="pb-3">
+      <div class="pb-4">
         {/* stack everything inline to get nice star ratings */}
         <p class="inline">
           I rated this series{" "}

@@ -2,6 +2,7 @@
 import type { Author } from "../../../airtable/data/authors";
 import { loadReads, type Read } from "../../../airtable/data/reads";
 import BookLegend from "../../../components/BookLegend.astro";
+import RoundedText from "../../../components/RoundedText.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { averageRating, pluralize, seoTitle } from "../../../utils";
@@ -54,8 +55,8 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   )} he's read by ${name}.`}
   activeTab="books"
 >
-  <h1 class="pb-3 pt-2 text-2xl">
-    Reviews for <span class="underline">{name}</span>
+  <h1 class="pb-3 pt-5 text-2xl">
+    Reviews for <RoundedText text={name} />
   </h1>
   <p class="pb-3">
     There {reads.length > 1 ? "are" : "is"}{" "}
