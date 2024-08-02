@@ -5,7 +5,13 @@ import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { averageRating, pluralize, seoTitle } from "../../../utils";
+import {
+  averageRating,
+  collectionPermalink,
+  pluralize,
+  seoTitle,
+} from "../../../utils";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
 
 type Params = {
   collectionSlug: string;
@@ -106,7 +112,7 @@ const sortedMovies = movies
       >
        Movies
     </h1>
-    <p class="pb-2 pt-3">
+    <p class="py-2">
       The {movies.length} movies below are some of my favories in this genre.
       Whenever this season or mood arrives, items from this list are my go-to
       comfort food. To qualify, a movie must be solidly in-genre <em
@@ -116,6 +122,11 @@ const sortedMovies = movies
       >
         {"let me know"}
       </ExternalLink> if you'd like to nominate an addition!
+    </p>
+    <p class="py-2">
+      ⬅️ Or, head back to <RoundedLink href={collectionPermalink("")}>
+        All Collections
+      </RoundedLink>.
     </p>
   </div>
   <div>
