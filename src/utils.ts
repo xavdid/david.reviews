@@ -3,9 +3,9 @@ import rss, { type RSSFeedItem } from "@astrojs/rss";
 import type { Permalink } from "./airtable/types";
 
 export const collectionPermalink = (slug: string): Permalink =>
-  `/movies/collections/${slug}/`;
+  `/movies/collections${slug === "" ? "" : `/${slug}`}/`;
 export const genrePermalink = (slug: string): Permalink =>
-  `/games/genres/${slug}/`;
+  `/games/genres${slug === "" ? "" : `/${slug}`}/`;
 export const minutesToDuration = (totalMinutes: number): string => {
   if (!totalMinutes) {
     return "Unknown Playtime";
