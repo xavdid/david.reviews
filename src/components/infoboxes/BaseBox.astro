@@ -1,4 +1,5 @@
 ---
+import { NO_REVIEW } from "../../utils";
 import Rating from "../Rating.astro";
 import BookIcon from "../icons/book.astro";
 import GameIcon from "../icons/game.astro";
@@ -85,7 +86,7 @@ const {
 
     {/* body area */}
     <p class="px-4 py-2">
-      {notes || <em>no review</em>}
+      {notes || <em>{NO_REVIEW}</em>}
     </p>
     {/* footer area */}
     <div

@@ -53,8 +53,10 @@ export const buildRssFeed = async <T extends { dateFinished: string }>(
   });
 };
 
+// don't want to make it sound like it was so bad I didn't have anything to say
+export const NO_REVIEW = "no additional notes, see rating";
 export const slimReview = (rating: number, notes: string): string =>
-  `${"★".repeat(rating)}${"☆".repeat(4 - rating)}: ${notes || "no review"}`;
+  `${"★".repeat(rating)}${"☆".repeat(4 - rating)}: ${notes || NO_REVIEW}`;
 
 export const averageRating = (items: Array<{ rating: number }>): number =>
   +(

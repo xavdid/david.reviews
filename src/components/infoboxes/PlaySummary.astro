@@ -1,6 +1,6 @@
 ---
 import type { Play } from "../../airtable/data/plays";
-import { minutesToDuration } from "../../utils";
+import { NO_REVIEW, minutesToDuration } from "../../utils";
 import Rating from "../Rating.astro";
 
 type Props = {
@@ -24,6 +24,6 @@ const {
       <Rating rating={rating} />
     </div>
   </div>
-  <p class="p-2">{notes || <em>no review</em>}</p>
+  <p class="p-2">{notes || <em>{NO_REVIEW}</em>}</p>
   {didNotFinish && <p class="p-2">Did not roll credits.</p>}
 </div>

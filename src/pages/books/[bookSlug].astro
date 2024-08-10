@@ -9,7 +9,7 @@ import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
-import { pluralize, seoTitle } from "../../utils";
+import { NO_REVIEW, pluralize, seoTitle } from "../../utils";
 
 type Params = {
   bookSlug: string;
@@ -121,7 +121,7 @@ const authorsStr = authors.map((a) => a.name).join(", ");
             <Rating rating={rating} />
           </div>
         </div>
-        <p class="p-2">{notes || <em>no review</em>}</p>
+        <p class="p-2">{notes || <em>{NO_REVIEW}</em>}</p>
       </div>
     ))
   }
