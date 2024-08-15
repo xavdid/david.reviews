@@ -13,6 +13,7 @@ const SCHEMA = {
     rating: "fld120ruFVH8sml4B",
     notes: "fldHCPMRJrOOiZxca",
     movie: "fldhAqjnIaBR90xr1",
+    watchLocation: "fldvmr7hYhHmA2H9Z",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
@@ -34,6 +35,7 @@ type LocalFields = {
   notes: string;
   dateFinished: string;
   isFirstWatch: boolean;
+  watchedInTheater: boolean;
 };
 type ForeignKeyFields = {
   movie: Movie;
@@ -45,6 +47,7 @@ const materialize = (watchRow: WatchRecord): LocalFields => ({
   notes: watchRow[fields.notes] ?? "",
   dateFinished: watchRow[fields.dateWatched],
   isFirstWatch: watchRow[fields.isFirstWatch] === 1,
+  watchedInTheater: watchRow[fields.watchLocation] === "Theater",
 });
 
 export const loadWatches = async (): Promise<Watch[]> =>
