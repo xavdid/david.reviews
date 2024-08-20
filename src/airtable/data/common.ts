@@ -106,7 +106,7 @@ const materializeRecordIds = <T>(
     const record = foreignObjects[fk] as T | undefined;
     if (record === undefined) {
       throw new Error(
-        `Failed to materialize ${foreignObjectType} record for ${fk}`,
+        `Failed to materialize record ${fk} (of type "${foreignObjectType}")`,
       );
     }
     return record;
