@@ -39,9 +39,10 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 
 # tell zapier that a build has completed, skipping the next auto-build
 announce_build:
-    #!/bin/bash
+    #!/usr/bin/env bash
+    set -euo pipefail
     if [ -n "$BUILD_STATUS_UUID" ]; then
-        curl --fail-with-body "https://store.zapier.com/api/records?secret=$BUILD_STATUS_UUID" -d '{"should_build": false}'
+        curl "https://store.zapier.com/api/records?secret=$BUILD_STATUS_UUID" -d '{"should_build": false}'
         echo "cleared auto-build"
     else
         echo "skipping build announcement"
