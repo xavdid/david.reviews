@@ -19,9 +19,15 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
     eslint src
     prettier --check src
 
+# fix issues checks
+[no-exit-message]
+@lint-fix:
+    eslint src --fix
+    prettier src --write
+
 # run pre-reqs for building
 [no-exit-message]
-@validate:
+@typecheck:
     # this only checks .astro files, but not .ts
     astro check
     # so we do this instead
@@ -29,11 +35,11 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 
 # do both style and structural checks
 [no-exit-message]
-@ci: validate lint
+@ci: typecheck lint
 
 # do a production build
 [no-exit-message]
-@build: clean validate
+@build: clean typecheck
     astro build
 
 # remove the build artifact & data cache
