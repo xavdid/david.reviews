@@ -36,7 +36,7 @@ export const getStaticPaths = async (): Result => {
     // for review/average, only note full plays
     if (
       !(["First Time", "Replay", "New Edition"] as PlayTypes[]).includes(
-        play.playType
+        play.playType,
       )
     ) {
       return result;
@@ -74,7 +74,7 @@ export const getStaticPaths = async (): Result => {
 
       return result;
     },
-    {}
+    {},
   );
 
   return Object.entries(genres).map(([genreSlug, props]) => ({
@@ -88,7 +88,7 @@ const processedGames = games
   .map(({ game, plays }) => {
     // i'm going to show info about the most relevant play, which is probably the one I had the most to say about
     const bestPlay = plays.reduce((result, item) =>
-      result.notes.length > item.notes.length ? result : item
+      result.notes.length > item.notes.length ? result : item,
     );
 
     return {
@@ -106,7 +106,7 @@ const processedGames = games
   .toSorted(
     (a, b) =>
       b.rating - a.rating ||
-      new Date(b.dateFinished).valueOf() - new Date(a.dateFinished).valueOf()
+      new Date(b.dateFinished).valueOf() - new Date(a.dateFinished).valueOf(),
   );
 ---
 

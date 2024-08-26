@@ -51,7 +51,7 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   pageTitle={`${name} - Books`}
   seoTitle={seoTitle(`Books by ${name}`)}
   seoDescription={`David shares thoughts about the ${numUniqueBooks} book${pluralize(
-    numUniqueBooks
+    numUniqueBooks,
   )} he's read by ${name}.`}
   activeTab="books"
 >

@@ -42,7 +42,7 @@ export const getStaticPaths = async (): Result => {
     };
 
     (isEtcPlay(play.playType) ? gameRecord.etcPlays : gameRecord.plays).push(
-      play
+      play,
     );
     result[igdbId] = gameRecord;
 

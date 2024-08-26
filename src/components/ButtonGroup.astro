@@ -24,7 +24,7 @@ buttons.forEach(({ subpath }) => {
 
   if (subpath.endsWith("/") || subpath.includes(pathRoot)) {
     throw new Error(
-      `subpaths should not include the pathroot ("${pathRoot}") or end with a slash, got "${subpath}"`
+      `subpaths should not include the pathroot ("${pathRoot}") or end with a slash, got "${subpath}"`,
     );
   }
 });

@@ -13,12 +13,12 @@ import { seoTitle } from "../utils";
 
 const inProgressPlays = (await loadInProgessPlays()).toSorted(
   (a, b) =>
-    new Date(b.dateStarted).valueOf() - new Date(a.dateStarted).valueOf()
+    new Date(b.dateStarted).valueOf() - new Date(a.dateStarted).valueOf(),
 );
 
 const inProgressReads = (await loadInProgressReads()).toSorted(
   (a, b) =>
-    new Date(b.dateStarted).valueOf() - new Date(a.dateStarted).valueOf()
+    new Date(b.dateStarted).valueOf() - new Date(a.dateStarted).valueOf(),
 );
 
 const sha = execSync("git rev-parse --short HEAD").toString().trim();
@@ -90,7 +90,7 @@ const now = new Date().toISOString();
               <span>{playType}</span>
             </div>
           </div>
-        )
+        ),
       )
     }
   </div>
@@ -126,7 +126,7 @@ const now = new Date().toISOString();
               {medium === "Audio" && <span>{medium}</span>}
             </div>
           </div>
-        )
+        ),
       )
     }
   </div>

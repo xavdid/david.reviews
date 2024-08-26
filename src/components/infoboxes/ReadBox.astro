@@ -15,7 +15,7 @@ type Props = {
 };
 const { read, omitAuthorIds, linkToSeries = true } = Astro.props;
 const authors = read.book.authors.filter(
-  (a) => !omitAuthorIds?.includes(a.recordId)
+  (a) => !omitAuthorIds?.includes(a.recordId),
 );
 ---
 

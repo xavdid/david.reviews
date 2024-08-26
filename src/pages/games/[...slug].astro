@@ -92,6 +92,13 @@ if (!pageTitle) {
 const plays = await loadPlays();
 const filteredPlays = plays.filter(filter).slice(0, limit);
 const numUniqueGames = new Set(filteredPlays.map((p) => p.game.igdbId)).size;
+
+// const collectionEmoji = new Set<string>(
+//   plays
+//     .map((p) => p.game.collection?.map((c) => c.emoji))
+//     .flat()
+//     .filter(Boolean) as string[],
+// );
 ---
 
 <Layout

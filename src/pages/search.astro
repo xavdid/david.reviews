@@ -16,7 +16,7 @@ const list: SearchItem[] = [
       title: `${title} (${yearReleased})`,
       category: "movie" as SearchItem["category"],
       permalink,
-    })
+    }),
   ),
   ...Object.values(await loadGames()).map(({ title, permalink }) => ({
     title,
