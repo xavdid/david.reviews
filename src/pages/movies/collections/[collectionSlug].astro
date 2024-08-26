@@ -145,16 +145,14 @@ const sortedMovies = movies
               />
             </a>
             <div class="pl-4">
-              <h3 class="">
-                <TitleLink classes={["text-xl"]} href={permalink}>
-                  {title}
-                </TitleLink>
-              </h3>
+              <TitleLink classes={["text-xl"]} href={permalink}>
+                {title}
+              </TitleLink>
 
               <div>
                 Watched {numWatches} time{pluralize(numWatches)}
               </div>
-              <div>Avg Rating: {avgRating}/4</div>
+              <div>Avg Rating: {avgRating}/4⭐</div>
               <p class="mt-2 border-l-2 border-red-600 pl-2 italic">{blurb}</p>
             </div>
           </div>

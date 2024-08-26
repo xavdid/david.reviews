@@ -1,0 +1,36 @@
+---
+import { collectionPermalink } from "../utils";
+import ExternalLink from "./links/ExternalLink.astro";
+import RoundedLink from "./links/RoundedLink.astro";
+
+type Props = {
+  collectionEmoji: Set<string>;
+  specificAwardUrl?: string;
+};
+
+const { collectionEmoji, specificAwardUrl } = Astro.props;
+---
+
+<ul
+  class="mb-4 rounded bg-blue-50 p-2 dark:bg-blue-950 dark:ring-1 dark:ring-white"
+>
+  <li>🛑 - Neglected to finish a beatable game</li>
+  {
+    collectionEmoji.size > 0 && (
+      <li class="py-1 leading-8 md:leading-[inherit]">
+        {[...collectionEmoji].join(" / ")} - Member of a{" "}
+        <RoundedLink href={collectionPermalink("games", "")}>
+          {"collection"}
+        </RoundedLink>
+      </li>
+    )
+  }
+  <li>
+    🥇 / 🥈 / 🥉 -
+    <ExternalLink
+      href={specificAwardUrl ?? "https://xavd.id/blog/tags/yearly-review"}
+    >
+      {"Favorite of the Year"}
+    </ExternalLink> honoree.
+  </li>
+</ul>

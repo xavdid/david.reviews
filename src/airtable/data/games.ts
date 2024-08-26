@@ -1,8 +1,10 @@
 import slugify from "@sindresorhus/slugify";
 
 import { type AwardDetails, type AwardTier } from "../../awards";
+import { collectionPermalink } from "../../utils";
 import type {
   AirtableBase,
+  Collection,
   ExternalUrl,
   Permalink,
   RecordBase,
@@ -21,6 +23,7 @@ const SCHEMA = {
     awardYear: "fldKAoXfWGvpVAzOR",
     awardTier: "fldAPUbtMJspTm2bP",
     awardAnchor: "fldvFTgyv1c2Q5M1G",
+    collection: "fld3so0K95cIwegiu",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
@@ -30,6 +33,7 @@ type NonStringFields = {
   [fields.igdbCoverId]?: string;
   [fields.awardTier]?: AwardTier;
   [fields.simpleGenre]?: string;
+  [fields.collection]?: string;
   [fields.awardAnchor]?: string;
   [fields.awardYear]: number; // always defined because it's calculated; unwatched movies are `0`, but those are filtered
 };
@@ -43,6 +47,7 @@ export type Game = {
   genre: string;
   igdbId: string;
   slug: string;
+  collection?: Collection;
   permalink: Permalink;
   posterUrl: ExternalUrl;
   bigPosterUrl: ExternalUrl;
@@ -64,6 +69,16 @@ const materialize = (gameRow: GameRecord): Game => {
       gameRow[fields.igdbCoverId]
     }.jpg`,
   };
+
+  const collection = gameRow[fields.collection];
+  if (collection) {
+    item.collection = {
+      fullName: collection,
+      emoji: collection.split(" ")[0],
+      slug: slugify(collection),
+      permalink: collectionPermalink("games", slugify(collection)),
+    };
+  }
 
   if (gameRow[fields.awardTier]) {
     item.award = {
@@ -112,3 +127,10 @@ export const GENRE_DESCRIPTIONS: Record<string, `${string}.`> = {
   "turn-based": "taking discrete, alternating, un-timed turns in combat.",
   "walk-and-talk": "advancing dialogue or exploring without danger.",
 } as const;
+
+export const COLLECTION_DESCRIPTIONS: Record<string, `${string}.`> = {
+  collaborative:
+    "there's only one controller, but all players feel engaged in the story, puzzle solving, and/or decision making.",
+  "co-op":
+    "2+ players play at the same time using their own controller, working together to accomplish a goal.",
+};

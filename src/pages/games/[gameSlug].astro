@@ -58,7 +58,7 @@ export const getStaticPaths = async (): Result => {
 const {
   plays,
   etcPlays,
-  game: { title, posterUrl, award, genre, bigPosterUrl },
+  game: { title, posterUrl, award, genre, bigPosterUrl, collection },
 } = Astro.props;
 ---
 
@@ -104,6 +104,19 @@ const {
         award && (
           <div class="pt-2">
             <AwardBlurb {...award} category="game" />
+          </div>
+        )
+      }
+      {
+        collection && (
+          <div class="pt-2">
+            <p>
+              This game is part of the{" "}
+              <RoundedLink href={collection.permalink}>
+                {collection.fullName}
+              </RoundedLink>{" "}
+              collection.
+            </p>
           </div>
         )
       }

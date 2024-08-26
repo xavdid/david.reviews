@@ -1,6 +1,7 @@
 ---
 import { loadPlays } from "../../../airtable/data/plays";
 import { awardYears, buildAwardUrl } from "../../../awards";
+import GameLegend from "../../../components/GameLegend.astro";
 import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
 import PlayBox from "../../../components/infoboxes/PlayBox.astro";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
@@ -23,6 +24,13 @@ const filteredPlays = plays
   .toReversed();
 
 const awardUrl = buildAwardUrl(parseInt(year), "#videogames");
+
+const collectionEmoji = new Set<string>(
+  plays
+    .map((p) => p.game.collection?.emoji)
+    .flat()
+    .filter(Boolean) as string[],
+);
 ---
 
 <Layout
@@ -46,17 +54,7 @@ const awardUrl = buildAwardUrl(parseInt(year), "#videogames");
     that genre I've played.
   </p>
   <SubscribeBlurb mediaType="game" />
-  <ul
-    class="mb-3 rounded bg-blue-50 p-2 dark:bg-blue-950 dark:ring-1 dark:ring-white"
-  >
-    <li>🛑 - Neglected to finish a beatable game</li>
-    <li>
-      🥇 / 🥈 / 🥉 -
-      <ExternalLink href={awardUrl}>
-        {"Favorite of the Year"}
-      </ExternalLink> honoree.
-    </li>
-  </ul>
+  <GameLegend collectionEmoji={collectionEmoji} specificAwardUrl={awardUrl} />
   <div>
     {filteredPlays.map((play) => <PlayBox play={play} />)}
   </div>

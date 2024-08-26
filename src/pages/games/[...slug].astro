@@ -1,9 +1,9 @@
 ---
 import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
 import ButtonGroup from "../../components/ButtonGroup.astro";
+import GameLegend from "../../components/GameLegend.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import PlayBox from "../../components/infoboxes/PlayBox.astro";
-import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { genrePermalink, seoTitle } from "../../utils";
@@ -93,12 +93,12 @@ const plays = await loadPlays();
 const filteredPlays = plays.filter(filter).slice(0, limit);
 const numUniqueGames = new Set(filteredPlays.map((p) => p.game.igdbId)).size;
 
-// const collectionEmoji = new Set<string>(
-//   plays
-//     .map((p) => p.game.collection?.map((c) => c.emoji))
-//     .flat()
-//     .filter(Boolean) as string[],
-// );
+const collectionEmoji = new Set<string>(
+  plays
+    .map((p) => p.game.collection?.emoji)
+    .flat()
+    .filter(Boolean) as string[],
+);
 ---
 
 <Layout
@@ -136,17 +136,7 @@ const numUniqueGames = new Set(filteredPlays.map((p) => p.game.igdbId)).size;
     }))}
   />
 
-  <ul
-    class="mb-4 rounded bg-blue-50 p-2 dark:bg-blue-950 dark:ring-1 dark:ring-white"
-  >
-    <li>🛑 - Neglected to finish a beatable game</li>
-    <li>
-      🥇 / 🥈 / 🥉 -
-      <ExternalLink href="https://xavd.id/blog/tags/yearly-review">
-        {"Favorite of the Year"}
-      </ExternalLink> honoree.
-    </li>
-  </ul>
+  <GameLegend collectionEmoji={collectionEmoji} />
 
   <div>
     {filteredPlays.map((play) => <PlayBox play={play} />)}

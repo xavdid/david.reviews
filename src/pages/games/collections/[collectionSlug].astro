@@ -1,0 +1,171 @@
+---
+import { Image } from "astro:assets";
+import {
+  type Game,
+  COLLECTION_DESCRIPTIONS,
+} from "../../../airtable/data/games";
+import { isEtcPlay, loadPlays, type Play } from "../../../airtable/data/plays";
+import type { Collection } from "../../../airtable/types";
+import ExternalLink from "../../../components/links/ExternalLink.astro";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
+import TitleLink from "../../../components/links/TitleLink.astro";
+import Layout from "../../../layouts/Layout.astro";
+import {
+  NO_REVIEW,
+  averageRating,
+  collectionPermalink,
+  seoTitle,
+} from "../../../utils";
+
+type Params = {
+  collectionSlug: string;
+};
+
+type GameAndPlays = {
+  game: Game;
+  plays: Play[];
+};
+type Props = {
+  collection: Collection;
+  games: GameAndPlays[];
+};
+
+// own row for weird export reasons
+type Result = Promise<Array<{ params: Params; props: Props }>>;
+export const getStaticPaths = async (): Result => {
+  const plays = await loadPlays();
+
+  const games = plays
+    .filter((p) => !isEtcPlay(p.playType))
+    .reduce<Record<string, GameAndPlays>>((result, play) => {
+      if (!play.game.collection) {
+        return result;
+      }
+
+      const igdbId = play.game.igdbId;
+      const gameRecord = result[igdbId] as GameAndPlays | undefined;
+
+      if (gameRecord) {
+        gameRecord.plays.push(play);
+      } else {
+        const item: GameAndPlays = {
+          game: play.game,
+          plays: [play],
+        };
+        result[igdbId] = item;
+      }
+
+      return result;
+    }, {});
+
+  const collections = Object.values(games).reduce<Record<string, Props>>(
+    (result, gameWithPlays) => {
+      const collection = gameWithPlays.game.collection;
+      if (!collection) {
+        return result;
+      }
+
+      const collectionRecord = result[collection.slug] as Props | undefined;
+
+      if (collectionRecord) {
+        collectionRecord.games.push(gameWithPlays);
+      } else {
+        result[collection.slug] = {
+          collection,
+          games: [gameWithPlays],
+        };
+      }
+
+      return result;
+    },
+    {},
+  );
+
+  return Object.entries(collections).map(([collectionSlug, props]) => ({
+    params: { collectionSlug },
+    props,
+  }));
+};
+
+const { games, collection } = Astro.props;
+const sortedGames = games
+  .map(({ game, plays: watches }) => ({
+    title: game.title,
+    avgRating: averageRating(watches),
+    permalink: game.permalink,
+    posterUrl: game.posterUrl,
+    // the longest review is probably the best one?
+    blurb:
+      watches.reduce<string>((result, { notes }) => {
+        return result.length > notes.length ? result : notes;
+      }, "") || NO_REVIEW,
+  }))
+  .toSorted(
+    (a, b) => b.avgRating - a.avgRating || (a.title > b.title ? 1 : -1),
+  );
+---
+
+<Layout
+  pageTitle={`${collection.fullName} Games`}
+  seoTitle={seoTitle(`${collection.fullName} Games`)}
+  seoDescription={`David's collection of the ${games.length} ${collection.fullName} games he and his wife have enjoyed the most.`}
+  activeTab="games"
+>
+  <div class="py-3">
+    <h1 class="pt-2 text-2xl">
+      My Favorite <span
+        class="rounded border-2 border-black p-1 dark:border-white"
+      >
+        {collection.fullName}</span
+      >
+       Games
+    </h1>
+    <p class="pb-1 pt-2">
+      Gaming is better with a partner, but it can be hard to pick something that
+      everyone is excited about. Luckily, I have just the things.
+    </p>
+    <p class="py-1">
+      The {games.length} games below are "{collection.slug}", meaning <strong
+        >{
+          COLLECTION_DESCRIPTIONS[collection.slug] ?? "MISSING DESCRIPTION"
+        }</strong
+      >
+    </p>
+    <p class="py-1">
+      Please <ExternalLink href="https://xavd.id/contact">
+        {"let me know"}
+      </ExternalLink> if you'd like to nominate an addition!
+    </p>
+
+    <p class="py-2">
+      ⬅️ Or, head back to <RoundedLink href={collectionPermalink("games", "")}>
+        {"All Collections"}
+      </RoundedLink>.
+    </p>
+  </div>
+  <div>
+    {
+      sortedGames.map(({ title, avgRating, permalink, posterUrl, blurb }) => (
+        <div class="mb-4 flex rounded border-2 border-blue-600 p-2 even:bg-red-50 dark:even:bg-zinc-700">
+          <a slot="image" href={permalink}>
+            <Image
+              class="max-w-[unset]"
+              src={posterUrl}
+              alt={`poster for ${title}`}
+              height={187.5}
+              width={125}
+            />
+          </a>
+          <div class="pl-4">
+            <TitleLink classes={["text-xl"]} href={permalink}>
+              {title}
+            </TitleLink>
+
+            <div>Avg Rating: {avgRating}/4⭐</div>
+            <p class="mt-2 border-l-2 border-blue-600 pl-2 italic">{blurb}</p>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</Layout>

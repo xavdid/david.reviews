@@ -3,6 +3,7 @@ import { SEO, type Props as SEOProps } from "astro-seo";
 
 import Navbar from "../components/Navbar.astro";
 import type { ExternalUrl } from "../airtable/types";
+import type { Category } from "../utils";
 
 type ImageInfo = {
   url: ExternalUrl;
@@ -16,7 +17,7 @@ type Props = {
   pageTitle: string; // shown in the tab
   seoTitle: string; // shown in the OG embed
   seoDescription: `${string}.`;
-  activeTab?: "games" | "movies" | "books" | "search";
+  activeTab?: `${Category}s` | "search";
   ogImg?: ImageInfo;
 };
 
