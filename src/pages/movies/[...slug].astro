@@ -1,12 +1,11 @@
 ---
 import { loadWatches, type Watch } from "../../airtable/data/watches";
 import ButtonGroup from "../../components/ButtonGroup.astro";
+import MovieLegend from "../../components/MovieLegend.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import WatchBox from "../../components/infoboxes/WatchBox.astro";
-import ExternalLink from "../../components/links/ExternalLink.astro";
-import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
-import { collectionPermalink, seoTitle } from "../../utils";
+import { seoTitle } from "../../utils";
 
 type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
 type WatchFilter = (W: { watch: Watch; numWatch: number }) => boolean;
@@ -102,7 +101,7 @@ const collectionEmoji = new Set<string>(
   watches
     .map((w) => w.movie.collections?.map((c) => c.emoji))
     .flat()
-    .filter(Boolean) as string[]
+    .filter(Boolean) as string[],
 );
 ---
 
@@ -137,28 +136,7 @@ const collectionEmoji = new Set<string>(
     }))}
   />
 
-  <ul
-    class="mb-3 rounded bg-red-50 p-2 dark:bg-red-950 dark:ring-1 dark:ring-white"
-  >
-    <li class="py-1">
-      <code>*</code> - this is my first <em>logged</em> watch, but I had seen
-      the movie before.
-    </li>
-    <li class="py-1">🍿 - watched in a theater.</li>
-    <li class="py-1">
-      {[...collectionEmoji].join(" / ")} - Member of a <RoundedLink
-        href={collectionPermalink("")}
-      >
-        {"collection"}
-      </RoundedLink>.
-    </li>
-    <li class="py-1">
-      🥇 / 🥈 / 🥉 -
-      <ExternalLink href="https://xavd.id/blog/tags/yearly-review">
-        {"Favorite of the Year"}
-      </ExternalLink> honoree.
-    </li>
-  </ul>
+  <MovieLegend collectionEmoji={collectionEmoji} />
   <div>
     {
       filteredWatches.map(({ watch, numWatch }) => (

@@ -1,12 +1,12 @@
 ---
 import { loadWatches } from "../../../airtable/data/watches";
 import { awardYears, buildAwardUrl } from "../../../awards";
+import MovieLegend from "../../../components/MovieLegend.astro";
 import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
 import WatchBox from "../../../components/infoboxes/WatchBox.astro";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { collectionPermalink, seoTitle } from "../../../utils";
+import { seoTitle } from "../../../utils";
 
 type Params = { year: string };
 
@@ -61,23 +61,11 @@ const awardUrl = buildAwardUrl(parseInt(year), "#movies");
     </ExternalLink> about my favorites.
   </p>
   <SubscribeBlurb mediaType="movie" />
-  <ul
-    class="mb-3 rounded bg-red-50 p-2 dark:bg-red-950 dark:ring-1 dark:ring-white"
-  >
-    <li class="py-1">
-      {[...collectionEmoji].join(" / ")} - Member of a <RoundedLink
-        href={collectionPermalink("")}
-      >
-        {"collection"}
-      </RoundedLink>.
-    </li>
-    <li class="py-1">
-      🥇 / 🥈 / 🥉 -
-      <ExternalLink href={awardUrl}>
-        {"Favorite of the Year"}
-      </ExternalLink> honoree.
-    </li>
-  </ul>
+  <MovieLegend
+    collectionEmoji={collectionEmoji}
+    specificAwardUrl={awardUrl}
+    showFirstTimeAsterisk={false}
+  />
   <div>
     {
       watchesWithCounts.map(({ watch, numWatch }) => (

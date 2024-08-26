@@ -1,0 +1,46 @@
+---
+import { collectionPermalink } from "../utils";
+import ExternalLink from "./links/ExternalLink.astro";
+import RoundedLink from "./links/RoundedLink.astro";
+
+type Props = {
+  collectionEmoji: Set<string>;
+  specificAwardUrl?: string;
+  showFirstTimeAsterisk?: boolean;
+};
+
+const {
+  collectionEmoji,
+  specificAwardUrl,
+  showFirstTimeAsterisk = true,
+} = Astro.props;
+---
+
+<ul
+  class="mb-3 rounded bg-red-50 p-2 dark:bg-red-950 dark:ring-1 dark:ring-white"
+>
+  {
+    showFirstTimeAsterisk && (
+      <li class="py-1">
+        <code>*</code> - this is my first <em>logged</em> watch, but I had seen
+        the movie before.
+      </li>
+    )
+  }
+  <li class="py-1">🍿 - watched in a theater.</li>
+  {
+    /* prettier-ignore */
+    collectionEmoji.size > 0 && <li class="py-1 leading-8 md:leading-[inherit]">
+        {[...collectionEmoji].join(" / ")} - Member of a{" "}
+        <RoundedLink href={collectionPermalink("")}>{"collection"}</RoundedLink>.
+      </li>
+  }
+  <li class="py-1">
+    🥇 / 🥈 / 🥉 -
+    <ExternalLink
+      href={specificAwardUrl ?? "https://xavd.id/blog/tags/yearly-review"}
+    >
+      {"Favorite of the Year"}
+    </ExternalLink> honoree.
+  </li>
+</ul>
