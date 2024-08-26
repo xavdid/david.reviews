@@ -13,3 +13,10 @@ export type RecordBase = {
 export type Permalink = `${string}/`;
 
 export type ExternalUrl = `https://${string}`;
+
+export type Collection = {
+  fullName: string;
+  emoji: string;
+  slug: string;
+  permalink: Permalink;
+};

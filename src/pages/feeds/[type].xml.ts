@@ -6,7 +6,7 @@ import type { Movie } from "../../airtable/data/movies";
 import { loadPlays } from "../../airtable/data/plays";
 import { loadReads } from "../../airtable/data/reads";
 import { loadWatches } from "../../airtable/data/watches";
-import { buildRssFeed, slimReview } from "../../utils";
+import { buildRssFeed, slimReview, type Category } from "../../utils";
 
 const feedTypes = ["books", "movies", "games", "everything"] as const;
 type Feeds = (typeof feedTypes)[number];
@@ -22,7 +22,7 @@ export const getStaticPaths = (): StaticPath[] =>
 const reviews: Record<
   Exclude<Feeds, "everything">,
   Array<{
-    type: string;
+    type: Category;
     media: Book | Movie | Game;
     dateFinished: string;
     rating: number;

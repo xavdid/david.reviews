@@ -1,8 +1,10 @@
 ---
 import { Image } from "astro:assets";
-import type { Collection, Movie } from "../../../airtable/data/movies";
+import type { Movie } from "../../../airtable/data/movies";
 import { loadWatches, type Watch } from "../../../airtable/data/watches";
+import type { Collection } from "../../../airtable/types";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
@@ -11,7 +13,6 @@ import {
   pluralize,
   seoTitle,
 } from "../../../utils";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
 
 type Params = {
   collectionSlug: string;
@@ -52,7 +53,7 @@ export const getStaticPaths = async (): Result => {
 
       return result;
     },
-    {}
+    {},
   );
 
   const collections = Object.values(movies).reduce<Record<string, Props>>(
@@ -72,7 +73,7 @@ export const getStaticPaths = async (): Result => {
 
       return result;
     },
-    {}
+    {},
   );
 
   return Object.entries(collections).map(([collectionSlug, props]) => ({
@@ -124,7 +125,7 @@ const sortedMovies = movies
       </ExternalLink> if you'd like to nominate an addition!
     </p>
     <p class="py-2">
-      ⬅️ Or, head back to <RoundedLink href={collectionPermalink("")}>
+      ⬅️ Or, head back to <RoundedLink href={collectionPermalink("movies", "")}>
         {"All Collections"}
       </RoundedLink>.
     </p>
@@ -157,7 +158,7 @@ const sortedMovies = movies
               <p class="mt-2 border-l-2 border-red-600 pl-2 italic">{blurb}</p>
             </div>
           </div>
-        )
+        ),
       )
     }
   </div>

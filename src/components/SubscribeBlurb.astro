@@ -1,9 +1,10 @@
 ---
+import type { Category } from "../utils";
 import RssIcon from "./icons/rss.astro";
 import SubtleLink from "./links/SubtleLink.astro";
 
 type Props = {
-  mediaType: "book" | "movie" | "game";
+  mediaType: Category;
 };
 
 const { mediaType } = Astro.props;

@@ -1,8 +1,10 @@
 import slugify from "@sindresorhus/slugify";
 
 import { type AwardDetails, type AwardTier } from "../../awards";
+import { collectionPermalink } from "../../utils";
 import type {
   AirtableBase,
+  Collection,
   ExternalUrl,
   Permalink,
   RecordBase,
@@ -43,12 +45,6 @@ type StringFields = {
 };
 type MovieRecord = StringFields & NonStringFields & RecordBase;
 
-export type Collection = {
-  fullName: string;
-  emoji: string;
-  slug: string;
-};
-
 export type Movie = {
   tmdbId: string;
   title: string;
@@ -80,6 +76,7 @@ const materialize = (movieRow: MovieRecord): Movie => {
       // need to split the string to find the emoji, don't just take the first character
       emoji: c.split(" ")[0],
       slug: slugify(c),
+      permalink: collectionPermalink("movies", slugify(c)),
     })),
     posterUrl: `https://image.tmdb.org/t/p/w300${movieRow[fields.posterPath]}`,
     bigPosterUrl: `https://image.tmdb.org/t/p/w500${

@@ -1,8 +1,8 @@
 ---
-import { loadMovies, type Collection } from "../../../airtable/data/movies";
+import { loadMovies } from "../../../airtable/data/movies";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { collectionPermalink } from "../../../utils";
+import { type Collection } from "../../../airtable/types";
 
 const movies = await loadMovies();
 
@@ -51,7 +51,7 @@ const collections = Object.values(movies).reduce<
         .toSorted((a, b) => b.movies.size - a.movies.size)
         .map(({ collection, movies }) => (
           <li class="py-2">
-            <RoundedLink href={collectionPermalink(collection.slug)}>
+            <RoundedLink href={collection.permalink}>
               {collection.fullName}
             </RoundedLink>
             {/* these counts may not match the page in dev, since it tracks watches and this tracks movies */}

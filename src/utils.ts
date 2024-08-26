@@ -2,8 +2,12 @@ import rss, { type RSSFeedItem } from "@astrojs/rss";
 
 import type { Permalink } from "./airtable/types";
 
-export const collectionPermalink = (slug: string): Permalink =>
-  `/movies/collections${slug === "" ? "" : `/${slug}`}/`;
+export type Category = "book" | "movie" | "game";
+
+export const collectionPermalink = (
+  category: `${Category}s`,
+  slug: string,
+): Permalink => `/${category}/collections${slug === "" ? "" : `/${slug}`}/`;
 export const genrePermalink = (slug: string): Permalink =>
   `/games/genres${slug === "" ? "" : `/${slug}`}/`;
 export const minutesToDuration = (totalMinutes: number): string => {
@@ -19,7 +23,7 @@ export const seoTitle = (t: string): string => `david.reviews: ${t}`;
 
 export type SearchItem = {
   title: string;
-  category: "book" | "movie" | "game";
+  category: Category;
   permalink: string;
 };
 
