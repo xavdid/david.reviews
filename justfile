@@ -37,12 +37,14 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 [no-exit-message]
 @ci: typecheck lint
 
+build_status_uuid := env("BUILD_STATUS_UUID", "")
 # tell zapier that a build has completed, skipping the next auto-build
 announce_build:
     #!/usr/bin/env bash
     set -euo pipefail
-    if [ -n "$BUILD_STATUS_UUID" ]; then
-        curl "https://store.zapier.com/api/records?secret=$BUILD_STATUS_UUID" -d '{"should_build": false}'
+    if [ -n "{{build_status_uuid}}" ]; then
+        # be quiet in the logs
+        curl -sS -o /dev/null "https://store.zapier.com/api/records?secret={{build_status_uuid}}" -d '{"should_build": false}'
         echo "cleared auto-build"
     else
         echo "skipping build announcement"
