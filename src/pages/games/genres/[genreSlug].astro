@@ -61,10 +61,14 @@ export const getStaticPaths = async (): Result => {
     (result, gameWithPlays) => {
       const { name, slug } = gameWithPlays.game.genre;
 
-      result[slug] ||= {
-        genre: { name, slug },
-        games: [gameWithPlays],
-      };
+      if (slug in result) {
+        result[slug].games.push(gameWithPlays);
+      } else {
+        result[slug] = {
+          genre: { name, slug },
+          games: [gameWithPlays],
+        };
+      }
 
       return result;
     },
