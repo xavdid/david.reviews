@@ -3,11 +3,10 @@ import { Image } from "astro:assets";
 
 import { medals } from "../../airtable/data/common";
 import type { Play } from "../../airtable/data/plays";
-import { minutesToDuration, genrePermalink } from "../../utils";
+import { minutesToDuration } from "../../utils";
+import SubtleLink from "../links/SubtleLink.astro";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
-import SubtleLink from "../links/SubtleLink.astro";
-import slugify from "@sindresorhus/slugify";
 
 type Props = {
   play: Play;
@@ -33,8 +32,8 @@ const { play } = Astro.props;
   <div class="text-center md:text-end" slot="subtitle">
     <span
       class="block border-b-2 border-l-2 border-blue-600 px-2 md:inline-block"
-      ><SubtleLink href={genrePermalink(slugify(play.game.genre))}>
-        {play.game.genre}
+      ><SubtleLink href={play.game.genre.permalink}>
+        {play.game.genre.name}
       </SubtleLink></span
     >
   </div>

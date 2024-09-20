@@ -1,18 +1,17 @@
 ---
-import slugify from "@sindresorhus/slugify";
 import { Image } from "astro:assets";
-import { type Game, GENRE_DESCRIPTIONS } from "../../../airtable/data/games";
+import { GENRE_DESCRIPTIONS, type Game } from "../../../airtable/data/games";
 import {
   loadPlays,
   type Play,
   type PlayTypes,
 } from "../../../airtable/data/plays";
+import Rating from "../../../components/Rating.astro";
+import RoundedText from "../../../components/RoundedText.astro";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
+import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { genrePermalink, seoTitle } from "../../../utils";
-import Rating from "../../../components/Rating.astro";
-import TitleLink from "../../../components/links/TitleLink.astro";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
-import RoundedText from "../../../components/RoundedText.astro";
 
 type Params = {
   genreSlug: string;
@@ -60,17 +59,12 @@ export const getStaticPaths = async (): Result => {
 
   const genres = Object.values(games).reduce<Record<string, Props>>(
     (result, gameWithPlays) => {
-      const genreSlug = slugify(gameWithPlays.game.genre);
-      const genreRecord = result[genreSlug] as Props | undefined;
+      const { name, slug } = gameWithPlays.game.genre;
 
-      if (genreRecord) {
-        genreRecord.games.push(gameWithPlays);
-      } else {
-        result[genreSlug] = {
-          genre: { name: gameWithPlays.game.genre, slug: genreSlug },
-          games: [gameWithPlays],
-        };
-      }
+      result[slug] ||= {
+        genre: { name, slug },
+        games: [gameWithPlays],
+      };
 
       return result;
     },

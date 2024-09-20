@@ -1,7 +1,6 @@
 ---
 import { Image } from "astro:assets";
 
-import slugify from "@sindresorhus/slugify";
 import type { Game } from "../../airtable/data/games";
 import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
 import AwardBlurb from "../../components/AwardBlurb.astro";
@@ -9,12 +8,7 @@ import PlaySummary from "../../components/infoboxes/PlaySummary.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
-import {
-  averageRating,
-  genrePermalink,
-  pluralize,
-  seoTitle,
-} from "../../utils";
+import { averageRating, pluralize, seoTitle } from "../../utils";
 
 type Params = {
   gameSlug: string;
@@ -67,7 +61,7 @@ const {
   seoTitle={seoTitle(title)}
   seoDescription={`David shares thoughts about the ${plays.length} time${
     plays.length > 1 ? "s" : ""
-  } he's played the ${genre} game ${title}.`}
+  } he's played the ${genre.name} game ${title}.`}
   activeTab="games"
   ogImg={{
     url: bigPosterUrl,
@@ -88,8 +82,8 @@ const {
     <div class="pl-3">
       <h1 class="pt-2 text-2xl underline">{title}</h1>
       <p class="pt-2">
-        Genre: <RoundedLink href={genrePermalink(slugify(genre))}>
-          {genre}
+        Genre: <RoundedLink href={genre.permalink}>
+          {genre.name}
         </RoundedLink>
       </p>
       <p class="pr-2 pt-2">

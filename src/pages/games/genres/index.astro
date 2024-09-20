@@ -1,5 +1,4 @@
 ---
-import slugify from "@sindresorhus/slugify";
 import { GENRE_DESCRIPTIONS, loadGames } from "../../../airtable/data/games";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
@@ -14,18 +13,12 @@ type GenreRecord = {
 
 const genres = Object.values(games).reduce<Record<string, GenreRecord>>(
   (result, game) => {
-    const genreSlug = slugify(game.genre);
+    const { name, slug } = game.genre;
 
-    const genreRecord = result[genreSlug] as GenreRecord | undefined;
-
-    if (genreRecord) {
-      genreRecord.games.add(game.igdbId);
-    } else {
-      result[genreSlug] = {
-        genre: { name: game.genre, slug: genreSlug },
-        games: new Set([game.igdbId]),
-      };
-    }
+    result[slug] ||= {
+      genre: { name, slug },
+      games: new Set([game.igdbId]),
+    };
 
     return result;
   },

@@ -1,16 +1,17 @@
 ---
 import Fuse from "fuse.js/min-basic";
 
-import { loadMovies } from "../airtable/data/movies";
-import { SearchBar } from "../components/SearchBar";
-import { type SearchItem } from "../utils";
-import Layout from "../layouts/Layout.astro";
-import { loadGames } from "../airtable/data/games";
-import { loadBooks } from "../airtable/data/books";
-import { loadSeries } from "../airtable/data/series";
 import { loadAuthors } from "../airtable/data/authors";
+import { loadBooks } from "../airtable/data/books";
+import { loadGames } from "../airtable/data/games";
+import { loadMovies } from "../airtable/data/movies";
+import { loadSeries } from "../airtable/data/series";
+import { SearchBar } from "../components/SearchBar";
+import Layout from "../layouts/Layout.astro";
+import { type SearchItem } from "../utils";
 
 const list: SearchItem[] = [
+  // movies
   ...Object.values(await loadMovies()).map(
     ({ title, yearReleased, permalink }) => ({
       title: `${title} (${yearReleased})`,
@@ -18,26 +19,45 @@ const list: SearchItem[] = [
       permalink,
     }),
   ),
+  // games
   ...Object.values(await loadGames()).map(({ title, permalink }) => ({
     title,
     category: "game" as SearchItem["category"],
     permalink,
   })),
+  // books
   ...Object.values(await loadBooks()).map(({ title, permalink }) => ({
     title,
     category: "book" as SearchItem["category"],
     permalink,
   })),
+  // series
   ...Object.values(await loadSeries()).map(({ name, permalink }) => ({
     title: `${name} (Series)`,
     category: "book" as SearchItem["category"],
     permalink,
   })),
+  // authors
   ...Object.values(await loadAuthors()).map(({ name, permalink }) => ({
     title: `${name} (Author)`,
     category: "book" as SearchItem["category"],
     permalink,
   })),
+  // game genres
+  ...Object.values(
+    Object.values(await loadGames()).reduce<Record<string, SearchItem>>(
+      (result, { genre: { slug, name, permalink } }) => {
+        result[slug] ||= {
+          title: `${name} (Genre)`,
+          category: "game",
+          permalink,
+        };
+
+        return result;
+      },
+      {},
+    ),
+  ),
 ];
 const index = Fuse.createIndex(["title"], list);
 ---

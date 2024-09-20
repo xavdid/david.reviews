@@ -1,7 +1,7 @@
 import slugify from "@sindresorhus/slugify";
 
 import { type AwardDetails, type AwardTier } from "../../awards";
-import { collectionPermalink } from "../../utils";
+import { collectionPermalink, genrePermalink } from "../../utils";
 import type {
   AirtableBase,
   Collection,
@@ -42,9 +42,15 @@ type StringFields = {
 };
 type GameRecord = StringFields & NonStringFields & RecordBase;
 
+export type Genre = {
+  name: string;
+  slug: string;
+  permalink: Permalink;
+};
+
 export type Game = {
   title: string;
-  genre: string;
+  genre: Genre;
   igdbId: string;
   slug: string;
   collection?: Collection;
@@ -56,9 +62,20 @@ export type Game = {
 
 const materialize = (gameRow: GameRecord): Game => {
   const slug = slugify(gameRow[fields.title]);
+  const genre =
+    gameRow[fields.simpleGenre] ??
+    (() => {
+      throw new Error(`No genre found for game ${gameRow[fields.title]}`);
+    })();
+  const genreSlug = slugify(genre);
+
   const item: Game = {
     title: gameRow[fields.title],
-    genre: gameRow[fields.simpleGenre] ?? "UNKNOWN",
+    genre: {
+      name: genre,
+      slug: genreSlug,
+      permalink: genrePermalink(genreSlug),
+    },
     igdbId: gameRow[fields.igdbId],
     slug,
     permalink: `/games/${slug}/`,
