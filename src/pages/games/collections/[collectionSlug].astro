@@ -38,21 +38,14 @@ export const getStaticPaths = async (): Result => {
   const games = plays
     .filter((p) => !isEtcPlay(p.playType))
     .reduce<Record<string, GameAndPlays>>((result, play) => {
-      if (!play.game.collection) {
-        return result;
-      }
+      if (play.game.collection) {
+        const igdbId = play.game.igdbId;
 
-      const igdbId = play.game.igdbId;
-      const gameRecord = result[igdbId] as GameAndPlays | undefined;
-
-      if (gameRecord) {
-        gameRecord.plays.push(play);
-      } else {
-        const item: GameAndPlays = {
+        result[igdbId] ||= {
           game: play.game,
-          plays: [play],
+          plays: [],
         };
-        result[igdbId] = item;
+        result[igdbId].plays.push(play);
       }
 
       return result;
@@ -61,21 +54,14 @@ export const getStaticPaths = async (): Result => {
   const collections = Object.values(games).reduce<Record<string, Props>>(
     (result, gameWithPlays) => {
       const collection = gameWithPlays.game.collection;
-      if (!collection) {
-        return result;
-      }
-
-      const collectionRecord = result[collection.slug] as Props | undefined;
-
-      if (collectionRecord) {
-        collectionRecord.games.push(gameWithPlays);
-      } else {
-        result[collection.slug] = {
+      if (collection) {
+        result[collection.slug] ||= {
           collection,
-          games: [gameWithPlays],
+          games: [],
         };
-      }
 
+        result[collection.slug].games.push(gameWithPlays);
+      }
       return result;
     },
     {},

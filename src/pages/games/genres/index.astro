@@ -14,15 +14,11 @@ type GenreRecord = {
 const genres = Object.values(games).reduce<Record<string, GenreRecord>>(
   (result, game) => {
     const { name, slug } = game.genre;
-
-    if (slug in result) {
-      result[slug].games.add(game.igdbId);
-    } else {
-      result[slug] = {
-        genre: { name, slug },
-        games: new Set([game.igdbId]),
-      };
-    }
+    result[slug] ||= {
+      genre: { name, slug },
+      games: new Set(),
+    };
+    result[slug].games.add(game.igdbId);
 
     return result;
   },

@@ -34,26 +34,19 @@ export const getStaticPaths = async (): Result => {
   const games = plays.reduce<Record<string, GameAndPlays>>((result, play) => {
     // for review/average, only note full plays
     if (
-      !(["First Time", "Replay", "New Edition"] as PlayTypes[]).includes(
+      (["First Time", "Replay", "New Edition"] as PlayTypes[]).includes(
         play.playType,
       )
     ) {
-      return result;
-    }
+      const igdbId = play.game.igdbId;
 
-    const igdbId = play.game.igdbId;
-    const gameRecord = result[igdbId] as GameAndPlays | undefined;
-
-    if (gameRecord) {
-      gameRecord.plays.push(play);
-    } else {
-      const item: GameAndPlays = {
+      result[igdbId] ||= {
         game: play.game,
-        plays: [play],
+        plays: [],
       };
-      result[igdbId] = item;
-    }
 
+      result[igdbId].plays.push(play);
+    }
     return result;
   }, {});
 
@@ -61,14 +54,12 @@ export const getStaticPaths = async (): Result => {
     (result, gameWithPlays) => {
       const { name, slug } = gameWithPlays.game.genre;
 
-      if (slug in result) {
-        result[slug].games.push(gameWithPlays);
-      } else {
-        result[slug] = {
-          genre: { name, slug },
-          games: [gameWithPlays],
-        };
-      }
+      result[slug] ||= {
+        genre: { name, slug },
+        games: [],
+      };
+
+      result[slug].games.push(gameWithPlays);
 
       return result;
     },

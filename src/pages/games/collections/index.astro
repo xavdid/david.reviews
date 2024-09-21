@@ -15,21 +15,12 @@ const collections = Object.values(games).reduce<
   Record<string, CollectionRecord>
 >((result, game) => {
   const collection = game.collection;
-  if (!collection) {
-    return result;
-  }
-
-  const collectionRecord = result[collection.slug] as
-    | CollectionRecord
-    | undefined;
-
-  if (collectionRecord) {
-    collectionRecord.games.add(game.igdbId);
-  } else {
-    result[collection.slug] = {
+  if (collection) {
+    result[collection.slug] ||= {
       collection,
-      games: new Set([game.igdbId]),
+      games: new Set([]),
     };
+    result[collection.slug].games.add(game.igdbId);
   }
   return result;
 }, {});

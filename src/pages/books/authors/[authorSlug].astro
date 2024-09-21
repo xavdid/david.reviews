@@ -23,16 +23,13 @@ export const getStaticPaths = async (): Result => {
   const authors = reads.reduce<Record<string, Props>>((result, read) => {
     read.book.authors.forEach((author) => {
       const authorId = author.recordId;
-      const authorRecord = result[authorId] as Props | undefined;
 
-      if (authorRecord) {
-        authorRecord.reads.push(read);
-      } else {
-        result[authorId] = {
-          ...author,
-          reads: [read],
-        };
-      }
+      result[authorId] ||= {
+        ...author,
+        reads: [],
+      };
+
+      result[authorId].reads.push(read);
     });
     return result;
   }, {});

@@ -12,15 +12,12 @@ const series = Object.values(books).reduce<
   Record<string, Series & { authors: Author[]; numReads: number }>
 >((result, book) => {
   if (book.series) {
-    if (book.series.slug in result) {
-      result[book.series.slug].numReads += 1;
-    } else {
-      result[book.series.slug] = {
-        ...book.series,
-        authors: book.authors,
-        numReads: 1,
-      };
-    }
+    result[book.series.slug] ||= {
+      ...book.series,
+      authors: book.authors,
+      numReads: 0,
+    };
+    result[book.series.slug].numReads += 1;
   }
   return result;
 }, {});

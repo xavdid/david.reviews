@@ -12,16 +12,13 @@ const authors = Object.values(reads).reduce<
   Record<string, Author & { books: Set<string>; reads: Read[] }>
 >((result, read) => {
   read.book.authors.forEach((a) => {
-    if (a.slug in result) {
-      result[a.slug].reads.push(read);
-      result[a.slug].books.add(read.book.gbid);
-    } else {
-      result[a.slug] = {
-        ...a,
-        books: new Set([read.book.gbid]),
-        reads: [read],
-      };
-    }
+    result[a.slug] ||= {
+      ...a,
+      books: new Set([]),
+      reads: [],
+    };
+    result[a.slug].reads.push(read);
+    result[a.slug].books.add(read.book.gbid);
   });
 
   return result;

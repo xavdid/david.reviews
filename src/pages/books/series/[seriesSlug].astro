@@ -27,16 +27,13 @@ export const getStaticPaths = async (): Result => {
     const series = read.book.series;
     if (series) {
       const seriesSlug = series.slug;
-      const seriesRecord = result[seriesSlug] as Props | undefined;
 
-      if (seriesRecord) {
-        seriesRecord.reads.push(read);
-      } else {
-        result[seriesSlug] = {
-          ...series,
-          reads: [read],
-        };
-      }
+      result[seriesSlug] ||= {
+        ...series,
+        reads: [],
+      };
+
+      result[seriesSlug].reads.push(read);
     }
     return result;
   }, {});

@@ -34,21 +34,13 @@ export const getStaticPaths = async (): Result => {
 
   const movies = watches.reduce<Record<string, MovieAndWatches>>(
     (result, watch) => {
-      if (watch.movie.collections === undefined) {
-        return result;
-      }
-
-      const tmdbId = watch.movie.tmdbId;
-      const movieRecord = result[tmdbId] as MovieAndWatches | undefined;
-
-      if (movieRecord) {
-        movieRecord.watches.push(watch);
-      } else {
-        const item: MovieAndWatches = {
+      if (watch.movie.collections) {
+        const tmdbId = watch.movie.tmdbId;
+        result[tmdbId] ||= {
           movie: watch.movie,
-          watches: [watch],
+          watches: [],
         };
-        result[tmdbId] = item;
+        result[tmdbId].watches.push(watch);
       }
 
       return result;
@@ -59,16 +51,12 @@ export const getStaticPaths = async (): Result => {
   const collections = Object.values(movies).reduce<Record<string, Props>>(
     (result, movieWithWatches) => {
       movieWithWatches.movie.collections?.forEach((collection) => {
-        const collectionRecord = result[collection.slug] as Props | undefined;
+        result[collection.slug] ||= {
+          collection,
+          movies: [],
+        };
 
-        if (collectionRecord) {
-          collectionRecord.movies.push(movieWithWatches);
-        } else {
-          result[collection.slug] = {
-            collection,
-            movies: [movieWithWatches],
-          };
-        }
+        result[collection.slug].movies.push(movieWithWatches);
       });
 
       return result;

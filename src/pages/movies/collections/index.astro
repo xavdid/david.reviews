@@ -12,18 +12,12 @@ const collections = Object.values(movies).reduce<
   Record<string, CollectionRecord>
 >((result, movie) => {
   movie.collections?.forEach((collection) => {
-    const collectionRecord = result[collection.slug] as
-      | CollectionRecord
-      | undefined;
+    result[collection.slug] ||= {
+      collection,
+      movies: new Set([]),
+    };
 
-    if (collectionRecord) {
-      collectionRecord.movies.add(movie.tmdbId);
-    } else {
-      result[collection.slug] = {
-        collection,
-        movies: new Set([movie.tmdbId]),
-      };
-    }
+    result[collection.slug].movies.add(movie.tmdbId);
   });
   return result;
 }, {});

@@ -26,17 +26,12 @@ export const getStaticPaths = async (): Result => {
 
   const movies = watches.reduce<Record<string, Props>>((result, watch) => {
     const tmdbId = watch.movie.tmdbId;
-    const movieRecord = result[tmdbId] as Props | undefined;
 
-    if (movieRecord) {
-      movieRecord.watches.push(watch);
-    } else {
-      const item: Props = {
-        movie: watch.movie,
-        watches: [watch],
-      };
-      result[tmdbId] = item;
-    }
+    result[tmdbId] ||= {
+      movie: watch.movie,
+      watches: [],
+    };
+    result[tmdbId].watches.push(watch);
 
     return result;
   }, {});
