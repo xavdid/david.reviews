@@ -1,0 +1,88 @@
+---
+import RoundedLink from "../../components/links/RoundedLink.astro";
+import Layout from "../../layouts/Layout.astro";
+import { seoTitle } from "../../utils";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+type Props = { entry: CollectionEntry<"articles"> };
+type Params = { slug: CollectionEntry<"articles">["slug"] };
+type StaticPaths = Promise<Array<{ params: Params; props: Props }>>;
+
+export const getStaticPaths = async (): StaticPaths => {
+  const articles = await getCollection("articles");
+  return articles.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+};
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+// try to keep thse two in sync? wish this could be more programmatic
+const h1Styles = [
+  "pt-2",
+  "text-4xl",
+
+  // border
+  "border-b",
+  "border-blue-600",
+  "dark:border-amber-300",
+];
+
+const proseStyles = [
+  // basic styles
+  "prose",
+  "dark:prose-invert",
+  "md:prose-lg",
+
+  // inline code
+  "prose-code:before:content-none", // remove visible backticks from around inline code
+  "prose-code:after:content-none", // remove visible backticks from around inline code
+  "dark:prose-pre:border", // border on code blocks in dark mode
+
+  // h2
+  // - colors
+  "prose-h2:border-b",
+  "prose-h2:border-blue-600",
+  "dark:prose-h2:border-amber-300",
+  // - spacing
+  "prose-h2:mb-4",
+  "prose-h2:mt-8",
+  // h3 content
+  "prose-h3:before:content-['›_']",
+  "prose-h3:before:text-blue-600",
+  "dark:prose-h3:before:text-amber-300",
+  // blockquote colors
+  "prose-blockquote:border-blue-600",
+  "dark:prose-blockquote:border-amber-300",
+
+  // image
+  "prose-img:border",
+  // - border colors
+  "prose-img:border-zinc-800",
+  "dark:prose-img:border-amber-300",
+
+  // links
+  "prose-a:text-blue-600",
+  "dark:prose-a:text-inherit",
+];
+---
+
+<Layout
+  pageTitle={`FIXME`}
+  seoTitle={seoTitle("Games, Movies, and Books")}
+  seoDescription={`Learn all about David's review site, where he shares his thoughts on the games he plays, the movies he watches, and the books he reads.`}
+  activeTab="games"
+>
+  <h1 class:list={h1Styles}>
+    {entry.data.title}
+  </h1>
+  <p class="pb-4 pt-2">📅 2021-03-03</p>
+  <div class:list={proseStyles}>
+    <Content />
+  </div>
+   Mentioned Games: <RoundedLink href="/games/little-kitty-big-city/">
+    Beat Breaker
+  </RoundedLink>
+</Layout>

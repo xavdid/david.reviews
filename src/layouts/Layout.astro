@@ -92,13 +92,14 @@ const groupedSeo: SEOProps = {
 
     <meta name="generator" content={Astro.generator} />
     <script
+      is:inline
       data-goatcounter="https://david-reviews.goatcounter.com/count"
       async
       src="https://gc.zgo.at/count.js"></script>
 
     <SEO {...groupedSeo} />
   </head>
-  <body class="dark:bg-zinc-800 dark:text-white">
+  <body class="bg-zinc-100 dark:bg-zinc-800 dark:text-white">
     <Navbar active={activeTab} />
     <main class="mx-auto max-w-[95%] pb-4 md:max-w-xl">
       <slot />

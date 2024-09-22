@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /** @type {import('tailwindcss').Config} */
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -20,7 +19,14 @@ export default {
         insetBook: insetShadow(emerald),
         insetSearch: insetShadow(purple),
       },
+      // typography: {
+      //   DEFAULT: {
+      //     css: {
+      //       "--tw-prose-quote-borders": "green",
+      //     },
+      //   },
+      // },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };

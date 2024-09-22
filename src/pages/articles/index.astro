@@ -1,0 +1,28 @@
+---
+import SubtleLink from "../../components/links/SubtleLink.astro";
+import Layout from "../../layouts/Layout.astro";
+import { seoTitle } from "../../utils";
+import { getCollection } from "astro:content";
+
+const allArticles = await getCollection("articles");
+---
+
+<Layout
+  pageTitle={`FIXME`}
+  seoTitle={seoTitle("Games, Movies, and Books")}
+  seoDescription={`Learn all about David's review site, where he shares his thoughts on the games he plays, the movies he watches, and the books he reads.`}
+  activeTab="games"
+>
+  <h1 class="pb-3 pt-2 text-2xl">Articles</h1>
+  <ul>
+    {
+      allArticles.map((article) => (
+        <li class="list-disc">
+          <SubtleLink href={`/articles/${article.slug}`}>
+            {article.data.title}
+          </SubtleLink>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

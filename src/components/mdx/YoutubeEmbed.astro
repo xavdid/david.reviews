@@ -1,0 +1,40 @@
+---
+import { stringify } from "querystring";
+
+type Props = {
+  youtubeId: string;
+  params?: {
+    start?: number;
+  };
+};
+
+const { youtubeId, params } = Astro.props;
+if (!youtubeId) {
+  throw new Error("Missing prop `youtubeId`!");
+}
+---
+
+<div
+  class="video"
+  style={{
+    position: "relative",
+    paddingBottom: "56.25%" /* 16:9 */,
+    paddingTop: 25,
+    height: 0,
+  }}
+>
+  <iframe
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+    }}
+    src={`https://www.youtube-nocookie.com/embed/${youtubeId}?${stringify(
+      params,
+    )}`}
+    frameborder="0"
+    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen></iframe>
+</div>
