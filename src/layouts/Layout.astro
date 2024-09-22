@@ -19,6 +19,7 @@ type Props = {
   seoDescription: `${string}.`;
   activeTab?: `${Category}s` | "search";
   ogImg?: ImageInfo;
+  maxWidth?: `md:max-w-${string}`;
 };
 
 const OG_IMG_URL = "https://david.reviews/og.png";
@@ -36,6 +37,7 @@ const {
   seoTitle,
   seoDescription: description,
   ogImg = defaultOgImg,
+  maxWidth = "md:max-w-xl",
 } = Astro.props;
 
 const groupedSeo: SEOProps = {
@@ -101,7 +103,7 @@ const groupedSeo: SEOProps = {
   </head>
   <body class="dark:bg-zinc-800 dark:text-white">
     <Navbar active={activeTab} />
-    <main class="mx-auto max-w-[95%] pb-4 md:max-w-xl">
+    <main class:list={["mx-auto max-w-[95%] pb-4", maxWidth]}>
       <slot />
     </main>
   </body>

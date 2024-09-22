@@ -78,11 +78,13 @@ const proseStyles = [
 const components = { a: ExternalLink };
 ---
 
+<!-- articles get a slightly wider layout -->
 <Layout
   pageTitle={`FIXME`}
   seoTitle={seoTitle("Games, Movies, and Books")}
   seoDescription={`Learn all about David's review site, where he shares his thoughts on the games he plays, the movies he watches, and the books he reads.`}
   activeTab="games"
+  maxWidth="md:max-w-2xl"
 >
   <h1 class:list={h1Styles}>
     {entry.data.title}
