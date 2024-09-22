@@ -19,13 +19,16 @@ export default {
         insetBook: insetShadow(emerald),
         insetSearch: insetShadow(purple),
       },
-      // typography: {
-      //   DEFAULT: {
-      //     css: {
-      //       "--tw-prose-quote-borders": "green",
-      //     },
-      //   },
-      // },
+      typography: {
+        DEFAULT: {
+          css: {
+            blockquote: {
+              // disalbe quotes befor and after text
+              quotes: "none",
+            },
+          },
+        },
+      },
     },
   },
   plugins: [require("@tailwindcss/typography")],

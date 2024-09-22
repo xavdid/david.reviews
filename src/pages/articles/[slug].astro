@@ -1,8 +1,10 @@
 ---
+import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { seoTitle } from "../../utils";
 import { getCollection, type CollectionEntry } from "astro:content";
+import CalendarIcon from "../../components/icons/calendar.astro";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -39,6 +41,8 @@ const proseStyles = [
   // inline code
   "prose-code:before:content-none", // remove visible backticks from around inline code
   "prose-code:after:content-none", // remove visible backticks from around inline code
+  "prose-blockquote:before:content-none", // remove visible backticks from around inline code
+  "prose-blockquote:after:content-none", // remove visible backticks from around inline code
   "dark:prose-pre:border", // border on code blocks in dark mode
 
   // h2
@@ -63,10 +67,15 @@ const proseStyles = [
   "prose-img:border-zinc-800",
   "dark:prose-img:border-amber-300",
 
-  // links
-  "prose-a:text-blue-600",
-  "dark:prose-a:text-inherit",
+  // shrink huge hr margins
+  // doing them evenly makes it look imbalanced
+  "prose-hr:mt-6",
+  "prose-hr:mb-4",
 ];
+
+// can replace specific markdown components: https://mdxjs.com/table-of-components/
+// TODO: if I ever need to differentiate between internal and external links in markdown, could do that in a wrapper component
+const components = { a: ExternalLink };
 ---
 
 <Layout
@@ -78,11 +87,19 @@ const proseStyles = [
   <h1 class:list={h1Styles}>
     {entry.data.title}
   </h1>
-  <p class="pb-4 pt-2">📅 2021-03-03</p>
+
+  <p class="pb-4 pt-2">
+    <CalendarIcon classes={["inline h-4 mb-1 pr-2", "dark:fill-white"]} />{
+      entry.data.publishedOn ?? "TBD"
+    }
+  </p>
   <div class:list={proseStyles}>
-    <Content />
+    <Content components={components} />
   </div>
-   Mentioned Games: <RoundedLink href="/games/little-kitty-big-city/">
-    Beat Breaker
-  </RoundedLink>
+  <hr class="my-6" />
+  <p>
+    FIXME Mentioned Games: <RoundedLink href="/games/little-kitty-big-city/">
+      Beat Breaker
+    </RoundedLink>
+  </p>
 </Layout>

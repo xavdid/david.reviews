@@ -41,6 +41,7 @@ const { header, rows } = Astro.props;
               {authors ? (
                 <AuthorList authors={authors} style="subtle" />
               ) : rating != null ? (
+                // space saving for mobile series list
                 <>
                   <Rating rating={rating} classes={["hidden", "md:block"]} />
                   <div class="md:hidden">

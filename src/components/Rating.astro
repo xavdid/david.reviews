@@ -5,18 +5,21 @@ import StarFilled from "./icons/star-filled.astro";
 type Props = {
   rating: number;
   classes?: string[];
+  starHeight?: string;
 };
 
-const { rating, classes: componentClasses } = Astro.props;
-const classes = "mb-[0.25em] h-4 inline";
+const { rating, classes: componentClasses, starHeight = "h-4" } = Astro.props;
+const starClasses = ["mb-[0.25em] inline", starHeight];
 ---
 
 <div class:list={[componentClasses, "whitespace-nowrap"]}>
   {
-    Array.from({ length: rating }).map(() => <StarFilled classes={[classes]} />)
+    Array.from({ length: rating }).map(() => (
+      <StarFilled classes={[starClasses]} />
+    ))
   }{
     Array.from({ length: 4 - rating }).map(() => (
-      <StarEmpty classes={[classes, "dark:fill-white"]} />
+      <StarEmpty classes={[starClasses, "dark:fill-white"]} />
     ))
   }
 </div>
