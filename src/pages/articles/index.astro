@@ -1,28 +1,39 @@
 ---
+import { getCollection } from "astro:content";
 import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { seoTitle } from "../../utils";
-import { getCollection } from "astro:content";
 
 const allArticles = await getCollection("articles");
 ---
 
 <Layout
-  pageTitle={`FIXME`}
-  seoTitle={seoTitle("Games, Movies, and Books")}
-  seoDescription={`Learn all about David's review site, where he shares his thoughts on the games he plays, the movies he watches, and the books he reads.`}
-  activeTab="games"
+  pageTitle="All Articles"
+  seoTitle={seoTitle("All Articles")}
+  seoDescription={`All full list of the ${allArticles.length} long-form articles I've written about media.`}
+  activeTab="search"
 >
-  <h1 class="pb-3 pt-2 text-2xl">Articles</h1>
-  <ul>
+  <h1 class="pb-3 pt-2 text-2xl">All Articles</h1>
+  <p class="py-1">
+    In addition to micro-reviews, I've also published {allArticles.length}
+     longer-form review(s) and design articles.
+  </p>
+  <p class="pt-1">
+    If you'd like me to review your game, please <SubtleLink href="/contact">
+      {"get in touch"}
+    </SubtleLink>!
+  </p>
+  <hr class="mb-3 mt-6" />
+  <div class="">
     {
       allArticles.map((article) => (
-        <li class="list-disc">
-          <SubtleLink href={`/articles/${article.slug}`}>
+        <div class="py-3">
+          <div class="text-sm text-zinc-400">{article.data.publishedOn}</div>
+          <SubtleLink href={`/articles/${article.slug}`} classes={["text-xl"]}>
             {article.data.title}
           </SubtleLink>
-        </li>
+        </div>
       ))
     }
-  </ul>
+  </div>
 </Layout>
