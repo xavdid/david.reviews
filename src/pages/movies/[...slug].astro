@@ -5,7 +5,7 @@ import MovieLegend from "../../components/MovieLegend.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import WatchBox from "../../components/infoboxes/WatchBox.astro";
 import Layout from "../../layouts/Layout.astro";
-import { seoTitle } from "../../utils";
+import { seoTitle } from "../../utils/data";
 
 type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
 type WatchFilter = (W: { watch: Watch; numWatch: number }) => boolean;

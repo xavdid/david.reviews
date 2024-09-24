@@ -4,7 +4,7 @@ import { loadReads, type Read } from "../../../airtable/data/reads";
 import StickyTable from "../../../components/StickyTable.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { averageRating } from "../../../utils";
+import { averageRating } from "../../../utils/data";
 
 const reads = await loadReads();
 

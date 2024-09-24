@@ -6,7 +6,8 @@ import type { Movie } from "../../airtable/data/movies";
 import { loadPlays } from "../../airtable/data/plays";
 import { loadReads } from "../../airtable/data/reads";
 import { loadWatches } from "../../airtable/data/watches";
-import { buildRssFeed, slimReview, type Category } from "../../utils";
+import { type Category } from "../../utils/data";
+import { buildRssFeed, slimReview } from "../../utils/rss";
 
 const feedTypes = ["books", "movies", "games", "everything"] as const;
 type Feeds = (typeof feedTypes)[number];

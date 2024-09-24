@@ -9,7 +9,7 @@ import RssIcon from "../components/icons/rss.astro";
 import ExternalLink from "../components/links/ExternalLink.astro";
 import SubtleLink from "../components/links/SubtleLink.astro";
 import Layout from "../layouts/Layout.astro";
-import { seoTitle } from "../utils";
+import { seoTitle } from "../utils/data";
 
 const inProgressPlays = (await loadInProgessPlays()).toSorted(
   (a, b) =>

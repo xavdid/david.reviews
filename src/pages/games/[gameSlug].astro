@@ -8,32 +8,65 @@ import PlaySummary from "../../components/infoboxes/PlaySummary.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import Layout from "../../layouts/Layout.astro";
-import { averageRating, pluralize, seoTitle } from "../../utils";
+import {
+  averageRating,
+  pluralize,
+  seoTitle,
+  articlePermalink,
+  isProdBuild,
+} from "../../utils/data";
+import {
+  getPublishedArticles,
+  type ArticleReference,
+} from "../../utils/content";
+import SubtleLink from "../../components/links/SubtleLink.astro";
 
 type Params = {
   gameSlug: string;
 };
-
 type Props = {
   game: Game;
   // first time, replay; used for headline info
   plays: Play[];
   // dlc, etc
   etcPlays: Play[];
+  articles: ArticleReference[];
 };
 
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const watches = await loadPlays();
+  const allArticles = await getPublishedArticles();
 
-  const movies = watches.reduce<Record<string, Props>>((result, play) => {
+  const newProps = (game: Game): Props => ({
+    game,
+    plays: [],
+    etcPlays: [],
+    articles: allArticles
+      .filter((articles) => articles.data.gameSlugs?.includes(game.slug))
+      .map(({ data: { title }, slug }) => ({
+        title,
+        permalink: articlePermalink(slug),
+      })),
+  });
+  const plays = await loadPlays();
+
+  // could pre-calculate all the articles for lookup, but this won't be a performance issue for a while
+  // const articlesByGame = allArticles.reduce<Record<string, ArticleReference[]>>(
+  //   (result, { data: { title, gameSlugs }, slug }) => {
+  //     gameSlugs?.forEach((gameSlug) => {
+  //       result[gameSlug] ||= [];
+  //       result[gameSlug].push({ title, permalink: articlePermalink(slug) });
+  //     });
+  //     return result;
+  //   },
+  //   {},
+  // );
+
+  const games = plays.reduce<Record<string, Props>>((result, play) => {
     const igdbId = play.game.igdbId;
-    const gameRecord = result[igdbId] ?? {
-      game: play.game,
-      plays: [],
-      etcPlays: [],
-    };
+    // TS doesn't check this right if I put the object inline? so it's a func call
+    const gameRecord = result[igdbId] ?? newProps(play.game);
 
     (isEtcPlay(play.playType) ? gameRecord.etcPlays : gameRecord.plays).push(
       play,
@@ -43,7 +76,24 @@ export const getStaticPaths = async (): Result => {
     return result;
   }, {});
 
-  return Object.entries(movies).map(([_, props]) => ({
+  // for prod builds, ensure every game slug exists
+  // older games won't be preset in dev
+  if (isProdBuild) {
+    const allGameSlugs = new Set(
+      Object.values(games).map(({ game: { slug } }) => slug),
+    );
+    allArticles.forEach(({ data: { gameSlugs, title } }) => {
+      gameSlugs?.forEach((gameSlug) => {
+        if (!allGameSlugs.has(gameSlug)) {
+          throw new Error(
+            `article "${title} has a game slug "${gameSlug}" that's not found in any games`,
+          );
+        }
+      });
+    });
+  }
+
+  return Object.entries(games).map(([_, props]) => ({
     params: { gameSlug: props.game.slug },
     props,
   }));
@@ -53,6 +103,7 @@ const {
   plays,
   etcPlays,
   game: { title, posterUrl, award, genre, bigPosterUrl, collection },
+  articles,
 } = Astro.props;
 ---
 
@@ -116,7 +167,24 @@ const {
       }
     </div>
   </div>
+  {
+    articles.length ? (
+      <div class="pb-4">
+        <h2 class="pb-0 text-xl">Mentioned In</h2>
+        <ul class="list-disc pl-8">
+          {articles.map(({ permalink, title }) => (
+            <li class="py-1">
+              <SubtleLink href={permalink} classes={["text-lg"]}>
+                {title}
+              </SubtleLink>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : null
+  }
   <div>
+    {articles.length ? <h2 class="pb-2 text-xl">Full Plays</h2> : null}
     {plays.map((play) => <PlaySummary play={play} />)}
   </div>
   {

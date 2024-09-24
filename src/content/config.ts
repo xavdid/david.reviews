@@ -8,7 +8,16 @@ const articles = defineCollection({
       title: z.string(),
       ogDesc: z.string(),
       publishedOn: z.optional(z.string().date()),
-      gameSlugs: z.optional(z.array(z.string())),
+      gameSlugs: z.optional(
+        z.array(
+          z.string().refine(
+            (val) => !val.endsWith("/"),
+            (val) => ({
+              message: `Slug "${val}" should not end with a slash`,
+            }),
+          ),
+        ),
+      ),
       review: z
         .object({
           rating: z.number().min(1).max(4),

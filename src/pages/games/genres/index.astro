@@ -2,7 +2,7 @@
 import { GENRE_DESCRIPTIONS, loadGames } from "../../../airtable/data/games";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { genrePermalink, pluralize } from "../../../utils";
+import { genrePermalink, pluralize } from "../../../utils/data";
 
 const games = await loadGames();
 

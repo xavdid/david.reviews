@@ -1,7 +1,7 @@
 import slugify from "@sindresorhus/slugify";
 
 import { type AwardDetails, type AwardTier } from "../../awards";
-import { collectionPermalink, genrePermalink } from "../../utils";
+import { collectionPermalink, genrePermalink } from "../../utils/data";
 import type {
   AirtableBase,
   Collection,

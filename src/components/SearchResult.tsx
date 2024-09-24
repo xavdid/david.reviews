@@ -1,6 +1,6 @@
 import { type JSX } from "preact";
 
-import type { SearchItem } from "../utils";
+import type { SearchItem } from "../utils/search";
 import { BookIcon, GameIcon, MovieIcon } from "./icons/allIcons";
 
 type Props = SearchItem;
