@@ -4,16 +4,16 @@ import RssIcon from "./icons/rss.astro";
 import SubtleLink from "./links/SubtleLink.astro";
 
 type Props = {
-  mediaType: Category;
+  mediaType: Category | "article";
 };
 
 const { mediaType } = Astro.props;
 ---
 
+<!-- prettier-ignore -->
 <p class="pb-3">
-  To be notified of new {mediaType} reviews, check out the <SubtleLink
-    href="/feeds"
-  >
-    <RssIcon classes={["inline", "mr-1"]} />RSS Feed
-  </SubtleLink>
+  To be notified of new {
+    mediaType === "article" ? "articles" : `${mediaType} reviews`
+  }, check out the <SubtleLink href="/feeds">
+    <RssIcon classes={["inline", "mr-1"]} />RSS Feed</SubtleLink>.
 </p>

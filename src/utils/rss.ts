@@ -1,5 +1,13 @@
 import rss, { type RSSFeedItem } from "@astrojs/rss";
-import { NO_REVIEW } from "./data";
+import { capitalize, NO_REVIEW } from "./data";
+
+export const feedTypes = [
+  "everything",
+  "articles",
+  "games",
+  "movies",
+  "books",
+] as const;
 
 export const buildRssFeed = async <T extends { dateFinished: string }>(
   { site }: { site: URL | undefined },
@@ -14,10 +22,10 @@ export const buildRssFeed = async <T extends { dateFinished: string }>(
 
   const plural = pluralItem ?? singularItem + "s";
   return await rss({
-    title: `david.reviews: ${
-      plural.charAt(0).toUpperCase() + plural.slice(1)
-    }!`,
-    description: `A feed of the 50 most recent ${singularItem} reviews I've posted.`,
+    title: `david.reviews: ${capitalize(plural)}!`,
+    description: `A feed of the 50 most recent ${
+      singularItem === "article" ? "articles" : `${singularItem} reviews`
+    } I've posted.`,
     site,
     items: reviews
       // it's important that these stay sorted

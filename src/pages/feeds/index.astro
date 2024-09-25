@@ -5,15 +5,19 @@ import {
   MovieIcon,
   BookIcon,
   StarIcon,
+  ArticleIcon,
 } from "../../components/icons/allIcons";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
+import { feedTypes } from "../../utils/rss";
+import { capitalize } from "../../utils/data";
 
-const icons: Record<string, () => JSX.Element> = {
-  Games: GameIcon,
-  Movies: MovieIcon,
-  Books: BookIcon,
-  Everything: StarIcon,
+const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
+  games: GameIcon,
+  movies: MovieIcon,
+  books: BookIcon,
+  everything: StarIcon,
+  articles: ArticleIcon,
 };
 ---
 
@@ -36,12 +40,12 @@ const icons: Record<string, () => JSX.Element> = {
     </ExternalLink> varieties. -->
   <ul class="list-disc pl-4">
     {
-      ["Everything", "Games", "Movies", "Books"].map((type) => {
+      feedTypes.map((type) => {
         const Icon = icons[type];
         return (
           <li class="py-1">
             <Icon />
-            {type}:{" "}
+            {capitalize(type)}:{" "}
             <ExternalLink
               href={`/feeds/${type.toLowerCase()}.xml`}
             >{`https://david.reviews/feeds/${type.toLowerCase()}.xml`}</ExternalLink>

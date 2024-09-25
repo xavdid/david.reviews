@@ -20,6 +20,9 @@ export const pluralize = (l: unknown[] | number): string => {
   return calc ? "s" : "";
 };
 
+export const capitalize = (s: string): string =>
+  s.charAt(0).toUpperCase() + s.slice(1);
+
 // don't want to make it sound like it was so bad I didn't have anything to say
 export const NO_REVIEW = "no additional notes, see rating";
 export const collectionPermalink = (
@@ -29,9 +32,6 @@ export const collectionPermalink = (
 
 export const genrePermalink = (slug: string): Permalink =>
   `/games/genres${slug === "" ? "" : `/${slug}`}/`;
-
-export const articlePermalink = (slug: string): Permalink =>
-  `/articles/${slug}/`;
 
 export const averageRating = (items: Array<{ rating: number }>): number =>
   +(

@@ -12,7 +12,6 @@ import {
   averageRating,
   pluralize,
   seoTitle,
-  articlePermalink,
   isProdBuild,
 } from "../../utils/data";
 import {
@@ -44,19 +43,19 @@ export const getStaticPaths = async (): Result => {
     etcPlays: [],
     articles: allArticles
       .filter((articles) => articles.data.gameSlugs?.includes(game.slug))
-      .map(({ data: { title }, slug }) => ({
+      .map(({ data: { title }, permalink }) => ({
         title,
-        permalink: articlePermalink(slug),
+        permalink,
       })),
   });
   const plays = await loadPlays();
 
   // could pre-calculate all the articles for lookup, but this won't be a performance issue for a while
   // const articlesByGame = allArticles.reduce<Record<string, ArticleReference[]>>(
-  //   (result, { data: { title, gameSlugs }, slug }) => {
+  //   (result, { data: { title, gameSlugs }, permalink }) => {
   //     gameSlugs?.forEach((gameSlug) => {
   //       result[gameSlug] ||= [];
-  //       result[gameSlug].push({ title, permalink: articlePermalink(slug) });
+  //       result[gameSlug].push({ title, permalink });
   //     });
   //     return result;
   //   },

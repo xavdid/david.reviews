@@ -4,6 +4,7 @@ import { SEO, type Props as SEOProps } from "astro-seo";
 import Navbar from "../components/Navbar.astro";
 import type { ExternalUrl } from "../airtable/types";
 import type { Category } from "../utils/data";
+import { feedTypes } from "../utils/rss";
 
 type ImageInfo = {
   url: ExternalUrl;
@@ -82,7 +83,7 @@ const groupedSeo: SEOProps = {
     <meta name="fediverse:creator" content="@xavdid@mastodon.social" />
     <!-- advertise the feeds -->
     {
-      ["everything", "games", "movies", "books"].map((type) => (
+      feedTypes.map((type) => (
         <link
           rel="alternate"
           type="application/rss+xml"
