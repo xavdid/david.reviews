@@ -96,7 +96,8 @@ const components = { a: ExternalLink };
     }
   </p>
   <div class:list={proseStyles}>
-    <Content components={components} />
+    <!-- https://github.com/withastro/astro/issues/12057 -->
+    <Content components={components} frontmatter={entry.data} />
   </div>
   <hr class="my-6" />
   <p>

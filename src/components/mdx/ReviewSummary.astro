@@ -10,15 +10,14 @@ type Props = {
   };
 };
 
-// have to give lists default while TKTK is open
 const {
-  review: { rating, blurb, plusses = [], minuses = [] },
+  review: { rating, blurb, plusses, minuses },
 } = Astro.props;
 ---
 
 <blockquote class="not-prose border-l-4 border-amber-300">
-  <div class="pl-4">
-    <Rating rating={rating} starHeight="h-8" />
+  <div class="rounded-r-md bg-zinc-200 p-4 dark:bg-zinc-700">
+    <Rating rating={rating} starHeight="h-8" classes={["text-center"]} />
 
     <div class="mt-4 text-2xl italic">{blurb}</div>
 
