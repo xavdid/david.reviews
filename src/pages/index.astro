@@ -1,6 +1,4 @@
 ---
-import { execSync } from "node:child_process";
-
 import { Image } from "astro:assets";
 
 import { loadInProgessPlays } from "../airtable/data/inProgressPlays";
@@ -20,9 +18,6 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
   (a, b) =>
     new Date(b.dateStarted).valueOf() - new Date(a.dateStarted).valueOf(),
 );
-
-const sha = execSync("git rev-parse --short HEAD").toString().trim();
-const now = new Date().toISOString();
 ---
 
 <Layout
@@ -30,30 +25,22 @@ const now = new Date().toISOString();
   seoTitle={seoTitle("Games, Movies, and Books")}
   seoDescription={`Learn all about David's review site, where he shares his thoughts on the games he plays, the movies he watches, and the books he reads.`}
 >
-  <h1 class="py-3 text-center text-2xl">Welcome to my review site!</h1>
-  <p class="py-2">
-    I'm <ExternalLink href="https://xavd.id">{"David"}</ExternalLink> and since
-    2016, I've used <ExternalLink href="https://airtable.com/">
-      {"Airtable"}
-    </ExternalLink> to track everything I play, watch, and read. I use that data
-    to write a <ExternalLink href="https://xavd.id/blog/tags/yearly-review">
-      {"yearly review"}
-    </ExternalLink> of the best things from that year. These micro-reviews have
-    always been publicly available, but they were hidden away in Airtable.
-    Friends would ask for recommendations but it wasn't easy to link them
-    directly to my thoughts.
+  <p class="py-2 pt-4">
+    Welcome to <strong>david.reviews</strong>, my small, independent media
+    review site. I'm <ExternalLink href="https://xavd.id">
+      {"David"}
+    </ExternalLink> and I've been doing this in some form or another since 2016.
   </p>
-  <p class="py-2">
-    Enter <strong>david.reviews</strong>. Having a dedicated site makes it
-    simple to link individual reviews and easy to see all reviews for a piece of
-    media. I hope you find something new to enjoy!
-  </p>
+
   <p class="pb-4 pt-2">
     If you'd like to be notified every time a new review goes live, check out
     the <SubtleLink href="/feeds" classes={["whitespace-nowrap"]}>
       <RssIcon classes={["inline", "mr-1"]} />{"RSS Feeds"}
     </SubtleLink>.
   </p>
+
+  <!-- <h2 class="py-3 text-center text-2xl underline">Recent Articles</h2> -->
+  <!-- can include this, but /articles page does the same -->
 
   <h2 class="py-3 text-center text-2xl underline">Now Playing</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
@@ -130,63 +117,6 @@ const now = new Date().toISOString();
       )
     }
   </div>
-
-  <h2 class="my-3 text-center text-2xl underline">Acknowledgements</h2>
-
-  <ul class="list-disc">
-    <li>
-      This site is entirely static, <abbr title=`${sha} @ ${now}`>built</abbr>
-       with <ExternalLink href="https://astro.build/">
-        {"Astro"}
-      </ExternalLink>, and styled with <ExternalLink
-        href="https://tailwindcss.com/"
-      >
-        {"Tailwind"}
-      </ExternalLink>
-    </li>
-    <li>
-      The data is stored in <ExternalLink href="https://airtable.com/">
-        {"Airtable"}
-      </ExternalLink>
-    </li>
-    <li>
-      The source is available on <ExternalLink
-        href="https://github.com/xavdid/david.reviews"
-      >
-        {"GitHub"}
-      </ExternalLink>
-    </li>
-    <li>
-      The <ExternalLink href="/og.png">social media image</ExternalLink> was
-      created by <ExternalLink href="https://www.karenbrownman.com/">
-        Karen Brownman
-      </ExternalLink>
-    </li>
-    <li>
-      Game covers are sourced from <ExternalLink href="https://www.igdb.com/">
-        {"IGDB"}
-      </ExternalLink>
-    </li>
-    <li>
-      Movie posters are sourced from <ExternalLink
-        href="https://www.themoviedb.org/"
-      >
-        {"TMDb"}
-      </ExternalLink>
-    </li>
-    <li>
-      Book covers are sourced from the Google <ExternalLink
-        href="https://developers.google.com/books"
-      >
-        {"Books API"}
-      </ExternalLink>
-    </li>
-    <li>
-      <SubtleLink href="/feeds" classes={["whitespace-nowrap"]}>
-        <RssIcon classes={["inline", "mr-1"]} />{"RSS Feeds"}
-      </SubtleLink> are available.
-    </li>
-  </ul>
 </Layout>
 
 <style></style>
