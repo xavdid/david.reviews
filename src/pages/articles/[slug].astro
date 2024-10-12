@@ -1,6 +1,7 @@
 ---
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
+import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
 import Layout from "../../layouts/Layout.astro";
 import { seoTitle } from "../../utils/data";
 import { getCollection, type CollectionEntry } from "astro:content";
@@ -21,7 +22,7 @@ export const getStaticPaths = async (): StaticPaths => {
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 
-// try to keep thse two in sync? wish this could be more programmatic
+// try to keep this in sync with RenderedMarkdown's h2 styles; wish this could be more programmatic
 const h1Styles = [
   "pt-2",
   "text-4xl",
@@ -30,47 +31,6 @@ const h1Styles = [
   "border-b",
   "border-blue-600",
   "dark:border-amber-300",
-];
-
-const proseStyles = [
-  // basic styles
-  "prose",
-  "dark:prose-invert",
-  "md:prose-lg",
-
-  // inline code
-  "prose-code:before:content-none", // remove visible backticks from around inline code
-  "prose-code:after:content-none", // remove visible backticks from around inline code
-  "prose-blockquote:before:content-none", // remove visible backticks from around inline code
-  "prose-blockquote:after:content-none", // remove visible backticks from around inline code
-  "dark:prose-pre:border", // border on code blocks in dark mode
-
-  // h2
-  // - colors
-  "prose-h2:border-b",
-  "prose-h2:border-blue-600",
-  "dark:prose-h2:border-amber-300",
-  // - spacing
-  "prose-h2:mb-4",
-  "prose-h2:mt-8",
-  // h3 content
-  "prose-h3:before:content-['›_']",
-  "prose-h3:before:text-blue-600",
-  "dark:prose-h3:before:text-amber-300",
-  // blockquote colors
-  "prose-blockquote:border-blue-600",
-  "dark:prose-blockquote:border-amber-300",
-
-  // image
-  "prose-img:border",
-  // - border colors
-  "prose-img:border-zinc-800",
-  "dark:prose-img:border-amber-300",
-
-  // shrink huge hr margins
-  // doing them evenly makes it look imbalanced
-  "prose-hr:mt-6",
-  "prose-hr:mb-4",
 ];
 
 // can replace specific markdown components: https://mdxjs.com/table-of-components/
@@ -95,10 +55,10 @@ const components = { a: ExternalLink };
       entry.data.publishedOn ?? "TBD"
     }
   </p>
-  <div class:list={proseStyles}>
+  <RenderedMarkdown>
     <!-- https://github.com/withastro/astro/issues/12057 -->
     <Content components={components} frontmatter={entry.data} />
-  </div>
+  </RenderedMarkdown>
   <hr class="my-6" />
   <p>
     FIXME Mentioned Games: <RoundedLink href="/games/little-kitty-big-city/">

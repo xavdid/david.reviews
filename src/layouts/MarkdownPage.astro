@@ -1,0 +1,28 @@
+---
+import type { MarkdownLayoutProps } from "astro";
+import Layout from "./Layout.astro";
+import RenderedMarkdown from "../components/RenderedMarkdown.astro";
+
+// these are not validated (like a content collection would be)
+type Props = MarkdownLayoutProps<{
+  title: string;
+  ogDescription: `${string}.`;
+}>;
+
+const {
+  frontmatter: { title, ogDescription },
+} = Astro.props;
+---
+
+<Layout
+  pageTitle=`${title} | david.reviews`
+  seoTitle=`${title} | david.reviews`
+  seoDescription={ogDescription}
+  maxWidth="md:max-w-2xl"
+>
+  <div class="pt-4">
+    <RenderedMarkdown>
+      <slot />
+    </RenderedMarkdown>
+  </div>
+</Layout>
