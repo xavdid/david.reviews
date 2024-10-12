@@ -1,7 +1,11 @@
 import slugify from "@sindresorhus/slugify";
 
 import { type AwardDetails, type AwardTier } from "../../awards";
-import { collectionPermalink, genrePermalink } from "../../utils/data";
+import {
+  collectionPermalink,
+  genrePermalink,
+  materializeCollection,
+} from "../../utils/data";
 import type {
   AirtableBase,
   Collection,
@@ -89,12 +93,7 @@ const materialize = (gameRow: GameRecord): Game => {
 
   const collection = gameRow[fields.collection];
   if (collection) {
-    item.collection = {
-      fullName: collection,
-      emoji: collection.split(" ")[0],
-      slug: slugify(collection),
-      permalink: collectionPermalink("games", slugify(collection)),
-    };
+    item.collection = materializeCollection(collection, "game");
   }
 
   if (gameRow[fields.awardTier]) {

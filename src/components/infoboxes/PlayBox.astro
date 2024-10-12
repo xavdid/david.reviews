@@ -39,15 +39,25 @@ const { play } = Astro.props;
   </div>
 
   <Fragment slot="icons">
-    {play.didNotFinish && <div class="inline px-1">🛑</div>}
+    {
+      play.didNotFinish && (
+        <div title="Didn't Finish" class="inline px-1">
+          🛑
+        </div>
+      )
+    }
     {
       play.game.collection && (
-        <div class="inline px-1">{play.game.collection.emoji}</div>
+        <div title={play.game.collection.nameOnly} class="inline px-1">
+          {play.game.collection.emoji}
+        </div>
       )
     }
     {
       play.game.award && (
-        <div class="inline px-1">{medals[play.game.award.tier]}</div>
+        <div title="Award Winning" class="inline px-1">
+          {medals[play.game.award.tier]}
+        </div>
       )
     }
   </Fragment>

@@ -1,4 +1,5 @@
-import type { Permalink } from "../airtable/types";
+import slugify from "@sindresorhus/slugify";
+import type { Collection, Permalink } from "../airtable/types";
 
 export type Category = "book" | "movie" | "game";
 
@@ -29,6 +30,25 @@ export const collectionPermalink = (
   category: `${Category}s`,
   slug: string,
 ): Permalink => `/${category}/collections${slug === "" ? "" : `/${slug}`}/`;
+
+export const materializeCollection = (
+  collection: string,
+  type: Category,
+): Collection => {
+  const [emoji, ...name] = collection.split(" ");
+  if (!(name.length > 0)) {
+    throw new Error(`got collection name without leading emoji: ${collection}`);
+  }
+  const slug = slugify(collection);
+  return {
+    fullName: collection,
+    // need to split the string to find the emoji, don't just take the first character
+    emoji,
+    nameOnly: name.join(" "),
+    slug,
+    permalink: collectionPermalink(`${type}s`, slug),
+  };
+};
 
 export const genrePermalink = (slug: string): Permalink =>
   `/games/genres${slug === "" ? "" : `/${slug}`}/`;

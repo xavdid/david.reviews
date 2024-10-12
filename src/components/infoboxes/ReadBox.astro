@@ -45,11 +45,25 @@ const authors = read.book.authors.filter(
   </div>
 
   <Fragment slot="icons">
-    {read.medium === "Audio" && <div class="inline px-1">🔈</div>}
-    {read.isReread && <div class="inline px-1">🔁</div>}
+    {
+      read.medium === "Audio" && (
+        <div title="Audiobook" class="inline px-1">
+          🔈
+        </div>
+      )
+    }
+    {
+      read.isReread && (
+        <div title="Re-read" class="inline px-1">
+          🔁
+        </div>
+      )
+    }
     {
       read.book.award && (
-        <div class="inline px-1">{medals[read.book.award.tier]}</div>
+        <div title="Award Winning" class="inline px-1">
+          {medals[read.book.award.tier]}
+        </div>
       )
     }
   </Fragment>

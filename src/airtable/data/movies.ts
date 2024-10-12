@@ -1,7 +1,7 @@
 import slugify from "@sindresorhus/slugify";
 
 import { type AwardDetails, type AwardTier } from "../../awards";
-import { collectionPermalink } from "../../utils/data";
+import { collectionPermalink, materializeCollection } from "../../utils/data";
 import type {
   AirtableBase,
   Collection,
@@ -71,13 +71,9 @@ const materialize = (movieRow: MovieRecord): Movie => {
     yearReleased: movieRow[fields.yearReleased],
     numWatches: movieRow[fields.numWatches],
     averageScore: movieRow[fields.averageScore],
-    collections: movieRow[fields.collections]?.map((c) => ({
-      fullName: c,
-      // need to split the string to find the emoji, don't just take the first character
-      emoji: c.split(" ")[0],
-      slug: slugify(c),
-      permalink: collectionPermalink("movies", slugify(c)),
-    })),
+    collections: movieRow[fields.collections]?.map((c) =>
+      materializeCollection(c, "movie"),
+    ),
     posterUrl: `https://image.tmdb.org/t/p/w300${movieRow[fields.posterPath]}`,
     bigPosterUrl: `https://image.tmdb.org/t/p/w500${
       movieRow[fields.posterPath]
