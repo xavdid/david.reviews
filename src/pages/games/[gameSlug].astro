@@ -19,6 +19,7 @@ import {
   type ArticleReference,
 } from "../../utils/content";
 import SubtleLink from "../../components/links/SubtleLink.astro";
+import SteamFollowButton from "../../components/SteamFollowButton.astro";
 
 type Params = {
   gameSlug: string;
@@ -198,4 +199,10 @@ const {
       </>
     )
   }
+
+  <p class="py-1">
+    To see reviews like this directly in your Steam UI, you can:
+  </p>
+
+  <SteamFollowButton />
 </Layout>

@@ -8,6 +8,7 @@ import ExternalLink from "../components/links/ExternalLink.astro";
 import SubtleLink from "../components/links/SubtleLink.astro";
 import Layout from "../layouts/Layout.astro";
 import { seoTitle } from "../utils/data";
+import SteamFollowButton from "../components/SteamFollowButton.astro";
 
 const inProgressPlays = (await loadInProgessPlays()).toSorted(
   (a, b) =>
@@ -33,10 +34,18 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
   </p>
 
   <p class="pb-4 pt-2">
-    If you'd like to be notified every time a new review goes live, check out
-    the <SubtleLink href="/feeds" classes={["whitespace-nowrap"]}>
+    The easiest way to keep up with my game reviews is to:
+  </p>
+
+  <SteamFollowButton />
+
+  <p class="pb-4 pt-2">
+    Alternatively, you can follow one of the many <SubtleLink
+      href="/feeds"
+      classes={["whitespace-nowrap"]}
+    >
       <RssIcon classes={["inline", "mr-1"]} />{"RSS Feeds"}
-    </SubtleLink>.
+    </SubtleLink> (which include all media types, plus articles).
   </p>
 
   <!-- <h2 class="py-3 text-center text-2xl underline">Recent Articles</h2> -->

@@ -2,9 +2,10 @@
 import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
 import ButtonGroup from "../../components/ButtonGroup.astro";
 import GameLegend from "../../components/GameLegend.astro";
-import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import PlayBox from "../../components/infoboxes/PlayBox.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
+import SteamFollowButton from "../../components/SteamFollowButton.astro";
+import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import Layout from "../../layouts/Layout.astro";
 import { genrePermalink, seoTitle } from "../../utils/data";
 
@@ -125,7 +126,16 @@ const collectionEmoji = new Set<string>(
       that genre I've played.
     </li>
   </ul>
+
   <SubscribeBlurb mediaType="game" />
+
+  <p class="py-1">
+    You can also get recommendations directly in the Steam UI if you:
+  </p>
+
+  <SteamFollowButton />
+
+  <hr class="my-2 mb-4" />
 
   <ButtonGroup
     pathRoot="games"
