@@ -3,7 +3,6 @@ import { Image } from "astro:assets";
 import type { Movie } from "../../../airtable/data/movies";
 import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import type { Collection } from "../../../airtable/types";
-import ExternalLink from "../../../components/links/ExternalLink.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
@@ -73,12 +72,12 @@ export const getStaticPaths = async (): Result => {
 
 const { movies, collection } = Astro.props;
 const sortedMovies = movies
-  .map(({ movie, watches }) => ({
-    title: movie.title,
+  .map(({ movie: { title, permalink, posterUrl }, watches }) => ({
+    title,
     avgRating: averageRating(watches),
     numWatches: watches.length,
-    permalink: movie.permalink,
-    posterUrl: movie.posterUrl,
+    permalink,
+    posterUrl,
     // the longest review is probably the best one?
     blurb: watches.reduce<string>((result, { notes }) => {
       return result.length > notes.length ? result : notes;

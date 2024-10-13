@@ -6,7 +6,6 @@ import {
 } from "../../../airtable/data/games";
 import { isEtcPlay, loadPlays, type Play } from "../../../airtable/data/plays";
 import type { Collection } from "../../../airtable/types";
-import ExternalLink from "../../../components/links/ExternalLink.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
@@ -76,11 +75,11 @@ export const getStaticPaths = async (): Result => {
 
 const { games, collection } = Astro.props;
 const sortedGames = games
-  .map(({ game, plays: watches }) => ({
-    title: game.title,
+  .map(({ game: { permalink, title, posterUrl }, plays: watches }) => ({
+    title,
     avgRating: averageRating(watches),
-    permalink: game.permalink,
-    posterUrl: game.posterUrl,
+    permalink,
+    posterUrl,
     // the longest review is probably the best one?
     blurb:
       watches.reduce<string>((result, { notes }) => {
