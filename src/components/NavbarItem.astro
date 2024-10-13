@@ -3,13 +3,14 @@ type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   name: string;
+  stacked: boolean;
   // this is a recursive type, but I don't actually care about the details
   // https://github.com/lukeed/clsx/blob/925494cf31bcd97d3337aacd34e659e80cae7fe2/clsx.d.ts#L1-L6
   classes: unknown[];
 };
 
 // astro has a problem with the variable `name`?
-const { name: text, icon: Icon, classes } = Astro.props;
+const { name: text, icon: Icon, classes, stacked } = Astro.props;
 
 // for every tab
 const buttonStyles = [
@@ -23,7 +24,9 @@ const buttonStyles = [
 const iconStyles = ["inline h-6 md:pr-1"];
 ---
 
-<a href={`/${text}/`} class:list={[buttonStyles, classes]}
+<a
+  href={`/${text}/`}
+  class:list={[buttonStyles, classes, { "flex flex-col lg:block": stacked }]}
   ><Icon classes={[iconStyles]} />
-  <span class="inline pl-1">{text}</span></a
+  <span class="inline px-1">{text}</span></a
 >

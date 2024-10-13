@@ -75,9 +75,9 @@ const infoButtons: Array<{
 <nav
   class:list={[
     "flex flex-wrap",
-    "pt-2 lg:pt-[inherit]",
-    "items-center justify-around",
-    "gap-y-[2px]",
+    "pt-2 md:pt-[inherit]",
+    "items-center justify-between lg:justify-around",
+    "gap-y-1",
     "border-b-2",
     {
       "border-blue-600": active === "games",
@@ -95,6 +95,7 @@ const infoButtons: Array<{
         "whitespace-nowrap",
         "rounded",
         "p-[0.15rem]",
+        "ml-4 lg:ml-2",
         "ring-black",
         "dark:ring-white",
         {
@@ -107,8 +108,6 @@ const infoButtons: Array<{
       href="/">david<span class="px-1">.</span>reviews</a
     >
   </h2>
-  <!-- these provide invisible line breaks -->
-  <div class="basis-full lg:hidden"></div>
   <!-- main tabs -->
   {
     mainButtons.map(({ activeValue, activeClass, classes, icon }) => {
@@ -116,8 +115,9 @@ const infoButtons: Array<{
       return (
         <NavbarItem
           name={activeValue}
+          stacked={true}
           classes={[
-            "order-1 lg:-order-none",
+            "order-1 lg:order-none",
             classes,
             {
               "fill-white text-white": isActive,
@@ -133,13 +133,18 @@ const infoButtons: Array<{
   {
     infoButtons.map(({ activeValue, icon }) => {
       const isActive = active === activeValue;
+      // gets special treatment on mobile
+      const isSearch = activeValue === "search";
       return (
         <NavbarItem
           name={activeValue}
+          stacked={isSearch}
           classes={[
             "dark:fill-white",
             "hover:shadow-insetInfo",
             "dark:hover:shadow-insetInfoDark",
+            // sort to the very end on mobile
+            { "order-2 lg:order-none": isSearch },
             {
               "dark:bg-white dark:!fill-black dark:text-black": isActive,
               "bg-black fill-white text-white": isActive,
@@ -150,5 +155,6 @@ const infoButtons: Array<{
       );
     })
   }
+  <!-- invisible flex line break -->
   <div class="basis-full lg:hidden"></div>
 </nav>
