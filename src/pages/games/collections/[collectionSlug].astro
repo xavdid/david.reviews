@@ -16,6 +16,7 @@ import {
   collectionPermalink,
   seoTitle,
 } from "../../../utils/data";
+import SubtleLink from "../../../components/links/SubtleLink.astro";
 
 type Params = {
   collectionSlug: string;
@@ -118,9 +119,9 @@ const sortedGames = games
       >
     </p>
     <p class="py-1">
-      Please <ExternalLink href="https://xavd.id/contact">
+      Please <SubtleLink href="/contact">
         {"let me know"}
-      </ExternalLink> if you'd like to nominate an addition!
+      </SubtleLink> if you'd like to nominate an addition!
     </p>
 
     <p class="py-2">
