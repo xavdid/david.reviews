@@ -2,23 +2,25 @@
 import type { MarkdownLayoutProps } from "astro";
 import Layout from "./Layout.astro";
 import RenderedMarkdown from "../components/RenderedMarkdown.astro";
+import { capitalize } from "../utils/data";
 
 // these are not validated (like a content collection would be)
 type Props = MarkdownLayoutProps<{
-  title: string;
+  activeTab: "about" | "contact";
   ogDescription: `${string}.`;
 }>;
 
 const {
-  frontmatter: { title, ogDescription },
+  frontmatter: { activeTab, ogDescription },
 } = Astro.props;
 ---
 
 <Layout
-  pageTitle=`${title} | david.reviews`
-  seoTitle=`${title} | david.reviews`
+  pageTitle=`${ capitalize( activeTab)} | david.reviews`
+  seoTitle=`${ capitalize( activeTab)} | david.reviews`
   seoDescription={ogDescription}
   maxWidth="md:max-w-2xl"
+  activeTab={activeTab}
 >
   <div class="pt-4">
     <RenderedMarkdown>

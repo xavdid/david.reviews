@@ -4,8 +4,12 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { blue, red, emerald, purple } = require("tailwindcss/colors");
 
+// this is a JS file
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const insetShadow = (color) => `inset 0em -0.2em ${color["600"]}`;
+// black/white hover bar
+const insetInfo = `inset 0em -0.2em black`;
+const insetInfoDark = `inset 0em -0.2em white`;
 
 export default {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
@@ -17,7 +21,9 @@ export default {
         insetGame: insetShadow(blue),
         insetMovie: insetShadow(red),
         insetBook: insetShadow(emerald),
-        insetSearch: insetShadow(purple),
+        insetArticles: insetShadow(purple),
+        insetInfo,
+        insetInfoDark,
       },
       typography: {
         DEFAULT: {

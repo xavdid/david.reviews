@@ -3,112 +3,152 @@ import BookIcon from "./icons/book.astro";
 import GameIcon from "./icons/game.astro";
 import MovieIcon from "./icons/movie.astro";
 import SearchIcon from "./icons/search.astro";
-import SubtleLink from "./links/SubtleLink.astro";
+import ArticleIcon from "./icons/article.astro";
+import AboutIcon from "./icons/about.astro";
+import ContactIcon from "./icons/contact.astro";
+import NavbarItem from "./NavbarItem.astro";
 
 type Props = {
-  active?: "games" | "movies" | "books" | "search";
+  active?:
+    | "games"
+    | "movies"
+    | "books"
+    | "articles"
+    | "search"
+    | "about"
+    | "contact";
 };
 
 const { active } = Astro.props;
 
-const buttonStyles = [
-  "text-center", // centers the svg
-  "p-1",
-  "md:p-2",
-  "text-l",
-  "md:text-xl",
+const mainButtons: Array<{
+  activeValue: NonNullable<Props["active"]>;
+  classes: string[];
+  activeClass: string;
+  icon: typeof GameIcon;
+}> = [
+  {
+    activeValue: "games",
+    classes: ["fill-blue-600", "hover:shadow-insetGame"],
+    activeClass: "bg-blue-600",
+    icon: GameIcon,
+  },
+  {
+    activeValue: "movies",
+    classes: ["fill-red-600", "hover:shadow-insetMovie"],
+    activeClass: "bg-red-600",
+    icon: MovieIcon,
+  },
+  {
+    activeValue: "books",
+    classes: ["fill-emerald-600", "hover:shadow-insetBook"],
+    activeClass: "bg-emerald-600",
+    icon: BookIcon,
+  },
+  {
+    activeValue: "articles",
+    classes: ["fill-purple-600", "hover:shadow-insetArticles"],
+    activeClass: "bg-purple-600",
+    icon: ArticleIcon,
+  },
 ];
-const iconStyles = ["inline h-6 md:pr-1"];
+
+const infoButtons: Array<{
+  activeValue: NonNullable<Props["active"]>;
+  icon: typeof GameIcon;
+}> = [
+  {
+    activeValue: "about",
+    icon: AboutIcon,
+  },
+  {
+    activeValue: "contact",
+    icon: ContactIcon,
+  },
+  {
+    activeValue: "search",
+    icon: SearchIcon,
+  },
+];
 ---
 
 <nav
   class:list={[
-    "flex items-center justify-around border-b-2",
+    "flex flex-wrap",
+    "pt-2 lg:pt-[inherit]",
+    "items-center justify-around",
+    "gap-y-[2px]",
+    "border-b-2",
     {
       "border-blue-600": active === "games",
       "border-red-600": active === "movies",
       "border-emerald-600": active === "books",
-      "border-purple-600": active === "search",
+      "border-purple-600": active === "articles",
+      "border-black dark:border-white":
+        !active || ["search", "about", "contact"].includes(active),
     },
   ]}
 >
-  <h2 class="mx-2 rounded text-xl md:text-2xl">
+  <h2 class="rounded text-xl md:mx-2 md:text-2xl">
     <a
       class:list={[
         "whitespace-nowrap",
         "rounded",
         "p-[0.15rem]",
+        "ring-black",
+        "dark:ring-white",
         {
-          "ring-1  ring-black dark:ring-white": !active,
-          "hover:underline": active,
+          // ringed when nothing else is active
+          "ring-1 ": !active,
+          // ring on hover only if we're elsewhere
+          "hover:ring-1": active,
         },
       ]}
       href="/">david<span class="px-1">.</span>reviews</a
     >
   </h2>
-
-  <a
-    href="/games/"
-    class:list={[
-      buttonStyles,
-      "ml-1",
-      "fill-blue-600",
-      "hover:shadow-insetGame",
-      { "bg-blue-600 fill-white text-white": active === "games" },
-    ]}
-    ><GameIcon classes={[iconStyles]} />
-    <span class="inline pl-1">games</span></a
-  >
-  <a
-    href="/movies/"
-    class:list={[
-      buttonStyles,
-      "fill-red-600",
-      "hover:shadow-insetMovie",
-      {
-        "bg-red-600 fill-white text-white": active === "movies",
-      },
-    ]}
-    ><MovieIcon classes={iconStyles} />
-    <span class="inline pl-1">movies</span></a
-  >
-  <a
-    href="/books/"
-    class:list={[
-      buttonStyles,
-      "fill-emerald-600",
-      "hover:shadow-insetBook",
-      // farthest right on mobile
-      "mr-0",
-      { "bg-emerald-600 fill-white text-white": active === "books" },
-    ]}
-    ><BookIcon classes={iconStyles} />
-    <span class="inline pl-1">books</span></a
-  >
-  <a
-    href="/search/"
-    class:list={[
-      "hidden",
-      "md:block", // desktop only
-      "p-2",
-      "text-xl",
-      "fill-purple-600",
-      "hover:shadow-insetSearch",
-      // no clue why _only_ this fill has to be !important
-      { "bg-purple-600 !fill-white text-white": active === "search" },
-    ]}
-    ><SearchIcon classes={iconStyles} />
-    <span class="inline pl-1">search</span></a
-  >
+  <!-- these provide invisible line breaks -->
+  <div class="basis-full lg:hidden"></div>
+  <!-- main tabs -->
+  {
+    mainButtons.map(({ activeValue, activeClass, classes, icon }) => {
+      const isActive = active === activeValue;
+      return (
+        <NavbarItem
+          name={activeValue}
+          classes={[
+            "order-1 lg:-order-none",
+            classes,
+            {
+              "fill-white text-white": isActive,
+              [activeClass]: isActive,
+            },
+          ]}
+          icon={icon}
+        />
+      );
+    })
+  }
+  <!-- info section -->
+  {
+    infoButtons.map(({ activeValue, icon }) => {
+      const isActive = active === activeValue;
+      return (
+        <NavbarItem
+          name={activeValue}
+          classes={[
+            "dark:fill-white",
+            "hover:shadow-insetInfo",
+            "dark:hover:shadow-insetInfoDark",
+            {
+              "dark:bg-white dark:!fill-black dark:text-black": isActive,
+              "bg-black fill-white text-white": isActive,
+            },
+          ]}
+          icon={icon}
+        />
+      );
+    })
+  }
+  <div class="basis-full lg:hidden"></div>
 </nav>
-<div
-  class:list={[
-    "pr-2 pt-1 text-end underline md:hidden",
-    "fill-purple-600",
-    { hidden: active === "search" },
-  ]}
->
-  <SearchIcon classes={["inline", "h-4", "pr-1"]} /><SubtleLink href="/search">
-    {"Search"}
-  </SubtleLink>
-</div>
