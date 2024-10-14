@@ -65,6 +65,7 @@ const { play } = Astro.props;
   <Fragment slot="footer">
     <span>{play.dateFinished}</span>
     <span>{play.playType}</span>
+    <div class="basis-full md:hidden"></div>
     <span>{minutesToDuration(play.minutesPlayed)}</span>
   </Fragment>
 </BaseBox>
