@@ -19,6 +19,7 @@ ogImg:
   height: 1080
 ---
 
+import RoundedLink from "../../components/links/RoundedLink.astro";
 import ReviewSummary from "../../components/mdx/ReviewSummary.astro";
 import YoutubeEmbed from "../../components/mdx/YoutubeEmbed.astro";
 
@@ -99,6 +100,6 @@ Bottom line, _Beast Breaker_ is an absolute delight in my book. It combines turn
 
 <ReviewSummary review={props.frontmatter.review} />
 
-_Beast Breaker is available on [Nintendo Switch](https://www.nintendo.com/games/detail/beast-breaker-switch/) and on PC/Mac via the [Epic Games Store](https://www.epicgames.com/store/en-US/p/beast-breaker)._
+_<RoundedLink href="/games/beast-breaker">Beast Breaker</RoundedLink> is available on [Nintendo Switch](https://www.nintendo.com/games/detail/beast-breaker-switch/) and on PC/Mac via the [Epic Games Store](https://www.epicgames.com/store/en-US/p/beast-breaker)._
 
 _This review was written using a free Switch code provided by the developer. The free nature of that code didn't influence the conclusions of this review in any way._
