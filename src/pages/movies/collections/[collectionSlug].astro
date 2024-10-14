@@ -4,7 +4,10 @@ import type { Movie } from "../../../airtable/data/movies";
 import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import type { Collection } from "../../../airtable/types";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
+import SubtleLink from "../../../components/links/SubtleLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
+import PageTitle from "../../../components/PageTitle.astro";
+import RoundedText from "../../../components/RoundedText.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
   averageRating,
@@ -12,9 +15,6 @@ import {
   pluralize,
   seoTitle,
 } from "../../../utils/data";
-import SubtleLink from "../../../components/links/SubtleLink.astro";
-import RoundedText from "../../../components/RoundedText.astro";
-import PageTitle from "../../../components/PageTitle.astro";
 
 type Params = {
   collectionSlug: string;

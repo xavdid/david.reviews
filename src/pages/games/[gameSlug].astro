@@ -7,20 +7,20 @@ import AwardBlurb from "../../components/AwardBlurb.astro";
 import PlaySummary from "../../components/infoboxes/PlaySummary.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
+import MediaTitle from "../../components/MediaTitle.astro";
+import SteamFollowButton from "../../components/SteamFollowButton.astro";
 import Layout from "../../layouts/Layout.astro";
-import {
-  averageRating,
-  pluralize,
-  seoTitle,
-  isProdBuild,
-} from "../../utils/data";
 import {
   getPublishedArticles,
   type ArticleReference,
 } from "../../utils/content";
-import SubtleLink from "../../components/links/SubtleLink.astro";
-import SteamFollowButton from "../../components/SteamFollowButton.astro";
-import MediaTitle from "../../components/MediaTitle.astro";
+import {
+  averageRating,
+  isProdBuild,
+  pluralize,
+  seoTitle,
+} from "../../utils/data";
 
 type Params = {
   gameSlug: string;

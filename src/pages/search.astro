@@ -6,10 +6,10 @@ import { loadBooks } from "../airtable/data/books";
 import { loadGames } from "../airtable/data/games";
 import { loadMovies } from "../airtable/data/movies";
 import { loadSeries } from "../airtable/data/series";
+import PageTitle from "../components/PageTitle.astro";
 import { SearchBar } from "../components/SearchBar";
 import Layout from "../layouts/Layout.astro";
 import { type SearchItem } from "../utils/search";
-import PageTitle from "../components/PageTitle.astro";
 
 const list: SearchItem[] = [
   // movies

@@ -1,9 +1,9 @@
 ---
 import { loadMovies } from "../../../airtable/data/movies";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
-import Layout from "../../../layouts/Layout.astro";
 import { type Collection } from "../../../airtable/types";
 import PageTitle from "../../../components/PageTitle.astro";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
+import Layout from "../../../layouts/Layout.astro";
 
 const movies = await loadMovies();
 

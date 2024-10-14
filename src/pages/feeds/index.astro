@@ -1,17 +1,17 @@
 ---
 import type { JSX } from "preact";
+import PageTitle from "../../components/PageTitle.astro";
 import {
+  ArticleIcon,
+  BookIcon,
   GameIcon,
   MovieIcon,
-  BookIcon,
   StarIcon,
-  ArticleIcon,
 } from "../../components/icons/allIcons";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
-import { feedTypes } from "../../utils/rss";
 import { capitalize } from "../../utils/data";
-import PageTitle from "../../components/PageTitle.astro";
+import { feedTypes } from "../../utils/rss";
 
 const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
   games: GameIcon,

@@ -1,12 +1,15 @@
 ---
 import { Image } from "astro:assets";
 import {
-  type Game,
   COLLECTION_DESCRIPTIONS,
+  type Game,
 } from "../../../airtable/data/games";
 import { isEtcPlay, loadPlays, type Play } from "../../../airtable/data/plays";
 import type { Collection } from "../../../airtable/types";
+import PageTitle from "../../../components/PageTitle.astro";
+import RoundedText from "../../../components/RoundedText.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
+import SubtleLink from "../../../components/links/SubtleLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
@@ -15,9 +18,6 @@ import {
   collectionPermalink,
   seoTitle,
 } from "../../../utils/data";
-import SubtleLink from "../../../components/links/SubtleLink.astro";
-import RoundedText from "../../../components/RoundedText.astro";
-import PageTitle from "../../../components/PageTitle.astro";
 
 type Params = {
   collectionSlug: string;
