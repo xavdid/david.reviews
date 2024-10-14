@@ -54,7 +54,7 @@ const components = { a: ExternalLink };
 
 <!-- articles get a slightly wider layout -->
 <Layout
-  pageTitle={`${frontmatter.title} | david.reviews`}
+  pageTitle={frontmatter.title}
   seoTitle={frontmatter.title}
   seoDescription={frontmatter.ogDesc as `${string}.`}
   activeTab="articles"
