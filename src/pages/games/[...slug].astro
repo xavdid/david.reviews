@@ -4,6 +4,7 @@ import ButtonGroup from "../../components/ButtonGroup.astro";
 import GameLegend from "../../components/GameLegend.astro";
 import PlayBox from "../../components/infoboxes/PlayBox.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
+import PageTitle from "../../components/PageTitle.astro";
 import SteamFollowButton from "../../components/SteamFollowButton.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -108,7 +109,7 @@ const collectionEmoji = new Set<string>(
   seoDescription={`David shares thoughts about the ${numUniqueGames} games he's played.`}
   activeTab="games"
 >
-  <h1 class="pb-3 pt-2 text-2xl">{pageTitle}</h1>
+  <PageTitle>{pageTitle}</PageTitle>
   <p class="pb-3">
     {
       slug === "all"

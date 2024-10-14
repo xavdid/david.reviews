@@ -1,5 +1,6 @@
 ---
 import { GENRE_DESCRIPTIONS, loadGames } from "../../../airtable/data/games";
+import PageTitle from "../../../components/PageTitle.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { genrePermalink, pluralize } from "../../../utils/data";
@@ -33,7 +34,7 @@ const genres = Object.values(games).reduce<Record<string, GenreRecord>>(
   activeTab="games"
 >
   <div class="py-3">
-    <h1 class="pt-2 text-2xl">Game Genres</h1>
+    <PageTitle>All Game Genres</PageTitle>
     <p class="pt-2">
       I categorize games I've played into into a basic genre based on their core
       gameplay loop. It's not an exact science, but it helps ensure I'm not

@@ -2,6 +2,7 @@
 import type { Author } from "../../../airtable/data/authors";
 import { loadBooks } from "../../../airtable/data/books";
 import type { Series } from "../../../airtable/data/series";
+import PageTitle from "../../../components/PageTitle.astro";
 import StickyTable from "../../../components/StickyTable.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
@@ -31,7 +32,7 @@ const series = Object.values(books).reduce<
   } book series I've read at least one book in.`}
   activeTab="books"
 >
-  <h1 class="pt-2 text-2xl">All Series</h1>
+  <PageTitle>All Series</PageTitle>
   <p class="py-3">
     I've read at least one book in {Object.keys(series).length} different
     series. See also:

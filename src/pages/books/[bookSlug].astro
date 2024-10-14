@@ -10,6 +10,8 @@ import RoundedLink from "../../components/links/RoundedLink.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
 import { NO_REVIEW, pluralize, seoTitle } from "../../utils/data";
+import PageTitle from "../../components/PageTitle.astro";
+import MediaTitle from "../../components/MediaTitle.astro";
 
 type Params = {
   bookSlug: string;
@@ -71,8 +73,8 @@ const authorsStr = authors.map((a) => a.name).join(", ");
       class="max-h-[225px] max-w-[150px]"
     />
     <div class="pl-3">
-      <h1 class="pt-2 text-2xl underline">{title}</h1>
-      <p class="py-2">
+      <MediaTitle classes={["underline"]}>{title}</MediaTitle>
+      <p class="py-2 pb-4">
         by <AuthorList authors={authors} style="rounded" />
       </p>
       <p class="pb-2">

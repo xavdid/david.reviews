@@ -4,6 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import { seoTitle } from "../../utils/data";
 import { getPublishedArticles } from "../../utils/content";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
+import PageTitle from "../../components/PageTitle.astro";
 
 const allArticles = await getPublishedArticles();
 ---
@@ -14,7 +15,7 @@ const allArticles = await getPublishedArticles();
   seoDescription={`All full list of the ${allArticles.length} long-form articles I've written about media.`}
   activeTab="articles"
 >
-  <h1 class="pb-3 pt-2 text-2xl">All Articles</h1>
+  <PageTitle>All Articles</PageTitle>
   <p class="py-1">
     In addition to micro-reviews, I've also published {allArticles.length}
      longer-form review(s) and design articles. If you'd like me to review your

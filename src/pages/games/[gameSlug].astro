@@ -20,6 +20,7 @@ import {
 } from "../../utils/content";
 import SubtleLink from "../../components/links/SubtleLink.astro";
 import SteamFollowButton from "../../components/SteamFollowButton.astro";
+import MediaTitle from "../../components/MediaTitle.astro";
 
 type Params = {
   gameSlug: string;
@@ -131,7 +132,7 @@ const {
       class="max-h-[225px] max-w-[150px]"
     />
     <div class="pl-3">
-      <h1 class="pt-2 text-2xl underline">{title}</h1>
+      <MediaTitle>{title}</MediaTitle>
       <p class="pt-2">
         Genre: <RoundedLink href={genre.permalink}>
           {genre.name}

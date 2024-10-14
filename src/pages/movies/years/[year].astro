@@ -2,6 +2,7 @@
 import { loadWatches } from "../../../airtable/data/watches";
 import { awardYears, buildAwardUrl } from "../../../awards";
 import MovieLegend from "../../../components/MovieLegend.astro";
+import PageTitle from "../../../components/PageTitle.astro";
 import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
 import WatchBox from "../../../components/infoboxes/WatchBox.astro";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
@@ -52,7 +53,7 @@ const awardUrl = buildAwardUrl(parseInt(year), "#movies");
   } movies he watched in ${year}.`}
   activeTab="movies"
 >
-  <h1 class="pb-3 pt-2 text-2xl">Every Movie I Watched in {year}</h1>
+  <PageTitle>Every Movie I Watched in {year}</PageTitle>
   <p class="pb-3">
     I watched {watchesWithCounts.length} new-to-me movies in {year}. I <ExternalLink
       href={awardUrl}

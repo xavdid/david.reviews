@@ -12,6 +12,7 @@ import RoundedLink from "../../../components/links/RoundedLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { genrePermalink, seoTitle } from "../../../utils/data";
+import PageTitle from "../../../components/PageTitle.astro";
 
 type Params = {
   genreSlug: string;
@@ -108,9 +109,9 @@ const processedGames = games
   activeTab="games"
 >
   <div class="py-3">
-    <h1 class="pt-2 text-2xl">
+    <PageTitle>
       <RoundedText text={genre.name} /> Games I've Played
-    </h1>
+    </PageTitle>
     <p class="pt-3">
       {genre.name} games are categorized by a primary gameplay loop of {
         GENRE_DESCRIPTIONS[genre.slug] ??

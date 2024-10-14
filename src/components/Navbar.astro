@@ -75,7 +75,7 @@ const infoButtons: Array<{
 <nav
   class:list={[
     "flex flex-wrap",
-    "pt-2 md:pt-[inherit]",
+    "pt-1 md:pt-[inherit]",
     "items-center justify-between lg:justify-around",
     "gap-y-1",
     "border-b-2",
@@ -140,14 +140,16 @@ const infoButtons: Array<{
           name={activeValue}
           stacked={isSearch}
           classes={[
+            // soften these a bit
+            "fill-zinc-600",
             "dark:fill-white",
             "hover:shadow-insetInfo",
             "dark:hover:shadow-insetInfoDark",
             // sort to the very end on mobile
             { "order-2 lg:order-none": isSearch },
             {
-              "dark:bg-white dark:!fill-black dark:text-black": isActive,
-              "bg-black fill-white text-white": isActive,
+              "dark:bg-white dark:!fill-zinc-600 dark:text-zinc-600": isActive,
+              "bg-zinc-600 !fill-white text-white": isActive,
             },
           ]}
           icon={icon}

@@ -9,6 +9,7 @@ import RoundedLink from "../../components/links/RoundedLink.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
 import { NO_REVIEW, pluralize, seoTitle } from "../../utils/data";
+import MediaTitle from "../../components/MediaTitle.astro";
 
 type Params = {
   movieSlug: string;
@@ -80,7 +81,7 @@ const {
       class="max-h-[225px] max-w-[150px]"
     />
     <div class="pl-3">
-      <h1 class="pt-2 text-2xl underline">{title}</h1>
+      <MediaTitle>{title}</MediaTitle>
       <p class="pt-2">
         Originally released in {yearReleased}.
       </p>

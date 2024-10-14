@@ -2,6 +2,7 @@
 import { loadPlays } from "../../../airtable/data/plays";
 import { awardYears, buildAwardUrl } from "../../../awards";
 import GameLegend from "../../../components/GameLegend.astro";
+import PageTitle from "../../../components/PageTitle.astro";
 import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
 import PlayBox from "../../../components/infoboxes/PlayBox.astro";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
@@ -39,7 +40,7 @@ const collectionEmoji = new Set<string>(
   seoDescription={`David shares thoughts about the ${filteredPlays.length} games he played in ${year}.`}
   activeTab="games"
 >
-  <h1 class="pb-3 pt-2 text-2xl">Every Game I Played in {year}</h1>
+  <PageTitle>Every Game I Played in {year}</PageTitle>
   <p class="py-2">
     I played {filteredPlays.length} new-to-me games in {year}. I <ExternalLink
       href={awardUrl}

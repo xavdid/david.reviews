@@ -2,6 +2,7 @@
 import { loadReads, type Read } from "../../airtable/data/reads";
 import BookLegend from "../../components/BookLegend.astro";
 import ButtonGroup from "../../components/ButtonGroup.astro";
+import PageTitle from "../../components/PageTitle.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import ReadBox from "../../components/infoboxes/ReadBox.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
@@ -97,7 +98,7 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   seoDescription={`David shares thoughts about the ${reads.length} books he's read.`}
   activeTab="books"
 >
-  <h1 class="pb-3 pt-2 text-2xl">{pageTitle}</h1>
+  <PageTitle>{pageTitle}</PageTitle>
 
   <p class="pb-3">
     {

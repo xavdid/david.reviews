@@ -5,6 +5,7 @@ import AuthorList from "../../../components/AuthorList.astro";
 import BookLegend from "../../../components/BookLegend.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
+import PageTitle from "../../../components/PageTitle.astro";
 import Rating from "../../../components/Rating.astro";
 import RoundedText from "../../../components/RoundedText.astro";
 import Layout from "../../../layouts/Layout.astro";
@@ -58,9 +59,9 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   } he's read from the ${name} series.`}
   activeTab="books"
 >
-  <h1 class="pt-5 text-2xl">
-    All reviews for The <RoundedText text={name} /> series
-  </h1>
+  <PageTitle>
+    Reviews for Books in The <RoundedText text={name} /> series
+  </PageTitle>
   <p class="py-3">
     {/* all series are by a single set of authors, for now */}
      by <AuthorList authors={reads[0].book.authors} style="rounded" />

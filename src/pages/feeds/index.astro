@@ -11,6 +11,7 @@ import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { feedTypes } from "../../utils/rss";
 import { capitalize } from "../../utils/data";
+import PageTitle from "../../components/PageTitle.astro";
 
 const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
   games: GameIcon,
@@ -26,7 +27,7 @@ const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
   seoTitle="All Feeds"
   seoDescription="RSS and JSON feeds for each review type (or everything)."
 >
-  <h1 class="py-3 text-center text-2xl">Feeds</h1>
+  <PageTitle>Feeds</PageTitle>
   <p class="py-2">
     There are 4 RSS feeds available for my reviews: one for each media type and
     a mixed "everything" feed. Enjoy!
