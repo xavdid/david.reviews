@@ -14,11 +14,11 @@ const articles = defineCollection({
         ),
       ogImg: z
         .object({
-          // this probably true, but can adjust as needed
           url: z
             .string()
             .startsWith("https://")
             .refine(
+              // this probably true, but can adjust as needed
               (v) => v.endsWith(".png") || v.endsWith(".jpeg"),
               "ogImg.url must end with .png or .jpeg",
             ),
