@@ -2,17 +2,9 @@
 import { SEO, type Props as SEOProps } from "astro-seo";
 
 import Navbar from "../components/Navbar.astro";
-import type { ExternalUrl } from "../airtable/types";
 import type { Category } from "../utils/data";
 import { feedTypes } from "../utils/rss";
-
-type ImageInfo = {
-  url: ExternalUrl;
-  height: number;
-  width: number;
-  // https://en.wikipedia.org/wiki/Media_type#Common_examples
-  type: "png" | "jpeg";
-};
+import { type ImageInfo } from "../utils/images";
 
 type Props = {
   pageTitle: string; // shown in the tab
@@ -20,7 +12,7 @@ type Props = {
   seoDescription: `${string}.`;
   activeTab?: `${Category}s` | "articles" | "search" | "about" | "contact";
   ogImg?: ImageInfo;
-  maxWidth?: `md:max-w-${string}`;
+  wide?: boolean;
 };
 
 const OG_IMG_URL = "https://david.reviews/og.png";
@@ -38,7 +30,7 @@ const {
   seoTitle,
   seoDescription: description,
   ogImg = defaultOgImg,
-  maxWidth = "md:max-w-xl",
+  wide,
 } = Astro.props;
 
 const groupedSeo: SEOProps = {
@@ -108,7 +100,12 @@ const groupedSeo: SEOProps = {
   </head>
   <body class="dark:bg-zinc-800 dark:text-white">
     <Navbar active={activeTab} />
-    <main class:list={["mx-auto max-w-[95%] pb-4", maxWidth]}>
+    <main
+      class:list={[
+        "mx-auto max-w-[95%] pb-4",
+        wide ? "md:max-w-2xl" : "md:max-w-xl",
+      ]}
+    >
       <slot />
     </main>
   </body>
