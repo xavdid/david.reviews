@@ -1,9 +1,8 @@
 import Airtable from "airtable";
 import { type AwardTier } from "../../awards";
+import { isProdBuild } from "../../utils/data";
 import { readCache, writeCache } from "../cache";
 import type { AirtableBase } from "../types";
-
-export const isProdBuild = import.meta.env.MODE === "production";
 
 export const medals: { [x in AwardTier]: string } = {
   Gold: "🥇",

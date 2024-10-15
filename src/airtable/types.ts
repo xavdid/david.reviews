@@ -15,8 +15,9 @@ export type Permalink = `${string}/`;
 export type ExternalUrl = `https://${string}`;
 
 export type Collection = {
-  fullName: string;
-  emoji: string;
-  slug: string;
-  permalink: Permalink;
+  fullName: string; // "🔎 Murder Mystery"
+  nameOnly: string; // "Murder Mystery"
+  emoji: string; // "🔎"
+  slug: string; // "murder-mystery"
+  permalink: Permalink; // "/collections/murder-mystery"
 };

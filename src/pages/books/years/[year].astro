@@ -2,11 +2,12 @@
 import { loadReads } from "../../../airtable/data/reads";
 import { awardYears, buildAwardUrl } from "../../../awards";
 import BookLegend from "../../../components/BookLegend.astro";
+import PageTitle from "../../../components/PageTitle.astro";
 import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import ExternalLink from "../../../components/links/ExternalLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { seoTitle } from "../../../utils";
+import { seoTitle } from "../../../utils/data";
 
 type Params = { year: string };
 
@@ -31,7 +32,7 @@ const awardUrl = buildAwardUrl(parseInt(year), "#books");
   seoDescription={`David shares thoughts about the ${rawReviews.length} books he's read.`}
   activeTab="books"
 >
-  <h1 class="pb-3 pt-2 text-2xl">Every Book I Read in {year}</h1>
+  <PageTitle>Every Book I Read in {year}</PageTitle>
   <p class="pb-3">
     I read {filteredReads.length} books in {year}. I <ExternalLink
       href={awardUrl}

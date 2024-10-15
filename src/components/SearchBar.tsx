@@ -2,7 +2,7 @@ import Fuse, { type FuseIndex } from "fuse.js/min-basic";
 import { type JSX } from "preact";
 import { useMemo, useState } from "preact/hooks";
 
-import { type SearchItem } from "../utils";
+import { type SearchItem } from "../utils/search";
 import { SearchResult } from "./SearchResult";
 
 type Props = {

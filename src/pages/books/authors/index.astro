@@ -1,10 +1,11 @@
 ---
 import type { Author } from "../../../airtable/data/authors";
 import { loadReads, type Read } from "../../../airtable/data/reads";
+import PageTitle from "../../../components/PageTitle.astro";
 import StickyTable from "../../../components/StickyTable.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { averageRating } from "../../../utils";
+import { averageRating } from "../../../utils/data";
 
 const reads = await loadReads();
 
@@ -33,7 +34,7 @@ const authors = Object.values(reads).reduce<
   } different authors I've read at least one book by.`}
   activeTab="books"
 >
-  <h1 class="pt-2 text-2xl">All Authors</h1>
+  <PageTitle>All Authors</PageTitle>
   <p class="py-3">
     I've read at least one book by {Object.keys(authors).length} different
     authors. See also:

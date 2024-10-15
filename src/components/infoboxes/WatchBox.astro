@@ -37,15 +37,25 @@ const { watch, numWatch } = Astro.props;
   <Fragment slot="icons">
     {
       watch.movie.award && (
-        <div class="inline px-1">{medals[watch.movie.award.tier]}</div>
+        <div title="Award Winning" class="inline px-1">
+          {medals[watch.movie.award.tier]}
+        </div>
       )
     }
     {
       watch.movie.collections?.map((collection) => (
-        <div class="inline px-1">{collection.emoji}</div>
+        <div title={collection.nameOnly} class="inline px-1">
+          {collection.emoji}
+        </div>
       ))
     }
-    {watch.watchedInTheater && <div class="inline px-1">🍿</div>}
+    {
+      watch.watchedInTheater && (
+        <div title="Watched in Theater" class="inline px-1">
+          🍿
+        </div>
+      )
+    }
   </Fragment>
 
   <Fragment slot="footer">

@@ -1,11 +1,12 @@
 ---
-import RoundedLink from "../../../components/links/RoundedLink.astro";
-import Layout from "../../../layouts/Layout.astro";
-import { type Collection } from "../../../airtable/types";
 import {
   COLLECTION_DESCRIPTIONS,
   loadGames,
 } from "../../../airtable/data/games";
+import { type Collection } from "../../../airtable/types";
+import PageTitle from "../../../components/PageTitle.astro";
+import RoundedLink from "../../../components/links/RoundedLink.astro";
+import Layout from "../../../layouts/Layout.astro";
 
 const games = await loadGames();
 
@@ -35,7 +36,7 @@ const collections = Object.values(games).reduce<
   activeTab="games"
 >
   <div class="py-3">
-    <h1 class="pt-2 text-2xl">Game Collections</h1>
+    <PageTitle>Game Collections</PageTitle>
     <p class="pt-2">
       Each of these collections houses our favorite games in each of these
       genres. Click through to find things to play with your loved ones!

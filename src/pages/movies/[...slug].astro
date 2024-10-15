@@ -2,10 +2,11 @@
 import { loadWatches, type Watch } from "../../airtable/data/watches";
 import ButtonGroup from "../../components/ButtonGroup.astro";
 import MovieLegend from "../../components/MovieLegend.astro";
+import PageTitle from "../../components/PageTitle.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import WatchBox from "../../components/infoboxes/WatchBox.astro";
 import Layout from "../../layouts/Layout.astro";
-import { seoTitle } from "../../utils";
+import { seoTitle } from "../../utils/data";
 
 type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
 type WatchFilter = (W: { watch: Watch; numWatch: number }) => boolean;
@@ -113,7 +114,7 @@ const collectionEmoji = new Set<string>(
   } movies he's watched.`}
   activeTab="movies"
 >
-  <h1 class="pb-3 pt-2 text-2xl">{pageTitle}</h1>
+  <PageTitle>{pageTitle}</PageTitle>
   <!-- fixed-height box so content doesn't jump around -->
   <!-- <p class="min-h-[5rem]"> -->
   <p class="mb-2">

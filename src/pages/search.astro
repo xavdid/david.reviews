@@ -6,9 +6,10 @@ import { loadBooks } from "../airtable/data/books";
 import { loadGames } from "../airtable/data/games";
 import { loadMovies } from "../airtable/data/movies";
 import { loadSeries } from "../airtable/data/series";
+import PageTitle from "../components/PageTitle.astro";
 import { SearchBar } from "../components/SearchBar";
 import Layout from "../layouts/Layout.astro";
-import { type SearchItem } from "../utils";
+import { type SearchItem } from "../utils/search";
 
 const list: SearchItem[] = [
   // movies
@@ -68,7 +69,7 @@ const index = Fuse.createIndex(["title"], list);
   seoDescription="The search page, where you can jump to any reviewed media."
   activeTab="search"
 >
-  <h1 class="py-2 text-2xl">Search</h1>
+  <PageTitle>Search</PageTitle>
 
   <p class="py-2">
     This page lets you search for anything I've talked about. Search for titles,

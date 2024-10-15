@@ -1,8 +1,9 @@
 ---
 import { loadMovies } from "../../../airtable/data/movies";
+import { type Collection } from "../../../airtable/types";
+import PageTitle from "../../../components/PageTitle.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { type Collection } from "../../../airtable/types";
 
 const movies = await loadMovies();
 
@@ -32,7 +33,7 @@ const collections = Object.values(movies).reduce<
   activeTab="movies"
 >
   <div class="py-3">
-    <h1 class="pt-2 text-2xl">Movie Collections</h1>
+    <PageTitle>Movie Collections</PageTitle>
     <p class="pt-2">
       Each of these collections houses my absolute favorite movies in each of
       these genres. If you're a fan, you're sure to find something good to

@@ -1,13 +1,15 @@
 ---
 import { Image } from "astro:assets";
 import {
-  type Game,
   COLLECTION_DESCRIPTIONS,
+  type Game,
 } from "../../../airtable/data/games";
 import { isEtcPlay, loadPlays, type Play } from "../../../airtable/data/plays";
 import type { Collection } from "../../../airtable/types";
-import ExternalLink from "../../../components/links/ExternalLink.astro";
+import PageTitle from "../../../components/PageTitle.astro";
+import RoundedText from "../../../components/RoundedText.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
+import SubtleLink from "../../../components/links/SubtleLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
@@ -15,7 +17,7 @@ import {
   averageRating,
   collectionPermalink,
   seoTitle,
-} from "../../../utils";
+} from "../../../utils/data";
 
 type Params = {
   collectionSlug: string;
@@ -75,11 +77,11 @@ export const getStaticPaths = async (): Result => {
 
 const { games, collection } = Astro.props;
 const sortedGames = games
-  .map(({ game, plays: watches }) => ({
-    title: game.title,
+  .map(({ game: { permalink, title, posterUrl }, plays: watches }) => ({
+    title,
     avgRating: averageRating(watches),
-    permalink: game.permalink,
-    posterUrl: game.posterUrl,
+    permalink,
+    posterUrl,
     // the longest review is probably the best one?
     blurb:
       watches.reduce<string>((result, { notes }) => {
@@ -98,14 +100,10 @@ const sortedGames = games
   activeTab="games"
 >
   <div class="py-3">
-    <h1 class="pt-2 text-2xl">
-      My Favorite <span
-        class="rounded border-2 border-black p-1 dark:border-white"
-      >
-        {collection.fullName}</span
-      >
+    <PageTitle>
+      Favorite <RoundedText text={collection.fullName} />
        Games
-    </h1>
+    </PageTitle>
     <p class="pb-1 pt-2">
       Gaming is better with a partner, but it can be hard to pick something that
       everyone is excited about. Luckily, I have just the things.
@@ -118,9 +116,9 @@ const sortedGames = games
       >
     </p>
     <p class="py-1">
-      Please <ExternalLink href="https://xavd.id/contact">
+      Please <SubtleLink href="/contact">
         {"let me know"}
-      </ExternalLink> if you'd like to nominate an addition!
+      </SubtleLink> if you'd like to nominate an addition!
     </p>
 
     <p class="py-2">

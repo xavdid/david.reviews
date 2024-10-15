@@ -1,0 +1,41 @@
+{
+  "name": "david.reviews",
+  "short_name": "david.reviews",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png?v=3",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png?v=3",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Games",
+      "url": "/games",
+      "description": "Recent game reivews"
+    },
+    {
+      "name": "Movies",
+      "url": "/movies",
+      "description": "Recent movie reviews"
+    },
+    {
+      "name": "Games",
+      "url": "/games",
+      "description": "Recent book reviews"
+    },
+    {
+      "name": "Articles",
+      "url": "/articles",
+      "description": "Recent articles"
+    }
+  ],
+  "theme_color": "#00274C",
+  "background_color": "#00274C",
+  "display": "standalone"
+}

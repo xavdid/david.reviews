@@ -1,0 +1,42 @@
+---
+import PageTitle from "../../components/PageTitle.astro";
+import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getPublishedArticles } from "../../utils/content";
+import { seoTitle } from "../../utils/data";
+
+const allArticles = await getPublishedArticles();
+---
+
+<Layout
+  pageTitle="All Articles"
+  seoTitle={seoTitle("All Articles")}
+  seoDescription={`All full list of the ${allArticles.length} long-form articles I've written about media.`}
+  activeTab="articles"
+>
+  <PageTitle>All Articles</PageTitle>
+  <p class="py-1">
+    In addition to micro-reviews, I've also published {allArticles.length}
+     longer-form review(s) and design articles. If you'd like me to review your
+    game, please <SubtleLink href="/contact">
+      {"get in touch"}
+    </SubtleLink>!
+  </p>
+  <p class="pt-1">
+    <SubscribeBlurb mediaType="article" />
+  </p>
+  <hr class="mb-3 mt-3" />
+  <div class="">
+    {
+      allArticles.map((article) => (
+        <div class="py-3">
+          <div class="text-sm text-zinc-400">{article.data.publishedOn}</div>
+          <SubtleLink href={article.permalink} classes={["text-xl"]}>
+            {article.data.title}
+          </SubtleLink>
+        </div>
+      ))
+    }
+  </div>
+</Layout>

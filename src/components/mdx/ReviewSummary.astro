@@ -1,0 +1,33 @@
+---
+import Rating from "../Rating.astro";
+type Props = {
+  // matches zod schema
+  review: {
+    rating: number;
+    blurb: string;
+    plusses: string[];
+    minuses: string[];
+  };
+};
+
+const {
+  review: { rating, blurb, plusses, minuses },
+} = Astro.props;
+---
+
+<blockquote class="not-prose border-l-4 border-amber-300">
+  <div class="rounded-r-md bg-zinc-200 p-4 dark:bg-zinc-700">
+    <Rating rating={rating} starHeight="h-8" classes={["text-center"]} />
+
+    <div class="mt-4 text-2xl italic">{blurb}</div>
+
+    <div class="flex flex-col justify-between gap-x-6 pl-4 md:flex-row">
+      <ul class="mt-4 list-['+_'] text-lg">
+        {plusses.map((p) => <li class="py-2">{p}</li>)}
+      </ul>
+      <ul class="mt-4 list-['-_'] text-lg">
+        {minuses.map((p) => <li class="py-2">{p}</li>)}
+      </ul>
+    </div>
+  </div>
+</blockquote>

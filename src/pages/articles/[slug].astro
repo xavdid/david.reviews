@@ -1,0 +1,83 @@
+---
+import ExternalLink from "../../components/links/ExternalLink.astro";
+import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import CalendarIcon from "../../components/icons/calendar.astro";
+import type { ImageInfo } from "../../utils/images";
+
+type Props = { entry: CollectionEntry<"articles"> };
+type Params = { slug: CollectionEntry<"articles">["slug"] };
+type StaticPaths = Promise<Array<{ params: Params; props: Props }>>;
+
+export const getStaticPaths = async (): StaticPaths => {
+  const articles = await getCollection("articles");
+  return articles.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+};
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const frontmatter = entry.data;
+let ogImg: ImageInfo | undefined;
+
+if (frontmatter.ogImg) {
+  const parts = frontmatter.ogImg.url.split(".");
+  const type = parts[parts.length - 1] as "png"; // it's one or the other and the type is validated in the schema
+  ogImg = {
+    ...frontmatter.ogImg,
+    url: frontmatter.ogImg.url as ImageInfo["url"],
+    type,
+  };
+}
+
+// try to keep this in sync with RenderedMarkdown's h2 styles; wish this could be more programmatic
+const h1Styles = [
+  "pt-2",
+  "text-3xl",
+  "md:text-4xl",
+  "font-bold",
+
+  // border
+  "border-b",
+  "border-blue-600",
+  "dark:border-amber-300",
+];
+
+// can replace specific markdown components: https://mdxjs.com/table-of-components/
+// TODO: if I ever need to differentiate between internal and external links in markdown, could do that in a wrapper component
+const components = { a: ExternalLink };
+---
+
+<!-- articles get a slightly wider layout -->
+<Layout
+  pageTitle={frontmatter.title}
+  seoTitle={frontmatter.title}
+  seoDescription={frontmatter.ogDesc as `${string}.`}
+  activeTab="articles"
+  wide
+  ogImg={ogImg}
+>
+  <h1 class:list={h1Styles}>
+    {frontmatter.title}
+  </h1>
+
+  <p class="pb-4 pt-2">
+    <CalendarIcon classes={["inline h-4 mb-1 pr-2", "dark:fill-white"]} />{
+      frontmatter.publishedOn ?? "TBD"
+    }
+  </p>
+  <RenderedMarkdown>
+    <!-- https://github.com/withastro/astro/issues/12057 -->
+    <Content components={components} frontmatter={frontmatter} />
+  </RenderedMarkdown>
+  <!-- <hr class="my-6" />
+  <p>
+    FIXME Mentioned Games: <RoundedLink href="/games/little-kitty-big-city/">
+      Beat Breaker
+    </RoundedLink>
+  </p> -->
+</Layout>

@@ -2,10 +2,11 @@
 import type { Author } from "../../../airtable/data/authors";
 import { loadReads, type Read } from "../../../airtable/data/reads";
 import BookLegend from "../../../components/BookLegend.astro";
+import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { averageRating, pluralize, seoTitle } from "../../../utils";
+import { averageRating, pluralize, seoTitle } from "../../../utils/data";
 
 type Params = {
   authorSlug: string;
@@ -52,9 +53,9 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   )} he's read by ${name}.`}
   activeTab="books"
 >
-  <h1 class="pb-3 pt-5 text-2xl">
+  <PageTitle>
     Reviews for <RoundedText text={name} />
-  </h1>
+  </PageTitle>
   <p class="pb-3">
     There {reads.length > 1 ? "are" : "is"}{" "}
     {reads.length} review{pluralize(reads)} of {numUniqueBooks}

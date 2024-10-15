@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 
 import { medals } from "../../airtable/data/common";
 import type { Play } from "../../airtable/data/plays";
-import { minutesToDuration } from "../../utils";
+import { minutesToDuration } from "../../utils/data";
 import SubtleLink from "../links/SubtleLink.astro";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
@@ -39,15 +39,25 @@ const { play } = Astro.props;
   </div>
 
   <Fragment slot="icons">
-    {play.didNotFinish && <div class="inline px-1">🛑</div>}
+    {
+      play.didNotFinish && (
+        <div title="Didn't Finish" class="inline px-1">
+          🛑
+        </div>
+      )
+    }
     {
       play.game.collection && (
-        <div class="inline px-1">{play.game.collection.emoji}</div>
+        <div title={play.game.collection.nameOnly} class="inline px-1">
+          {play.game.collection.emoji}
+        </div>
       )
     }
     {
       play.game.award && (
-        <div class="inline px-1">{medals[play.game.award.tier]}</div>
+        <div title="Award Winning" class="inline px-1">
+          {medals[play.game.award.tier]}
+        </div>
       )
     }
   </Fragment>
@@ -55,6 +65,7 @@ const { play } = Astro.props;
   <Fragment slot="footer">
     <span>{play.dateFinished}</span>
     <span>{play.playType}</span>
+    <div class="basis-full md:hidden"></div>
     <span>{minutesToDuration(play.minutesPlayed)}</span>
   </Fragment>
 </BaseBox>
