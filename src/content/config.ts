@@ -47,6 +47,7 @@ const articles = defineCollection({
         })
         .strict()
         .optional(),
+      gotPressKey: z.boolean().default(false),
     })
     .strict(),
 });

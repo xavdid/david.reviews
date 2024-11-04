@@ -75,6 +75,20 @@ const components = { a: ExternalLink };
     <Content components={components} frontmatter={frontmatter} />
   </RenderedMarkdown>
 
+  {
+    frontmatter.gotPressKey && (
+      <RenderedMarkdown>
+        <p>
+          <em>
+            This review was written using a free code provided by the
+            developer/publisher. The free nature of that code didn’t influence
+            the conclusions of this review in any way.
+          </em>
+        </p>
+      </RenderedMarkdown>
+    )
+  }
+
   <!-- {frontmatter.} -->
 
   <!-- <hr class="my-6" />
