@@ -2,8 +2,10 @@
 import { Image } from "astro:assets";
 
 import type { Game } from "../../airtable/data/games";
+import { loadInProgessPlays } from "../../airtable/data/inProgressPlays";
 import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
 import AwardBlurb from "../../components/AwardBlurb.astro";
+import RssIcon from "../../components/icons/rss.astro";
 import PlaySummary from "../../components/infoboxes/PlaySummary.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
@@ -21,7 +23,6 @@ import {
   pluralize,
   seoTitle,
 } from "../../utils/data";
-import { loadInProgessPlays } from "../../airtable/data/inProgressPlays";
 
 type Params = {
   gameSlug: string;
@@ -213,9 +214,15 @@ const {
     )
   }
 
-  <p class="py-1">
-    To see reviews like this directly in your Steam UI, you can:
-  </p>
-
-  <SteamFollowButton />
+  <div class="text-center">
+    <em>
+      If you liked this review and want to read more like it, subscribe via <SubtleLink
+        href="/feeds"
+        classes={["whitespace-nowrap"]}
+      >
+        <RssIcon classes={["inline", "mr-1"]} />{"RSS"}
+      </SubtleLink> or:
+      <SteamFollowButton />
+    </em>
+  </div>
 </Layout>

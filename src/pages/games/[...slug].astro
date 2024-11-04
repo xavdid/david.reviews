@@ -2,11 +2,12 @@
 import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
 import ButtonGroup from "../../components/ButtonGroup.astro";
 import GameLegend from "../../components/GameLegend.astro";
+import RssIcon from "../../components/icons/rss.astro";
 import PlayBox from "../../components/infoboxes/PlayBox.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
 import PageTitle from "../../components/PageTitle.astro";
 import SteamFollowButton from "../../components/SteamFollowButton.astro";
-import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import Layout from "../../layouts/Layout.astro";
 import { genrePermalink, seoTitle } from "../../utils/data";
 
@@ -128,13 +129,15 @@ const collectionEmoji = new Set<string>(
     </li>
   </ul>
 
-  <SubscribeBlurb mediaType="game" />
+  <div>
+    The best way to keep in touch if you like my reviwes is to subscribe via the
 
-  <p class="py-1">
-    You can also get recommendations directly in the Steam UI if you:
-  </p>
 
-  <SteamFollowButton />
+    <SubtleLink href="/feeds" classes={["whitespace-nowrap"]}>
+      <RssIcon classes={["inline", "mr-1"]} />{"RSS feeds"}
+    </SubtleLink> or:
+    <SteamFollowButton />
+  </div>
 
   <hr class="my-2 mb-5" />
 
@@ -151,5 +154,17 @@ const collectionEmoji = new Set<string>(
 
   <div>
     {filteredPlays.map((play) => <PlayBox play={play} />)}
+  </div>
+
+  <div class="text-center">
+    <em>
+      If you liked these reviews and want to read more like it, subscribe via <SubtleLink
+        href="/feeds"
+        classes={["whitespace-nowrap"]}
+      >
+        <RssIcon classes={["inline", "mr-1"]} />{"RSS"}
+      </SubtleLink> or:
+      <SteamFollowButton />
+    </em>
   </div>
 </Layout>

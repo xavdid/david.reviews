@@ -1,9 +1,12 @@
 ---
-import ExternalLink from "../../components/links/ExternalLink.astro";
-import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
-import Layout from "../../layouts/Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
+import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
+import SteamFollowButton from "../../components/SteamFollowButton.astro";
 import CalendarIcon from "../../components/icons/calendar.astro";
+import RssIcon from "../../components/icons/rss.astro";
+import ExternalLink from "../../components/links/ExternalLink.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
+import Layout from "../../layouts/Layout.astro";
 import type { ImageInfo } from "../../utils/images";
 
 type Props = { entry: CollectionEntry<"articles"> };
@@ -73,21 +76,36 @@ const components = { a: ExternalLink };
   <RenderedMarkdown>
     <!-- https://github.com/withastro/astro/issues/12057 -->
     <Content components={components} frontmatter={frontmatter} />
-  </RenderedMarkdown>
 
-  {
-    frontmatter.gotPressKey && (
-      <RenderedMarkdown>
-        <p>
-          <em>
-            This review was written using a free code provided by the
-            developer/publisher. The free nature of that code didn’t influence
-            the conclusions of this review in any way.
-          </em>
-        </p>
-      </RenderedMarkdown>
-    )
-  }
+    <hr />
+
+    <div class="text-center">
+      <em>
+        If you liked this review and want to read more like it, subscribe via <SubtleLink
+          href="/feeds"
+          classes={["whitespace-nowrap"]}
+        >
+          <RssIcon classes={["inline", "mr-1"]} />{"RSS"}
+        </SubtleLink> or:
+        <SteamFollowButton />
+      </em>
+    </div>
+
+    {
+      frontmatter.gotPressKey && (
+        <>
+          <hr />
+          <p>
+            <em>
+              This review was written using a free code provided by the
+              developer/publisher. The free nature of that code didn’t influence
+              the conclusions of this review in any way.
+            </em>
+          </p>
+        </>
+      )
+    }
+  </RenderedMarkdown>
 
   <!-- {frontmatter.} -->
 

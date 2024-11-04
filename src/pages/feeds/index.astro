@@ -29,8 +29,8 @@ const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
 >
   <PageTitle>Feeds</PageTitle>
   <p class="py-2">
-    There are 4 RSS feeds available for my reviews: one for each media type and
-    a mixed "everything" feed. Enjoy!
+    There are {feedTypes.length} RSS feeds available for my reviews. You can
+    subscribe to individual media types or enjoy the "Everything" experience!
   </p>
   <!-- Each is available in both <ExternalLink
       href="https://zapier.com/blog/how-to-use-rss-feeds/"

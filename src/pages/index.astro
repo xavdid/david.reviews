@@ -3,12 +3,12 @@ import { Image } from "astro:assets";
 
 import { loadInProgessPlays } from "../airtable/data/inProgressPlays";
 import { loadInProgressReads } from "../airtable/data/inProgressReads";
+import SteamFollowButton from "../components/SteamFollowButton.astro";
 import RssIcon from "../components/icons/rss.astro";
 import ExternalLink from "../components/links/ExternalLink.astro";
 import SubtleLink from "../components/links/SubtleLink.astro";
 import Layout from "../layouts/Layout.astro";
 import { seoTitle } from "../utils/data";
-import SteamFollowButton from "../components/SteamFollowButton.astro";
 
 const inProgressPlays = (await loadInProgessPlays()).toSorted(
   (a, b) =>
@@ -30,23 +30,18 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     Welcome to <strong>david.reviews</strong>, my small, independent media
     review site. I'm <ExternalLink href="https://xavd.id">
       {"David"}
-    </ExternalLink> and I've been doing this in some form or another since 2016.
+    </ExternalLink> and I've reviewing things and writing them down since 2016.
   </p>
 
-  <p class="pb-4 pt-2">
-    The easiest way to keep up with my game reviews is to:
-  </p>
-
-  <SteamFollowButton />
-
-  <p class="pb-4 pt-2">
-    Alternatively, you can follow one of the many <SubtleLink
+  <div>
+    If you like my reviews and want to stay up to date, subscribe via <SubtleLink
       href="/feeds"
       classes={["whitespace-nowrap"]}
     >
-      <RssIcon classes={["inline", "mr-1"]} />{"RSS Feeds"}
-    </SubtleLink> (which include all media types, plus articles).
-  </p>
+      <RssIcon classes={["inline", "mr-1"]} />{"RSS"}
+    </SubtleLink> or:
+    <SteamFollowButton />
+  </div>
 
   <!-- <h2 class="py-3 text-center text-2xl underline">Recent Articles</h2> -->
   <!-- can include this, but /articles page does the same -->
