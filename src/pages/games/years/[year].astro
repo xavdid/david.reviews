@@ -21,7 +21,7 @@ const plays = await loadPlays();
 const { year } = Astro.params as Params;
 
 const filteredPlays = plays
-  .filter((p) => p.dateFinished.startsWith(year) && p.playType === "First Time")
+  .filter((p) => p.playType === "First Time" && p.dateFinished.startsWith(year))
   .toReversed();
 
 const awardUrl = buildAwardUrl(parseInt(year), "#videogames");

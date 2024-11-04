@@ -1,5 +1,5 @@
 ---
-import { loadWatches } from "../../../airtable/data/watches";
+import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import { awardYears, buildAwardUrl } from "../../../awards";
 import MovieLegend from "../../../components/MovieLegend.astro";
 import PageTitle from "../../../components/PageTitle.astro";
@@ -20,24 +20,13 @@ const watchCounts: Record<string, number> = {};
 
 const { year } = Astro.params as Params;
 
-const watchesWithCounts = watches
-  .map((watch) => {
-    const thisWatchNum = watchCounts[watch.movie.tmdbId] ?? 0;
-    watchCounts[watch.movie.tmdbId] = thisWatchNum + 1;
-    return {
-      watch,
-      numWatch: watch.movie.numWatches - thisWatchNum,
-    };
-  })
-  .filter(
-    (w) =>
-      w.watch.dateFinished.startsWith(year.toString()) && w.watch.isFirstWatch,
-  )
+const watchesWithCounts: Watch[] = watches
+  .filter((w) => w.isFirstWatch && w.dateFinished.startsWith(year.toString()))
   .toReversed();
 
 const collectionEmoji = new Set<string>(
   watchesWithCounts
-    .map(({ watch: w }) => w.movie.collections?.map((c) => c.emoji))
+    .map(({ movie }) => movie.collections?.map((c) => c.emoji))
     .flat()
     .filter(Boolean) as string[],
 );
@@ -68,10 +57,6 @@ const awardUrl = buildAwardUrl(parseInt(year), "#movies");
     showFirstTimeAsterisk={false}
   />
   <div>
-    {
-      watchesWithCounts.map(({ watch, numWatch }) => (
-        <WatchBox watch={watch} numWatch={numWatch} />
-      ))
-    }
+    {watchesWithCounts.map((watch) => <WatchBox watch={watch} numWatch={1} />)}
   </div>
 </Layout>

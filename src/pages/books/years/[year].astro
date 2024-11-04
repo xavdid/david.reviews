@@ -19,9 +19,9 @@ const rawReviews = await loadReads();
 
 const { year } = Astro.params as Params;
 
-const filteredReads = rawReviews.filter(
-  (r) => r.dateFinished.startsWith(year) && !r.isReread,
-);
+const filteredReads = rawReviews
+  .filter((r) => !r.isReread && r.dateFinished.startsWith(year))
+  .toReversed();
 
 const awardUrl = buildAwardUrl(parseInt(year), "#books");
 ---
