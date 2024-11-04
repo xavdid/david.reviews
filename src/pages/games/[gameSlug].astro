@@ -21,6 +21,7 @@ import {
   pluralize,
   seoTitle,
 } from "../../utils/data";
+import { loadInProgessPlays } from "../../airtable/data/inProgressPlays";
 
 type Params = {
   gameSlug: string;
@@ -64,7 +65,7 @@ export const getStaticPaths = async (): Result => {
   //   {},
   // );
 
-  const games = plays.reduce<Record<string, Props>>((result, play) => {
+  const completedGames = plays.reduce<Record<string, Props>>((result, play) => {
     const igdbId = play.game.igdbId;
     // TS doesn't check this right if I put the object inline? so it's a func call
     const gameRecord = result[igdbId] ?? newProps(play.game);
@@ -78,23 +79,34 @@ export const getStaticPaths = async (): Result => {
   }, {});
 
   // for prod builds, ensure every game slug exists
-  // older games won't be preset in dev
+  // older games won't be preset in dev (but still get warnings?)
   if (isProdBuild) {
-    const allGameSlugs = new Set(
-      Object.values(games).map(({ game: { slug } }) => slug),
-    );
-    allArticles.forEach(({ data: { gameSlugs, title } }) => {
+    const allGameSlugs = new Set<string>([
+      ...Object.values(completedGames).map(({ game: { slug } }) => slug),
+      ...(await loadInProgessPlays()).map(({ game: { slug } }) => slug),
+    ]);
+
+    const issues: string[] = [];
+
+    allArticles.forEach(({ data: { gameSlugs }, slug }) => {
       gameSlugs?.forEach((gameSlug) => {
         if (!allGameSlugs.has(gameSlug)) {
-          throw new Error(
-            `article "${title} has a game slug "${gameSlug}" that's not found in any games`,
+          issues.push(
+            `! article "${slug}" has a game slug "${gameSlug}" that's not found in any games`,
           );
         }
       });
     });
+
+    if (issues.length) {
+      issues.forEach((i) => {
+        console.error(i);
+      });
+      throw new Error("Some articles don't correctly point to games");
+    }
   }
 
-  return Object.entries(games).map(([_, props]) => ({
+  return Object.entries(completedGames).map(([_, props]) => ({
     params: { gameSlug: props.game.slug },
     props,
   }));
