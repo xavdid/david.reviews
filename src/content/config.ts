@@ -1,6 +1,5 @@
 import { defineCollection, z } from "astro:content";
 
-// zod defaults are ignored when astro parses?
 const articles = defineCollection({
   type: "content",
   schema: z
