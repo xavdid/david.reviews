@@ -77,6 +77,9 @@ const components = { a: ExternalLink };
     <!-- https://github.com/withastro/astro/issues/12057 -->
     <Content components={components} frontmatter={frontmatter} />
 
+    <!-- could do this, but I like the "buy this on" coming after the blurb and that's hard without putting it in frontmatter -->
+    <!-- {frontmatter.review && <ReviewSummary review={frontmatter.review} />} -->
+
     <hr />
 
     <div class="text-center">
