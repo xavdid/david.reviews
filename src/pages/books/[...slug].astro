@@ -81,6 +81,7 @@ const {
   pageTitle,
   tabTitle = "",
   introText,
+  subpath,
 } = subPages.find(({ subpath: subpageSlug }) => subpageSlug === slug) ?? {};
 if (!pageTitle) {
   throw new Error(`Unable to find page details for slug "${slug}"`);
@@ -94,10 +95,10 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 
 <Layout
   pageTitle={tabTitle}
-  pageDescription={limit === undefined
+  pageDescription={subpath == null
     ? `Detailed reviews of recent reads.`
-    : `All ${reads.length} book reviews.`}
-  seoTitle={seoTitle(`Books!`)}
+    : `A filtered subset of all the books I've read.`}
+  seoTitle={seoTitle(`Books!${subpath ? ` (${subpath})` : ""}`)}
   activeTab="books"
 >
   <PageTitle>{pageTitle}</PageTitle>

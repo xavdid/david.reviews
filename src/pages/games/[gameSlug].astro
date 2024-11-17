@@ -143,7 +143,12 @@ const {
     plays.length > 1 ? "s" : ""
   } he's played the ${genre.name} game ${title}.`}
   seoTitle={seoTitle(title)}
-  seoDescription={buildSeoDescription(plays, "plays")}
+  seoDescription={buildSeoDescription(
+    [...plays, ...etcPlays].toSorted(
+      (a, b) => Date.parse(b.dateFinished) - Date.parse(a.dateFinished),
+    ),
+    "plays",
+  )}
   activeTab="games"
   ogImg={{
     url: bigPosterUrl,

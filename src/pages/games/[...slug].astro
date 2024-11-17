@@ -87,6 +87,7 @@ const {
   pageTitle,
   tabTitle = "",
   introText,
+  subpath,
 } = subPages.find(({ subpath: subpageSlug }) => subpageSlug === slug) ?? {};
 if (!pageTitle) {
   throw new Error(`Unable to find page details for slug "${slug}"`);
@@ -106,10 +107,10 @@ const collectionEmoji = new Set<string>(
 
 <Layout
   pageTitle={tabTitle}
-  pageDescription={limit === undefined
+  pageDescription={subpath == null
     ? `Detailed reviews of recently played games.`
-    : `All ${plays.length} game reviews.`}
-  seoTitle={seoTitle(`Games!`)}
+    : `A filtered subset of all the games I've played.`}
+  seoTitle={seoTitle(`Games!${subpath ? ` (${subpath})` : ""}`)}
   activeTab="games"
 >
   <PageTitle>{pageTitle}</PageTitle>
