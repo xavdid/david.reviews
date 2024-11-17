@@ -1,5 +1,5 @@
 import rss, { type RSSFeedItem } from "@astrojs/rss";
-import { capitalize, NO_REVIEW } from "./data";
+import { capitalize } from "./data";
 
 export const feedTypes = [
   "everything",
@@ -38,6 +38,3 @@ export const buildRssFeed = async <T extends { dateFinished: string }>(
       .map(itemizer),
   });
 };
-
-export const slimReview = (rating: number, notes: string): string =>
-  `${"★".repeat(rating)}${"☆".repeat(4 - rating)}: ${notes || NO_REVIEW}`;

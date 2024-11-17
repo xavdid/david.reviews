@@ -28,9 +28,10 @@ const genres = Object.values(games).reduce<Record<string, GenreRecord>>(
 ---
 
 <Layout
-  pageTitle={`All Game Genres`}
-  seoTitle={"All Game Genres"}
-  seoDescription={`A list of every game genre I've written reviews for.`}
+  pageTitle="All Game Genres"
+  pageDescription={`I've sorted all games into ${
+    Object.keys(genres).length
+  } different of core gameplay mechanics.`}
   activeTab="games"
 >
   <div class="py-3">

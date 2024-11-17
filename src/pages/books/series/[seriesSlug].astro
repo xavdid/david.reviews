@@ -9,7 +9,12 @@ import PageTitle from "../../../components/PageTitle.astro";
 import Rating from "../../../components/Rating.astro";
 import RoundedText from "../../../components/RoundedText.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { averageRating, pluralize, seoTitle } from "../../../utils/data";
+import {
+  averageRating,
+  maxIsoDate,
+  pluralize,
+  seoTitle,
+} from "../../../utils/data";
 
 type Params = {
   seriesSlug: string;
@@ -17,6 +22,8 @@ type Params = {
 
 type Props = Series & {
   reads: Read[];
+  publishedOn: string;
+  updatedOn?: string;
 };
 
 // own row for weird export reasons
@@ -32,9 +39,19 @@ export const getStaticPaths = async (): Result => {
       result[seriesSlug] ||= {
         ...series,
         reads: [],
+        publishedOn: "",
       };
 
       result[seriesSlug].reads.push(read);
+
+      if (read.isReread) {
+        result[seriesSlug].updatedOn = maxIsoDate(
+          result[seriesSlug].updatedOn,
+          read.dateFinished,
+        );
+      } else {
+        result[seriesSlug].publishedOn = read.dateFinished;
+      }
     }
     return result;
   }, {});
@@ -45,7 +62,15 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { reads, name, numBooksInSeries, remarks, percentComplete } = Astro.props;
+const {
+  reads,
+  name,
+  numBooksInSeries,
+  remarks,
+  percentComplete,
+  publishedOn,
+  updatedOn,
+} = Astro.props;
 const seriesComplete = (numBooksInSeries ?? 0) > 0;
 const readAll = percentComplete === 100;
 const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
@@ -53,11 +78,16 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 
 <Layout
   pageTitle={`${name} Series - Books`}
-  seoTitle={seoTitle(`The ${name} Series`)}
-  seoDescription={`David shares thoughts about the ${numUniqueBooks} book${
+  pageDescription={`David shares thoughts about the ${numUniqueBooks} book${
     numUniqueBooks > 1 ? "s" : ""
   } he's read from the ${name} series.`}
+  seoTitle={seoTitle(`The ${name} Series`)}
+  seoDescription={`There's an average score of ${averageRating(
+    reads,
+  )}⭐ for the ${numUniqueBooks} book${pluralize(numUniqueBooks)}.`}
   activeTab="books"
+  publishedOn={publishedOn}
+  updatedOn={updatedOn}
 >
   <PageTitle>
     Reviews for Books in The <RoundedText text={name} /> series

@@ -67,6 +67,66 @@ export const minutesToDuration = (totalMinutes: number): string => {
   return `${hours}h ${minutes}m`;
 };
 
+/**
+ * prepeneds `david.reviews` to a share title
+ */
 export const seoTitle = (t: string): string => `david.reviews: ${t}`;
 
+/**
+ * given a nullable updatedDate ISO string and a present date ISO string, return the greater of the two
+ */
+export const maxIsoDate = (first: string | undefined, next: string): string => {
+  if (!first) {
+    return next;
+  }
+
+  return Date.parse(first) > Date.parse(next) ? first : next;
+};
+
+/**
+ * inlines info about a review suitable for sharing elsewhere
+ */
+export const slimReview = (rating: number, notes: string): string =>
+  `${"★".repeat(rating)}${"☆".repeat(4 - rating)}: ${notes || NO_REVIEW}`;
+
 export const isProdBuild = import.meta.env.PROD;
+
+// rough approximation, but it works well enough
+const numDaysAgo = (date: string): number =>
+  Math.floor((new Date().valueOf() - Date.parse(date)) / (1000 * 60 * 60 * 24));
+
+const truncate = (s: string, length = 200): string => {
+  if (s.length <= 200) {
+    return s;
+  }
+
+  return s.substring(0, length) + "...";
+};
+
+/**
+ * Given a media page, generate the SEO blurb that shows up below the title when shared
+ * There are 2 modes:
+ * 1. a summary of a specific review (its star rating & text)
+ * 2. a summary of the page (# reviews & average score)
+ *
+ * - If there's just one review, then use type 1.
+ * - If there's multiple reivews, use type 2, unless...
+ * - There's multiple reviews & the latest one is within the N days. Then, treat it as the only review
+ *
+ * this allows for linking "directly" to a specific review if it's just gone up (when I'm most likely to share it) but blubing the average the rest of the time.
+ *
+ * Reviews are assumed to be sorted latest -> earliest
+ */
+export const buildSeoDescription = (
+  reviews: Array<{ dateFinished: string; rating: number; notes: string }>,
+  verbNoun: "plays" | "watches" | "reads",
+): `${string}.` => {
+  if (reviews.length === 1 || numDaysAgo(reviews[0].dateFinished) < 15) {
+    const desc = truncate(slimReview(reviews[0].rating, reviews[0].notes));
+    return (desc.endsWith(".") ? desc : desc + ".") as `${string}.`;
+  }
+
+  return `It averages ${averageRating(reviews)}⭐ after ${
+    reviews.length
+  } ${verbNoun}.`;
+};

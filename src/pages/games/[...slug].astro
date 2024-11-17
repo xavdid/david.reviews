@@ -106,8 +106,10 @@ const collectionEmoji = new Set<string>(
 
 <Layout
   pageTitle={tabTitle}
+  pageDescription={limit === undefined
+    ? `Detailed reviews of recently played games.`
+    : `All ${plays.length} game reviews.`}
   seoTitle={seoTitle(`Games!`)}
-  seoDescription={`David shares thoughts about the ${numUniqueGames} games he's played.`}
   activeTab="games"
 >
   <PageTitle>{pageTitle}</PageTitle>

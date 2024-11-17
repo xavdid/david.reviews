@@ -19,7 +19,9 @@ import {
 } from "../../utils/content";
 import {
   averageRating,
+  buildSeoDescription,
   isProdBuild,
+  maxIsoDate,
   pluralize,
   seoTitle,
 } from "../../utils/data";
@@ -34,14 +36,14 @@ type Props = {
   // dlc, etc
   etcPlays: Play[];
   articles: ArticleReference[];
+  publishedOn: string;
+  updatedOn?: string;
 };
 
 // own row for weird export reasons
 type Result = Promise<Array<{ params: Params; props: Props }>>;
 export const getStaticPaths = async (): Result => {
-  const allArticles = await getPublishedArticles();
-
-  const newProps = (game: Game): Props => ({
+  const buildNewProps = (game: Game): Props => ({
     game,
     plays: [],
     etcPlays: [],
@@ -51,7 +53,10 @@ export const getStaticPaths = async (): Result => {
         title,
         permalink,
       })),
+    publishedOn: "",
   });
+
+  const allArticles = await getPublishedArticles();
   const plays = await loadPlays();
 
   // could pre-calculate all the articles for lookup, but this won't be a performance issue for a while
@@ -69,11 +74,20 @@ export const getStaticPaths = async (): Result => {
   const completedGames = plays.reduce<Record<string, Props>>((result, play) => {
     const igdbId = play.game.igdbId;
     // TS doesn't check this right if I put the object inline? so it's a func call
-    const gameRecord = result[igdbId] ?? newProps(play.game);
+    const gameRecord = result[igdbId] ?? buildNewProps(play.game);
 
     (isEtcPlay(play.playType) ? gameRecord.etcPlays : gameRecord.plays).push(
       play,
     );
+    if (play.playType === "First Time") {
+      gameRecord.publishedOn = play.dateFinished;
+    } else {
+      // set the updated date to the max of current value and the new one, defaulting to the new one if nothing is set
+      gameRecord.updatedOn = maxIsoDate(
+        gameRecord.updatedOn,
+        play.dateFinished,
+      );
+    }
     result[igdbId] = gameRecord;
 
     return result;
@@ -118,15 +132,18 @@ const {
   etcPlays,
   game: { title, posterUrl, award, genre, bigPosterUrl, collection },
   articles,
+  publishedOn,
+  updatedOn,
 } = Astro.props;
 ---
 
 <Layout
   pageTitle={`${title} - Games`}
-  seoTitle={seoTitle(title)}
-  seoDescription={`David shares thoughts about the ${plays.length} time${
+  pageDescription={`David shares thoughts about the ${plays.length} time${
     plays.length > 1 ? "s" : ""
   } he's played the ${genre.name} game ${title}.`}
+  seoTitle={seoTitle(title)}
+  seoDescription={buildSeoDescription(plays, "plays")}
   activeTab="games"
   ogImg={{
     url: bigPosterUrl,
@@ -135,6 +152,8 @@ const {
     width: 528,
     type: "jpeg",
   }}
+  publishedOn={publishedOn}
+  updatedOn={updatedOn}
 >
   <div class="flex py-3">
     <Image

@@ -9,7 +9,14 @@ import RoundedLink from "../../components/links/RoundedLink.astro";
 import MediaTitle from "../../components/MediaTitle.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
-import { NO_REVIEW, pluralize, seoTitle } from "../../utils/data";
+import {
+  NO_REVIEW,
+  pluralize,
+  seoTitle,
+  maxIsoDate,
+  buildSeoDescription,
+  averageRating,
+} from "../../utils/data";
 
 type Params = {
   movieSlug: string;
@@ -18,6 +25,8 @@ type Params = {
 type Props = {
   movie: Movie;
   watches: Watch[];
+  publishedOn: string;
+  updatedOn?: string;
 };
 
 // own row for weird export reasons
@@ -31,8 +40,19 @@ export const getStaticPaths = async (): Result => {
     result[tmdbId] ||= {
       movie: watch.movie,
       watches: [],
+      publishedOn: "",
     };
     result[tmdbId].watches.push(watch);
+
+    if (watch.isFirstWatch) {
+      result[tmdbId].publishedOn = watch.dateFinished;
+    } else {
+      // set the updated date to the max of current value and the new one, defaulting to the new one if nothing is set
+      result[tmdbId].updatedOn = maxIsoDate(
+        result[tmdbId].updatedOn,
+        watch.dateFinished,
+      );
+    }
 
     return result;
   }, {});
@@ -53,17 +73,19 @@ const {
     collections,
     yearReleased,
     numWatches,
-    averageScore,
   },
+  publishedOn,
+  updatedOn,
 } = Astro.props;
 ---
 
 <Layout
   pageTitle={`${title} - Movies`}
-  seoTitle={seoTitle(title)}
-  seoDescription={`David shares thoughts about the ${watches.length} time${
+  pageDescription={`David shares thoughts about the ${watches.length} time${
     watches.length > 1 ? "s" : ""
   } he's watched ${title}.`}
+  seoTitle={seoTitle(title)}
+  seoDescription={buildSeoDescription(watches, "watches")}
   activeTab="movies"
   ogImg={{
     url: bigPosterUrl,
@@ -71,6 +93,8 @@ const {
     width: 500,
     type: "jpeg",
   }}
+  publishedOn={publishedOn}
+  updatedOn={updatedOn}
 >
   <div class="flex py-3">
     <Image
@@ -87,7 +111,7 @@ const {
       </p>
       <p class="pr-2 pt-2">
         I've watched this movie {watches.length} time{pluralize(watches)}
-         and given it an average score of {averageScore.toFixed(2)} (<ExternalLink
+         and given it an average score of {averageRating(watches)}⭐ (<ExternalLink
           href="https://xavd.id/blog/post/on-the-rating-of-media/"
         >
           {"out of 4"}

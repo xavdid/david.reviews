@@ -6,7 +6,12 @@ import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { averageRating, pluralize, seoTitle } from "../../../utils/data";
+import {
+  maxIsoDate,
+  averageRating,
+  pluralize,
+  seoTitle,
+} from "../../../utils/data";
 
 type Params = {
   authorSlug: string;
@@ -14,6 +19,8 @@ type Params = {
 
 type Props = Author & {
   reads: Read[];
+  publishedOn: string;
+  updatedOn?: string;
 };
 
 // own row for weird export reasons
@@ -28,10 +35,21 @@ export const getStaticPaths = async (): Result => {
       result[authorId] ||= {
         ...author,
         reads: [],
+        publishedOn: "",
       };
 
       result[authorId].reads.push(read);
+
+      if (read.isReread) {
+        result[authorId].updatedOn = maxIsoDate(
+          result[authorId].updatedOn,
+          read.dateFinished,
+        );
+      } else {
+        result[authorId].publishedOn = read.dateFinished;
+      }
     });
+
     return result;
   }, {});
 
@@ -41,17 +59,22 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { reads, name, recordId: authorId } = Astro.props;
+const { reads, name, recordId: authorId, publishedOn, updatedOn } = Astro.props;
 const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 ---
 
 <Layout
   pageTitle={`${name} - Books`}
+  pageDescription={`David's reviewed reviews books by ${name}.`}
   seoTitle={seoTitle(`Books by ${name}`)}
-  seoDescription={`David shares thoughts about the ${numUniqueBooks} book${pluralize(
+  seoDescription={`There's an average score of ${averageRating(
+    reads,
+  )}⭐ for the ${numUniqueBooks} book${pluralize(
     numUniqueBooks,
   )} he's read by ${name}.`}
   activeTab="books"
+  publishedOn={publishedOn}
+  updatedOn={updatedOn}
 >
   <PageTitle>
     Reviews for <RoundedText text={name} />

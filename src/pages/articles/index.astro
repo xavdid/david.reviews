@@ -4,15 +4,14 @@ import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getPublishedArticles } from "../../utils/content";
-import { seoTitle } from "../../utils/data";
 
 const allArticles = await getPublishedArticles();
 ---
 
 <Layout
   pageTitle="All Articles"
-  seoTitle={seoTitle("All Articles")}
-  seoDescription={`All full list of the ${allArticles.length} long-form articles I've written about media.`}
+  pageDescription={`Every longer article I've written.`}
+  seoDescription={`All ${allArticles.length} long-form articles I've written.`}
   activeTab="articles"
 >
   <PageTitle>All Articles</PageTitle>

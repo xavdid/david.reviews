@@ -12,6 +12,19 @@ module.exports = {
     // all astro components are untyped, so I'm getting a lot of complaints about this
     "@typescript-eslint/no-unsafe-return": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
+    "no-restricted-imports": [
+      "error",
+      {
+        paths: [
+          {
+            name: "astro:schema",
+            importNames: ["undefined"],
+            message:
+              "This import is almost certainly in error. You use `undefined` directly unless you're describing a Zod schema.",
+          },
+        ],
+      },
+    ],
   },
   overrides: [
     {

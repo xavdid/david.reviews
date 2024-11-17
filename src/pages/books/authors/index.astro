@@ -28,10 +28,10 @@ const authors = Object.values(reads).reduce<
 
 <Layout
   pageTitle={`Book Authors`}
-  seoTitle={"All Book Authors"}
-  seoDescription={`A list of the ${
+  pageDescription={`A list of the ${
     Object.keys(authors).length
   } different authors I've read at least one book by.`}
+  seoTitle={"All Book Authors"}
   activeTab="books"
 >
   <PageTitle>All Authors</PageTitle>

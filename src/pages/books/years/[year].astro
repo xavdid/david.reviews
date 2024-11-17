@@ -28,8 +28,8 @@ const awardUrl = buildAwardUrl(parseInt(year), "#books");
 
 <Layout
   pageTitle={`${year} Books`}
+  pageDescription={`David shares thoughts about the ${rawReviews.length} books he's read.`}
   seoTitle={seoTitle(`Books he read for the first time in ${year}!`)}
-  seoDescription={`David shares thoughts about the ${rawReviews.length} books he's read.`}
   activeTab="books"
 >
   <PageTitle>Every Book I Read in {year}</PageTitle>

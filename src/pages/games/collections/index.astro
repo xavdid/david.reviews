@@ -29,10 +29,8 @@ const collections = Object.values(games).reduce<
 
 <Layout
   pageTitle={`Game Collections`}
+  pageDescription={`${Object.keys(collections).length} curated lists of games.`}
   seoTitle={"All Game Collections"}
-  seoDescription={`A list of the ${
-    Object.keys(collections).length
-  } curated game collections I've built.`}
   activeTab="games"
 >
   <div class="py-3">

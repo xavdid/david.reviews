@@ -58,11 +58,11 @@ const components = { a: ExternalLink };
 <!-- articles get a slightly wider layout -->
 <Layout
   pageTitle={frontmatter.title}
-  seoTitle={frontmatter.title}
-  seoDescription={frontmatter.ogDesc as `${string}.`}
+  pageDescription={frontmatter.ogDesc as `${string}.`}
   activeTab="articles"
   wide
   ogImg={ogImg}
+  publishedOn={frontmatter.publishedOn}
 >
   <h1 class:list={h1Styles}>
     {frontmatter.title}

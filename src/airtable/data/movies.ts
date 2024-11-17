@@ -37,7 +37,6 @@ type NonStringFields = {
   [fields.awardAnchor]?: string;
   [fields.awardYear]: number; // always defined because it's calculated; unwatched movies are `0`, but those are filtered
   [fields.yearReleased]: number;
-  [fields.averageScore]: number;
   [fields.collections]?: string[];
 };
 type StringFields = {
@@ -51,7 +50,6 @@ export type Movie = {
   slug: string;
   permalink: Permalink;
   yearReleased: number;
-  averageScore: number;
   numWatches: number;
   collections?: Collection[];
   posterUrl: ExternalUrl;
@@ -70,7 +68,6 @@ const materialize = (movieRow: MovieRecord): Movie => {
     permalink: `/movies/${slug}/`,
     yearReleased: movieRow[fields.yearReleased],
     numWatches: movieRow[fields.numWatches],
-    averageScore: movieRow[fields.averageScore],
     collections: movieRow[fields.collections]?.map((c) =>
       materializeCollection(c, "movie"),
     ),

@@ -94,8 +94,10 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 
 <Layout
   pageTitle={tabTitle}
+  pageDescription={limit === undefined
+    ? `Detailed reviews of recent reads.`
+    : `All ${reads.length} book reviews.`}
   seoTitle={seoTitle(`Books!`)}
-  seoDescription={`David shares thoughts about the ${reads.length} books he's read.`}
   activeTab="books"
 >
   <PageTitle>{pageTitle}</PageTitle>

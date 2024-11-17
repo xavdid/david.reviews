@@ -8,8 +8,8 @@ import { loadReads } from "../../airtable/data/reads";
 import { loadWatches } from "../../airtable/data/watches";
 import type { Permalink } from "../../airtable/types";
 import { getPublishedArticles } from "../../utils/content";
-import { type Category } from "../../utils/data";
-import { buildRssFeed, feedTypes, slimReview } from "../../utils/rss";
+import { type Category, slimReview } from "../../utils/data";
+import { buildRssFeed, feedTypes } from "../../utils/rss";
 
 type Feeds = (typeof feedTypes)[number];
 

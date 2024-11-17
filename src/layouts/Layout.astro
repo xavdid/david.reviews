@@ -7,12 +7,42 @@ import { feedTypes } from "../utils/rss";
 import { type ImageInfo } from "../utils/images";
 
 type Props = {
-  pageTitle: string; // shown in the tab; " | david.reviews" is appended
-  seoTitle: string; // shown in the OG embed
-  seoDescription: `${string}.`;
+  /**
+   * shown in the tab; ` | david.reviews` is appended
+   */
+  pageTitle: string;
+  /**
+   * summarizes the page for search engines
+   */
+  pageDescription: `${string}.` | `${string}!`;
+  /**
+   * shown in the OG embed;
+   */
+  seoTitle?: string;
+  /**
+   * shown as the OG description;
+   */
+  seoDescription?: `${string}.`;
+  /**
+   * which nav item is selected and which color/outline the navbar is
+   */
   activeTab?: `${Category}s` | "articles" | "search" | "about" | "contact";
+  /**
+   * image to replace the default share picture
+   */
   ogImg?: ImageInfo;
+  /**
+   * makes the page's max-width wider, like for articles
+   */
   wide?: boolean;
+  /**
+   * the date this page went live; the article date or first review published
+   */
+  publishedOn?: string;
+  /**
+   * the date of the last review published, if there's more than 1
+   */
+  updatedOn?: string;
 };
 
 const OG_IMG_URL = "https://david.reviews/og.png";
@@ -26,25 +56,30 @@ const defaultOgImg: ImageInfo = {
 
 const {
   activeTab,
-  pageTitle: title,
+  pageTitle,
+  pageDescription,
   seoTitle,
-  seoDescription: description,
+  seoDescription,
   ogImg = defaultOgImg,
   wide,
+  publishedOn,
+  updatedOn,
 } = Astro.props;
 
 const groupedSeo: SEOProps = {
-  title,
+  title: pageTitle,
   titleTemplate: "%s | david.reviews",
-  description,
+  description: pageDescription,
   openGraph: {
     basic: {
-      title: seoTitle,
-      type: "website",
+      title: seoTitle ?? pageTitle,
+      type: publishedOn ? "article" : "website",
       image: ogImg.url,
+      // url could be defined here, but it gets a sensible default
     },
     optional: {
       siteName: "david.reviews",
+      description: seoDescription ?? pageDescription,
     },
     image: {
       type: `image/${ogImg.type}`,
@@ -55,6 +90,13 @@ const groupedSeo: SEOProps = {
           ? "A banner for david.reviews, showing the site title and icons for games, movies, and books."
           : `The cover for the media being reviewed.`,
     },
+    article: publishedOn
+      ? {
+          publishedTime: publishedOn,
+          modifiedTime: updatedOn,
+          authors: ["David Brownman"],
+        }
+      : undefined,
   },
 };
 ---

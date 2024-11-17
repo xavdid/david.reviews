@@ -10,7 +10,13 @@ import RoundedLink from "../../components/links/RoundedLink.astro";
 import MediaTitle from "../../components/MediaTitle.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
-import { NO_REVIEW, pluralize, seoTitle } from "../../utils/data";
+import {
+  buildSeoDescription,
+  maxIsoDate,
+  NO_REVIEW,
+  pluralize,
+  seoTitle,
+} from "../../utils/data";
 
 type Params = {
   bookSlug: string;
@@ -18,6 +24,8 @@ type Params = {
 
 type Props = Book & {
   reads: Read[];
+  publishedOn: string;
+  updatedOn?: string;
 };
 
 // own row for weird export reasons
@@ -31,8 +39,18 @@ export const getStaticPaths = async (): Result => {
     result[gbid] ||= {
       ...read.book,
       reads: [],
+      publishedOn: "",
     };
     result[gbid].reads.push(read);
+
+    if (read.isReread) {
+      result[gbid].updatedOn = maxIsoDate(
+        result[gbid].updatedOn,
+        read.dateFinished,
+      );
+    } else {
+      result[gbid].publishedOn = read.dateFinished;
+    }
 
     return result;
   }, {});
@@ -43,18 +61,28 @@ export const getStaticPaths = async (): Result => {
   }));
 };
 
-const { title, reads, series, award, authors, gbid, numberInSeries } =
-  Astro.props;
+const {
+  title,
+  reads,
+  series,
+  award,
+  authors,
+  gbid,
+  numberInSeries,
+  publishedOn,
+  updatedOn,
+} = Astro.props;
 
 const authorsStr = authors.map((a) => a.name).join(", ");
 ---
 
 <Layout
   pageTitle={`${title} - Books`}
-  seoTitle={`${seoTitle(title)}, by ${authorsStr}`}
-  seoDescription={`David shares thoughts about the ${reads.length} time${
+  pageDescription={`David shares thoughts about the ${reads.length} time${
     reads.length > 1 ? "s" : ""
   } he's read ${title}, by ${authorsStr}.`}
+  seoTitle={seoTitle(`${title}, by ${authorsStr}`)}
+  seoDescription={buildSeoDescription(reads, "reads")}
   activeTab="books"
   ogImg={{
     url: `https://books.google.com/books/content/images/frontcover/${gbid}?fife=h700`,
@@ -62,6 +90,8 @@ const authorsStr = authors.map((a) => a.name).join(", ");
     width: 461,
     type: "jpeg",
   }}
+  publishedOn={publishedOn}
+  updatedOn={updatedOn}
 >
   <div class="flex py-3">
     <Image
