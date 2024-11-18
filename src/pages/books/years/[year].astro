@@ -40,7 +40,7 @@ const awardUrl = buildAwardUrl(parseInt(year), "#books");
       {"wrote in more detail"}
     </ExternalLink> about my favorites.
   </p>
-  <SubscribeBlurb mediaType="game" />
+  <SubscribeBlurb mediaType="book" classes="pb-3" />
   <BookLegend awardUrl={awardUrl} showRereads={false} />
   <div>
     {filteredReads.map((read) => <ReadBox read={read} />)}

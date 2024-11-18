@@ -8,6 +8,7 @@ import ExternalLink from "../../components/links/ExternalLink.astro";
 import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import type { ImageInfo } from "../../utils/images";
+import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -82,17 +83,12 @@ const components = { a: ExternalLink };
 
     <hr />
 
-    <div class="text-center">
-      <em>
-        If you liked this review and want to read more like it, subscribe via <SubtleLink
-          href="/feeds"
-          classes={["whitespace-nowrap"]}
-        >
-          <RssIcon classes={["inline", "mr-1"]} />{"RSS"}
-        </SubtleLink> or:
-        <SteamFollowButton />
-      </em>
-    </div>
+    <SubscribeBlurb
+      pClasses={["!my-2"]}
+      centered
+      showSteamButton
+      blurb="If you liked this review and want to read more like it, subscribe via"
+    />
 
     {
       frontmatter.gotPressKey && (

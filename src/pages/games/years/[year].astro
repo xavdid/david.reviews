@@ -54,7 +54,7 @@ const collectionEmoji = new Set<string>(
     </RoundedLink>, and you can click through to see all the others games from
     that genre I've played.
   </p>
-  <SubscribeBlurb mediaType="game" />
+  <SubscribeBlurb mediaType="game" classes="pb-3" />
   <GameLegend collectionEmoji={collectionEmoji} specificAwardUrl={awardUrl} />
   <div>
     {filteredPlays.map((play) => <PlayBox play={play} />)}

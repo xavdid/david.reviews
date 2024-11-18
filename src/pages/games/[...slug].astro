@@ -2,12 +2,11 @@
 import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
 import ButtonGroup from "../../components/ButtonGroup.astro";
 import GameLegend from "../../components/GameLegend.astro";
-import RssIcon from "../../components/icons/rss.astro";
 import PlayBox from "../../components/infoboxes/PlayBox.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import SubtleLink from "../../components/links/SubtleLink.astro";
 import PageTitle from "../../components/PageTitle.astro";
-import SteamFollowButton from "../../components/SteamFollowButton.astro";
+import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import Layout from "../../layouts/Layout.astro";
 import { genrePermalink, ratingPage, seoTitle } from "../../utils/data";
 
@@ -124,7 +123,7 @@ const collectionEmoji = new Set<string>(
     </SubtleLink>.
   </p>
    Each game notes its:
-  <ul class="list-disc pb-3 pl-8">
+  <ul class="list-disc pb-2 pl-8">
     <li class="py-1">Play type (first time, replays, DLC, etc.)</li>
     <li class="py-1">
       <RoundedLink href={genrePermalink("")}>
@@ -134,17 +133,9 @@ const collectionEmoji = new Set<string>(
     </li>
   </ul>
 
-  <div>
-    The best way to keep in touch if you like my reviwes is to subscribe via the
+  <SubscribeBlurb showSteamButton mediaType="game" />
 
-
-    <SubtleLink href="/feeds" classes={["whitespace-nowrap"]}>
-      <RssIcon classes={["inline", "mr-1"]} />{"RSS feeds"}
-    </SubtleLink> or:
-    <SteamFollowButton />
-  </div>
-
-  <hr class="my-2 mb-5" />
+  <hr class="mb-5 mt-6" />
 
   <ButtonGroup
     pathRoot="games"
@@ -161,15 +152,10 @@ const collectionEmoji = new Set<string>(
     {filteredPlays.map((play) => <PlayBox play={play} />)}
   </div>
 
-  <div class="text-center">
-    <em>
-      If you liked these reviews and want to read more like it, subscribe via <SubtleLink
-        href="/feeds"
-        classes={["whitespace-nowrap"]}
-      >
-        <RssIcon classes={["inline", "mr-1"]} />{"RSS"}
-      </SubtleLink> or:
-      <SteamFollowButton />
-    </em>
-  </div>
+  <SubscribeBlurb
+    classes="mb-2"
+    centered
+    showSteamButton
+    blurb="If you liked these reviews and want to read more like them, subscribe via"
+  />
 </Layout>

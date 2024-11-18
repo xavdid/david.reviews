@@ -4,6 +4,7 @@ import { loadReads, type Read } from "../../../airtable/data/reads";
 import BookLegend from "../../../components/BookLegend.astro";
 import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
+import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import SubtleLink from "../../../components/links/SubtleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
@@ -94,4 +95,5 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   <div>
     {reads.map((read) => <ReadBox read={read} omitAuthorIds={[authorId]} />)}
   </div>
+  <SubscribeBlurb centered mediaType="book" />
 </Layout>

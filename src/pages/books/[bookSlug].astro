@@ -18,6 +18,7 @@ import {
   seoTitle,
 } from "../../utils/data";
 import SubtleLink from "../../components/links/SubtleLink.astro";
+import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 
 type Params = {
   bookSlug: string;
@@ -150,4 +151,6 @@ const authorsStr = authors.map((a) => a.name).join(", ");
       </div>
     ))
   }
+
+  <SubscribeBlurb centered mediaType="book" />
 </Layout>

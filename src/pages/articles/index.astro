@@ -15,17 +15,17 @@ const allArticles = await getPublishedArticles();
   activeTab="articles"
 >
   <PageTitle>All Articles</PageTitle>
-  <p class="py-1">
+  <p class="pb-3 pt-1">
     In addition to micro-reviews, I've also published {allArticles.length}
      longer-form reviews and design articles. If you'd like me to review your
     game, please <SubtleLink href="/contact">
       {"get in touch"}
     </SubtleLink>!
   </p>
-  <p class="pt-2">
-    <SubscribeBlurb mediaType="article" />
-  </p>
-  <hr class="mb-3 mt-3" />
+
+  <SubscribeBlurb mediaType="article" />
+
+  <hr class="my-3" />
   <div class="">
     {
       allArticles.map((article) => (

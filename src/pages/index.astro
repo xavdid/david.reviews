@@ -3,13 +3,12 @@ import { Image } from "astro:assets";
 
 import { loadInProgessPlays } from "../airtable/data/inProgressPlays";
 import { loadInProgressReads } from "../airtable/data/inProgressReads";
-import SteamFollowButton from "../components/SteamFollowButton.astro";
-import RssIcon from "../components/icons/rss.astro";
 import ExternalLink from "../components/links/ExternalLink.astro";
 import SubtleLink from "../components/links/SubtleLink.astro";
 import Layout from "../layouts/Layout.astro";
-import { seoTitle } from "../utils/data";
 import { getPublishedArticles } from "../utils/content";
+import { seoTitle } from "../utils/data";
+import SubscribeBlurb from "../components/SubscribeBlurb.astro";
 
 const inProgressPlays = (await loadInProgessPlays()).toSorted(
   (a, b) =>
@@ -30,24 +29,16 @@ const latestArticle = (await getPublishedArticles())[0];
   seoTitle={seoTitle("Games, Movies, and Books")}
   seoDescription=`The home of everything that David reviews.`
 >
-  <p class="py-2 pt-4">
+  <p class="pb-3 pt-4">
     Welcome to <strong>david.reviews</strong>, my small, independent media
     review site. I'm <ExternalLink href="https://xavd.id">
       {"David"}
     </ExternalLink> and I've reviewing things and writing them down since 2016.
   </p>
 
-  <div>
-    If you like my reviews and want to stay up to date, subscribe via <SubtleLink
-      href="/feeds"
-      classes={["whitespace-nowrap"]}
-    >
-      <RssIcon classes={["inline", "mr-1"]} />{"RSS"}
-    </SubtleLink> or:
-    <SteamFollowButton />
-  </div>
+  <SubscribeBlurb showSteamButton />
 
-  <h2 class="pb-2 pt-4 text-center text-3xl font-bold">Latest Article</h2>
+  <h2 class="pb-2 pt-8 text-center text-3xl font-bold">Latest Article</h2>
   <div class="align-center flex w-full rounded border-2 border-purple-600 p-2">
     <SubtleLink href={latestArticle.permalink} classes={["text-xl"]}>
       {latestArticle.data.title}
@@ -56,7 +47,7 @@ const latestArticle = (await getPublishedArticles())[0];
 
   <!-- can include this, but /articles page does the same -->
 
-  <h2 class="pb-2 pt-4 text-center text-3xl font-bold">Now Playing</h2>
+  <h2 class="pb-2 pt-6 text-center text-3xl font-bold">Now Playing</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
       inProgressPlays.length === 0 && (
@@ -95,7 +86,7 @@ const latestArticle = (await getPublishedArticles())[0];
       )
     }
   </div>
-  <h2 class="pb-2 pt-4 text-center text-3xl font-bold">Now Reading</h2>
+  <h2 class="pb-2 pt-6 text-center text-3xl font-bold">Now Reading</h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
       inProgressReads.length === 0 && (

@@ -8,6 +8,7 @@ import SubtleLink from "../../../components/links/SubtleLink.astro";
 import PageTitle from "../../../components/PageTitle.astro";
 import Rating from "../../../components/Rating.astro";
 import RoundedText from "../../../components/RoundedText.astro";
+import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
   averageRating,
@@ -154,4 +155,5 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
         ))
     }
   </div>
+  <SubscribeBlurb centered mediaType="book" />
 </Layout>

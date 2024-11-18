@@ -8,6 +8,8 @@ import {
   MovieIcon,
   StarIcon,
 } from "../../components/icons/allIcons";
+import BlueskyIcon from "../../components/icons/bluesky.astro";
+import MastodonIcon from "../../components/icons/mastodon.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { capitalize } from "../../utils/data";
@@ -54,4 +56,16 @@ const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
       })
     }
   </ul>
+
+  <p class="py-2">
+    Additionally, I post most reviews to a dedicated <BlueskyIcon
+      classes={["inline h-5 pr-1", "mb-1"]}
+    /><ExternalLink href="https://bsky.app/profile/david.reviews">
+      {"Bluesky account"}
+    </ExternalLink>, as well as to my personal account on <MastodonIcon
+      classes={["inline h-6 pr-1"]}
+    /><ExternalLink href="https://mastodon.social/@xavdid">
+      {"Mastodon"}
+    </ExternalLink>
+  </p>
 </Layout>

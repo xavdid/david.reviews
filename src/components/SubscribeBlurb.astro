@@ -1,19 +1,74 @@
 ---
 import type { Category } from "../utils/data";
+import SteamFollowButton from "./SteamFollowButton.astro";
+import BlueskyIcon from "./icons/bluesky.astro";
+import MastodonIcon from "./icons/mastodon.astro";
 import RssIcon from "./icons/rss.astro";
+import ExternalLink from "./links/ExternalLink.astro";
 import SubtleLink from "./links/SubtleLink.astro";
 
 type Props = {
-  mediaType: Category | "article";
+  /**
+   * only used with the default blurb
+   */
+  mediaType?: Category | "article";
+  /**
+   * text to use instead of the default: `To be notified of new TYPE reviews, consider subscribing via`
+   */
+  blurb?: `${string} via`;
+  /**
+   * classes applied to the outer div
+   */
+  classes?: string | string[];
+  /**
+   * classes applied to the inner `p`
+   */
+  pClasses?: string | string[];
+  /**
+   * center and italisize the text
+   */
+  centered?: boolean;
+  showSteamButton?: boolean;
 };
 
-const { mediaType } = Astro.props;
+const {
+  mediaType,
+  classes = [],
+  pClasses = ["pb-2"],
+  showSteamButton,
+  blurb,
+  centered,
+} = Astro.props;
 ---
 
-<!-- prettier-ignore -->
-<p class="pb-3">
-  To be notified of new {
-    mediaType === "article" ? "articles" : `${mediaType} reviews`
-  }, consider subscribing via <SubtleLink href="/feeds">
-    <RssIcon classes={["inline", "mr-1"]} />RSS Feeds</SubtleLink>!
-</p>
+<div class:list={[{ "text-center italic": centered }, classes]}>
+  <p class:list={pClasses}>
+    {
+      blurb ??
+        `To be notified of new ${
+          mediaType === "article"
+            ? "articles"
+            : `${mediaType ? `${mediaType} ` : ""}reviews`
+        }, consider subscribing via`
+    }
+    <span class="whitespace-nowrap"
+      ><RssIcon classes={["inline", "mr-1"]} /><SubtleLink href="/feeds">
+        {"RSS Feeds"}
+      </SubtleLink></span
+    >, <span class="whitespace-nowrap"
+      ><BlueskyIcon classes={["inline h-5 pr-1", "mb-1"]} /><ExternalLink
+        href="https://bsky.app/profile/david.reviews"
+      >
+        {"Bluesky"}
+      </ExternalLink></span
+    >, {showSteamButton ? "" : "or"}
+    <span class="whitespace-nowrap"
+      ><MastodonIcon classes={["inline h-6 pr-1"]} /><ExternalLink
+        href="https://mastodon.social/@xavdid"
+      >
+        {"Mastodon"}
+      </ExternalLink></span
+    >{showSteamButton ? ", or:" : "!"}
+    {showSteamButton && <SteamFollowButton />}
+  </p>
+</div>
