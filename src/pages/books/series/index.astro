@@ -5,7 +5,9 @@ import type { Series } from "../../../airtable/data/series";
 import PageTitle from "../../../components/PageTitle.astro";
 import StickyTable from "../../../components/StickyTable.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
+import SubtleLink from "../../../components/links/SubtleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
+import { ratingPage } from "../../../utils/data";
 
 const books = await loadBooks();
 
@@ -32,10 +34,15 @@ const series = Object.values(books).reduce<
   activeTab="books"
 >
   <PageTitle>All Series</PageTitle>
-  <p class="py-3">
+  <p class="py-2">
     I've read at least one book in {Object.keys(series).length} different
-    series. See also:
+    series. Completed series are rated using my <SubtleLink
+      href={ratingPage("books")}
+    >
+      {"4-point rating system"}
+    </SubtleLink>.
   </p>
+  <p class="pb-3">See also:</p>
   <ul class="list-disc pb-1 pl-8">
     <li class="pb-3">
       <RoundedLink href="/books/">recent reads</RoundedLink>

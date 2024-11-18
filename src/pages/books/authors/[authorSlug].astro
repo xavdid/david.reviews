@@ -5,12 +5,14 @@ import BookLegend from "../../../components/BookLegend.astro";
 import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
+import SubtleLink from "../../../components/links/SubtleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
   maxIsoDate,
   averageRating,
   pluralize,
   seoTitle,
+  ratingPage,
 } from "../../../utils/data";
 
 type Params = {
@@ -82,9 +84,11 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   <p class="pb-3">
     There {reads.length > 1 ? "are" : "is"}{" "}
     {reads.length} review{pluralize(reads)} of {numUniqueBooks}
-     book{pluralize(numUniqueBooks)}. They have an average score of {
+     book{pluralize(numUniqueBooks)} with an average score of {
       averageRating(reads)
-    }/4.
+    } (<SubtleLink href={ratingPage("books")}>
+      {"out of 4"}
+    </SubtleLink>).
   </p>
   <BookLegend />
   <div>

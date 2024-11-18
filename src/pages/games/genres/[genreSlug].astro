@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import { GENRE_DESCRIPTIONS, type Game } from "../../../airtable/data/games";
 import {
   loadPlays,
@@ -7,12 +6,12 @@ import {
   type PlayTypes,
 } from "../../../airtable/data/plays";
 import PageTitle from "../../../components/PageTitle.astro";
-import Rating from "../../../components/Rating.astro";
 import RoundedText from "../../../components/RoundedText.astro";
 import RoundedLink from "../../../components/links/RoundedLink.astro";
-import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
-import { genrePermalink, seoTitle } from "../../../utils/data";
+import { genrePermalink, ratingPage, seoTitle } from "../../../utils/data";
+import SlimBox from "../../../components/infoboxes/SlimBox.astro";
+import SubtleLink from "../../../components/links/SubtleLink.astro";
 
 type Params = {
   genreSlug: string;
@@ -119,39 +118,18 @@ const processedGames = games
       } I've played {games.length} game{games.length > 1 ? "s" : ""} in this
       genre so far.
     </p>
+    <p class="py-3">
+      Each game is scored on my <SubtleLink href={ratingPage("games")}>
+        {"4-point rating system"}
+      </SubtleLink>.
+    </p>
     <p class="pt-2">
-      You can also go back to <RoundedLink href={genrePermalink("")}>
+      ⬅️ You can also go back to <RoundedLink href={genrePermalink("")}>
         {"all genres"}
-      </RoundedLink>.
+      </RoundedLink>
     </p>
   </div>
   <div>
-    {
-      processedGames.map(({ title, rating, permalink, posterUrl, blurb }) => (
-        <div class="mb-4 flex rounded border-2 border-blue-600 p-2 even:bg-blue-50 dark:even:bg-zinc-700">
-          <a href={permalink}>
-            <Image
-              class="max-w-[unset]"
-              src={posterUrl}
-              alt={`poster for ${title}`}
-              height={187.5}
-              width={125}
-            />
-          </a>
-          <div class="pl-4">
-            <h3>
-              <TitleLink classes={["text-xl"]} href={permalink}>
-                {title}
-              </TitleLink>
-            </h3>
-
-            <div class="pt-1">
-              <Rating rating={rating} />
-            </div>
-            <p class="mt-2 border-l-2 border-blue-600 pl-2 italic">{blurb}</p>
-          </div>
-        </div>
-      ))
-    }
+    {processedGames.map((game) => <SlimBox {...game} mediaType="games" />)}
   </div>
 </Layout>

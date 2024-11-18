@@ -5,7 +5,6 @@ import type { Book } from "../../airtable/data/books";
 import { loadReads, type Read } from "../../airtable/data/reads";
 import AuthorList from "../../components/AuthorList.astro";
 import AwardBlurb from "../../components/AwardBlurb.astro";
-import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import MediaTitle from "../../components/MediaTitle.astro";
 import Rating from "../../components/Rating.astro";
@@ -15,8 +14,10 @@ import {
   maxIsoDate,
   NO_REVIEW,
   pluralize,
+  ratingPage,
   seoTitle,
 } from "../../utils/data";
+import SubtleLink from "../../components/links/SubtleLink.astro";
 
 type Params = {
   bookSlug: string;
@@ -111,11 +112,9 @@ const authorsStr = authors.map((a) => a.name).join(", ");
         an average score of {
           reads.reduce((total, { rating }) => rating + total, 0) / reads.length
         }
-         (<ExternalLink
-          href="https://xavd.id/blog/post/on-the-rating-of-media/"
-        >
+         (<SubtleLink href={`${ratingPage("books")}`}>
           {"out of 4"}
-        </ExternalLink>).
+        </SubtleLink>).
       </p>
       {
         series && (

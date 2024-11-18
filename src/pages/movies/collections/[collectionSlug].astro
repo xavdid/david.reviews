@@ -13,6 +13,7 @@ import {
   averageRating,
   collectionPermalink,
   pluralize,
+  ratingPage,
   seoTitle,
 } from "../../../utils/data";
 
@@ -103,16 +104,19 @@ const sortedMovies = movies
       Whenever this season or mood arrives, items from this list are my go-to
       comfort food. To qualify, a movie must be solidly in-genre <em
         >and be highly rated (or purposefully bad)</em
-      >. Either way, these are the cream of their respective crop. Please <SubtleLink
-        href="/contact"
-      >
+      >. Either way, these are the cream of their respective crop.
+    </p>
+    <p class="py-2">
+      Each movie is scored on my <SubtleLink href={ratingPage("movies")}>
+        {"4-point rating system"}
+      </SubtleLink>. Please <SubtleLink href="/contact">
         {"let me know"}
       </SubtleLink> if you'd like to nominate an addition!
     </p>
     <p class="py-2">
       ⬅️ Or, head back to <RoundedLink href={collectionPermalink("movies", "")}>
         {"All Collections"}
-      </RoundedLink>.
+      </RoundedLink>
     </p>
   </div>
   <div>
@@ -125,8 +129,8 @@ const sortedMovies = movies
                 class="max-w-[unset]"
                 src={posterUrl}
                 alt={`poster for ${title}`}
-                height={187.5}
-                width={125}
+                height={180}
+                width={120}
               />
             </a>
             <div class="pl-4">

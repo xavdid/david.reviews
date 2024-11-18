@@ -6,8 +6,9 @@ import PageTitle from "../../components/PageTitle.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import ReadBox from "../../components/infoboxes/ReadBox.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
-import { seoTitle } from "../../utils/data";
+import { ratingPage, seoTitle } from "../../utils/data";
 
 type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
 type WatchFilter = (read: Read) => boolean;
@@ -108,8 +109,11 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
       slug === "all"
         ? `Showing every single review (${reads.length} reviews for ${numUniqueBooks} books).`
         : introText
-    } You can also see lists of:
+    } Each review is scored on my <SubtleLink href={ratingPage("books")}>
+      {"4-point rating system"}
+    </SubtleLink>.
   </p>
+  <p class="pb-3">You can also see lists of:</p>
   <ul class="list-disc pl-8">
     <li class="pb-3">
       <RoundedLink href="/books/series/">all series</RoundedLink>

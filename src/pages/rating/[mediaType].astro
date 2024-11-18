@@ -1,0 +1,223 @@
+---
+import { loadPlays } from "../../airtable/data/plays";
+import { loadReads } from "../../airtable/data/reads";
+import { loadWatches } from "../../airtable/data/watches";
+import type { Permalink } from "../../airtable/types";
+import PageTitle from "../../components/PageTitle.astro";
+import RatingHeaderWithStars from "../../components/RatingHeaderWithStars.astro";
+import SlimBox from "../../components/infoboxes/SlimBox.astro";
+import ExternalLink from "../../components/links/ExternalLink.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
+import Layout from "../../layouts/Layout.astro";
+import { capitalize, type Category } from "../../utils/data";
+
+type Params = {
+  mediaType: `${Category}s`;
+};
+type Props = {
+  verb: string;
+};
+
+type Result = Array<{ params: Params; props: Props }>;
+export const getStaticPaths = (): Result => [
+  { params: { mediaType: "books" }, props: { verb: "read" } },
+  { params: { mediaType: "movies" }, props: { verb: "watch" } },
+  { params: { mediaType: "games" }, props: { verb: "play" } },
+];
+
+type SlimboxProps = {
+  permalink: Permalink;
+  posterUrl: string;
+  title: string;
+  blurb: string;
+  rating: number;
+};
+
+const getBooks = async (ofRating: number): Promise<SlimboxProps[]> =>
+  (await loadReads())
+    .filter(({ isReread, rating }) => !isReread && rating === ofRating)
+    .slice(0, 3)
+    .map(({ book: { permalink, posterUrl, title }, notes: blurb, rating }) => ({
+      permalink,
+      posterUrl,
+      title,
+      blurb,
+      rating,
+    }));
+
+const getGames = async (ofRating: number): Promise<SlimboxProps[]> =>
+  (await loadPlays())
+    .filter(
+      ({ playType, rating }) =>
+        playType === "First Time" && rating === ofRating,
+    )
+    .slice(0, 3)
+    .map(({ game: { permalink, posterUrl, title }, notes: blurb, rating }) => ({
+      permalink,
+      posterUrl,
+      title,
+      blurb,
+      rating,
+    }));
+
+const getMovies = async (ofRating: number): Promise<SlimboxProps[]> =>
+  (await loadWatches())
+    .filter(({ isFirstWatch, rating }) => isFirstWatch && rating === ofRating)
+    .slice(0, 3)
+    .map(
+      ({ movie: { permalink, posterUrl, title }, notes: blurb, rating }) => ({
+        permalink,
+        posterUrl,
+        title,
+        blurb,
+        rating,
+      }),
+    );
+
+const { mediaType } = Astro.params;
+const { verb } = Astro.props;
+
+const mediaTypeSingular = mediaType.slice(0, -1);
+
+const mediaFetcher: (r: number) => Promise<SlimboxProps[]> = {
+  books: getBooks,
+  movies: getMovies,
+  games: getGames,
+}[mediaType];
+
+const media = await Promise.all(
+  Array(4)
+    .fill(0)
+    .map(async (_, i) => await mediaFetcher(4 - i)),
+);
+
+const sections: Array<{
+  title: string;
+  description: string;
+}> = [
+  {
+    title: "Yes!",
+    description: `A 4 star rating is both my highest and my most common score. ${capitalize(
+      mediaType,
+    )} in this bracket can be recommended emphatically. They may not be perfect, but I never felt bored while ${verb}ing them. A 4 usually means that a ${mediaTypeSingular} excelled in multiple areas and the result is more than the sum of its parts. Another way to earn a 4 is to succeed so highly in a specific area (such as ${
+      {
+        books: "characters or prose",
+        movies: "performances or direction",
+        games: "gameplay or overall concept",
+      }[mediaType]
+    }) that any concerns are dropped by the wayside; they didn't stop my enjoyment.`,
+  },
+  {
+    title: "Yes, but...",
+    description: `Most ${mediaType} that earn a 3 could have been a 4, but something held them back. Maybe it was a plot that didn't quite line up, poor pacing, or ${
+      {
+        books: "bad prose",
+        movies: "too many jokes that didn't land",
+        games: "unnecessary papercuts in menus",
+      }[mediaType]
+    }. Whatever it was I was annoyed enough about its shortcomings that I have to qualify this recommendation with a "I liked it, but wish they hadn't done XYZ".`,
+  },
+  {
+    title: "No, but...",
+    description: `Welcome to the bottom half! ${capitalize(
+      mediaType,
+    )} that earn a 2 have more hits than misses, but there are redeeming qualities. It can also mean I would have scored it higher, but I was so put off by something (such as ${
+      {
+        books: "bad writing",
+        movies: "plot holes or distracting performances",
+        games: "boring gameplay",
+      }[mediaType]
+    }) that I couldn't rate it higher. If you're a fan of this genre you might still find the ${mediaTypeSingular} worthwhile, but I'd start elsewhere.`,
+  },
+  {
+    title: "No!",
+    description: `The lowly 1 is my rarest rating. Because I mostly ${verb} things I (hope to) enjoy, for something to earn a 1 it's got to really fail across multiple areas. As long as a ${mediaTypeSingular} has reasonable plot, ${
+      mediaType === "games" ? "gameplay" : "cast"
+    }, or ${
+      mediaType === "books" ? "characters" : "artistic direction"
+    }, I'll usually find enough to like about it that it earns a 2. Earning a 1 means I feel bad for having spent time on this ${mediaTypeSingular} at all.`,
+  },
+];
+---
+
+<Layout
+  pageTitle={`Rating ${mediaType}`}
+  pageDescription={`An in-depth explanation of the 4-point rating system used for ${mediaType} on david.reviews.`}
+  activeTab={mediaType}
+>
+  <PageTitle>
+    How I Rate {capitalize(mediaType)}
+  </PageTitle>
+  <p class="mb-3">
+    The main goal of this site is to inform you, the reader, about <strong
+      >media that I think is worth your time</strong
+    >. While most reviews come with a short description of what I did and didn't
+    like, I also make sure to include a star rating to help you quickly
+    understand how I felt about a {mediaTypeSingular}.
+  </p>
+
+  <p class="mb-3">
+    My rating is a grade between <strong>4</strong> and <strong>1</strong>
+     stars. A high score indicates a strong recommendation, the middle two are
+    "yes but" and "no but" respectively, and the lowest is reserved for
+
+    {mediaType} I absolutely couldn't stand.
+  </p>
+
+  <p class="mb-3">
+    Rating {mediaType} with this method can be tricky. There are plenty of
+    popular {mediaType} that don't do it for me, or widely panned {mediaType}
+     that I love. It's important to remember that my rating is <em>not</em> a
+    measure of something's objective goodness; it's whether I thought it was
+    worthwhile and think people with similar tastes will as well.
+  </p>
+
+  <p class="mb-3">
+    It's also worth noting that my ratings skew high: I get to choose what I {
+      verb
+    } and I tend to choose things I think I'll enjoy. Keep that in mind when you
+    see how many things earn a 4. It's a very different grade than a perfect 10
+    on something like <ExternalLink
+      href="https://corp.ign.com/review-practices"
+    >
+      {"IGN's rating system"}
+    </ExternalLink>.
+  </p>
+
+  <p>
+    With that out of the way, let's go through what exactly each score means and
+    provide some concrete examples!
+  </p>
+
+  {
+    sections.map(({ title, description }, index) => {
+      const rating = 4 - index;
+
+      return (
+        <>
+          <RatingHeaderWithStars rating={rating}>{title}</RatingHeaderWithStars>
+          <p class="pb-2">{description}</p>
+          {rating === 4 && (
+            <p class="pb-2">
+              If you want to see the absolute cream of the {mediaTypeSingular}{" "}
+              crop, you can check my list of {mediaType} that were been the best
+              thing I
+              <SubtleLink href={`/${mediaType}/awarded/`}>
+                {`${verb}ed that year`}
+              </SubtleLink>
+              {/* . */}
+            </p>
+          )}
+          <p class="pb-2">
+            Here are some recent {mediaType} that earned {rating} stars:
+          </p>
+          {media[index].map((m) => (
+            <Fragment>
+              <SlimBox {...m} mediaType={mediaType} />
+            </Fragment>
+          ))}
+        </>
+      );
+    })
+  }
+</Layout>

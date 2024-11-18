@@ -16,6 +16,7 @@ import {
   NO_REVIEW,
   averageRating,
   collectionPermalink,
+  ratingPage,
   seoTitle,
 } from "../../../utils/data";
 
@@ -77,14 +78,14 @@ export const getStaticPaths = async (): Result => {
 
 const { games, collection } = Astro.props;
 const sortedGames = games
-  .map(({ game: { permalink, title, posterUrl }, plays: watches }) => ({
+  .map(({ game: { permalink, title, posterUrl }, plays }) => ({
     title,
-    avgRating: averageRating(watches),
+    avgRating: averageRating(plays),
     permalink,
     posterUrl,
     // the longest review is probably the best one?
     blurb:
-      watches.reduce<string>((result, { notes }) => {
+      plays.reduce<string>((result, { notes }) => {
         return result.length > notes.length ? result : notes;
       }, "") || NO_REVIEW,
   }))
@@ -116,7 +117,9 @@ const sortedGames = games
       >
     </p>
     <p class="py-1">
-      Please <SubtleLink href="/contact">
+      Each game is scored on my <SubtleLink href={ratingPage("games")}>
+        {"4-point rating system"}
+      </SubtleLink>. Please <SubtleLink href="/contact">
         {"let me know"}
       </SubtleLink> if you'd like to nominate an addition!
     </p>
@@ -124,13 +127,13 @@ const sortedGames = games
     <p class="py-2">
       ⬅️ Or, head back to <RoundedLink href={collectionPermalink("games", "")}>
         {"All Collections"}
-      </RoundedLink>.
+      </RoundedLink>
     </p>
   </div>
   <div>
     {
       sortedGames.map(({ title, avgRating, permalink, posterUrl, blurb }) => (
-        <div class="mb-4 flex rounded border-2 border-blue-600 p-2 even:bg-red-50 dark:even:bg-zinc-700">
+        <div class="mb-4 flex rounded border-2 border-blue-600 p-2 even:bg-blue-50 dark:even:bg-zinc-700">
           <a slot="image" href={permalink}>
             <Image
               class="max-w-[unset]"

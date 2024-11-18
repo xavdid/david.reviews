@@ -1,6 +1,8 @@
 ---
+import type { Category } from "../utils/data";
+
 type Props = {
-  pathRoot: "games" | "movies" | "books";
+  pathRoot: `${Category}s`;
   currentSubpath: string | null;
   buttons: Array<{
     label: string;

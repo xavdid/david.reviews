@@ -4,7 +4,7 @@ import type { Series } from "../../../airtable/data/series";
 import AuthorList from "../../../components/AuthorList.astro";
 import BookLegend from "../../../components/BookLegend.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
-import ExternalLink from "../../../components/links/ExternalLink.astro";
+import SubtleLink from "../../../components/links/SubtleLink.astro";
 import PageTitle from "../../../components/PageTitle.astro";
 import Rating from "../../../components/Rating.astro";
 import RoundedText from "../../../components/RoundedText.astro";
@@ -13,6 +13,7 @@ import {
   averageRating,
   maxIsoDate,
   pluralize,
+  ratingPage,
   seoTitle,
 } from "../../../utils/data";
 
@@ -72,6 +73,9 @@ const {
   updatedOn,
 } = Astro.props;
 const seriesComplete = (numBooksInSeries ?? 0) > 0;
+if (seriesComplete && numBooksInSeries == null) {
+  throw new Error(`There's a comple series without a fixed number of books.`);
+}
 const readAll = percentComplete === 100;
 const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 ---
@@ -98,10 +102,10 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   </p>
   <p class="pb-3 pt-2">
     {
-      seriesComplete ? (
+      seriesComplete && numBooksInSeries != null ? (
         <>
           I've read {readAll ? "all" : numUniqueBooks} of the {numBooksInSeries}
-          book{pluralize(numUniqueBooks)} in this series.
+          book{pluralize(numBooksInSeries)} in this series.
         </>
       ) : (
         <>
@@ -116,9 +120,9 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
     } book{pluralize(numUniqueBooks)} for an average score of {
       averageRating(reads)
     }
-     (<ExternalLink href="https://xavd.id/blog/post/on-the-rating-of-media/">
+     (<SubtleLink href={`${ratingPage("books")}`}>
       {"out of 4"}
-    </ExternalLink>).
+    </SubtleLink>).
   </p>
   {
     remarks && (

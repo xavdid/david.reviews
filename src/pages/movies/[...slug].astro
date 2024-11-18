@@ -5,8 +5,9 @@ import MovieLegend from "../../components/MovieLegend.astro";
 import PageTitle from "../../components/PageTitle.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import WatchBox from "../../components/infoboxes/WatchBox.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
-import { seoTitle } from "../../utils/data";
+import { ratingPage, seoTitle } from "../../utils/data";
 
 type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
 type WatchFilter = (W: { watch: Watch; numWatch: number }) => boolean;
@@ -126,6 +127,9 @@ const collectionEmoji = new Set<string>(
           } movies).`
         : introText
     }
+     Each review is scored on my <SubtleLink href={ratingPage("movies")}>
+      {"4-point rating system"}
+    </SubtleLink>.
   </p>
   <SubscribeBlurb mediaType="movie" />
 

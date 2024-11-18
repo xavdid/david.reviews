@@ -1,0 +1,13 @@
+---
+import Rating from "./Rating.astro";
+
+type Props = {
+  rating: number;
+};
+
+const { rating } = Astro.props;
+---
+
+<h2 class="pb-2 pt-6 text-3xl font-bold">
+  <Rating classes={["inline"]} rating={rating} starHeight="h-6" />: <slot />
+</h2>

@@ -53,6 +53,9 @@ export const materializeCollection = (
 export const genrePermalink = (slug: string): Permalink =>
   `/games/genres${slug === "" ? "" : `/${slug}`}/`;
 
+export const ratingPage = (mediaType: `${Category}s`): Permalink =>
+  `/rating/${mediaType}/`;
+
 export const averageRating = (items: Array<{ rating: number }>): number =>
   +(
     items.reduce((total, { rating }) => rating + total, 0) / items.length

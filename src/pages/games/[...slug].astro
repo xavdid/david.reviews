@@ -9,7 +9,7 @@ import SubtleLink from "../../components/links/SubtleLink.astro";
 import PageTitle from "../../components/PageTitle.astro";
 import SteamFollowButton from "../../components/SteamFollowButton.astro";
 import Layout from "../../layouts/Layout.astro";
-import { genrePermalink, seoTitle } from "../../utils/data";
+import { genrePermalink, ratingPage, seoTitle } from "../../utils/data";
 
 type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
 type PlayFilter = (p: Play) => boolean;
@@ -119,11 +119,13 @@ const collectionEmoji = new Set<string>(
       slug === "all"
         ? `Showing every single review (${filteredPlays.length} reviews for ${numUniqueGames} games).`
         : introText
-    }
+    } Each review is scored on my <SubtleLink href={ratingPage("games")}>
+      {"4-point rating system"}
+    </SubtleLink>.
   </p>
    Each game notes its:
   <ul class="list-disc pb-3 pl-8">
-    <li class="py-1">Play type (first time, replays, DLC, etc)</li>
+    <li class="py-1">Play type (first time, replays, DLC, etc.)</li>
     <li class="py-1">
       <RoundedLink href={genrePermalink("")}>
         {"genre"}

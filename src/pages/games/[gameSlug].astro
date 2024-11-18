@@ -7,7 +7,6 @@ import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
 import AwardBlurb from "../../components/AwardBlurb.astro";
 import RssIcon from "../../components/icons/rss.astro";
 import PlaySummary from "../../components/infoboxes/PlaySummary.astro";
-import ExternalLink from "../../components/links/ExternalLink.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import SubtleLink from "../../components/links/SubtleLink.astro";
 import MediaTitle from "../../components/MediaTitle.astro";
@@ -23,6 +22,7 @@ import {
   isProdBuild,
   maxIsoDate,
   pluralize,
+  ratingPage,
   seoTitle,
 } from "../../utils/data";
 
@@ -177,11 +177,11 @@ const {
       </p>
       <p class="pr-2 pt-2">
         I've played the main story {plays.length} time{pluralize(plays)}
-         and given it an average score of {averageRating(plays)} (<ExternalLink
-          href="https://xavd.id/blog/post/on-the-rating-of-media/"
+         and given it an average score of {averageRating(plays)} (<SubtleLink
+          href={`${ratingPage("games")}`}
         >
           {"out of 4"}
-        </ExternalLink>).
+        </SubtleLink>).
       </p>
       {
         award && (
