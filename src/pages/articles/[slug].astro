@@ -1,11 +1,8 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
-import SteamFollowButton from "../../components/SteamFollowButton.astro";
 import CalendarIcon from "../../components/icons/calendar.astro";
-import RssIcon from "../../components/icons/rss.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
-import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import type { ImageInfo } from "../../utils/images";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
@@ -91,7 +88,7 @@ const components = { a: ExternalLink };
     />
 
     {
-      frontmatter.gotPressKey && (
+      frontmatter?.review?.gotPressKey && (
         <>
           <hr />
           <p>

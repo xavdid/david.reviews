@@ -43,10 +43,10 @@ const articles = defineCollection({
           blurb: z.string(),
           plusses: z.array(z.string()).default([]),
           minuses: z.array(z.string()).default([]),
+          gotPressKey: z.boolean().default(false),
         })
         .strict()
         .optional(),
-      gotPressKey: z.boolean().default(false),
     })
     .strict(),
 });
