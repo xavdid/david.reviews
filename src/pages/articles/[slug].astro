@@ -6,6 +6,12 @@ import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import type { ImageInfo } from "../../utils/images";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
+import YoutubeEmbed from "../../components/mdx/YoutubeEmbed.astro";
+import RoundedLink from "../../components/links/RoundedLink.astro";
+import ReviewSummary from "../../components/mdx/ReviewSummary.astro";
+
+import Config from "../../../astro.config.mjs";
+import type { ExternalUrl as AbsoluteUrl } from "../../airtable/types";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -25,13 +31,20 @@ const { Content } = await entry.render();
 const frontmatter = entry.data;
 let ogImg: ImageInfo | undefined;
 
+if (Config.site?.endsWith("/")) {
+  throw new Error("config.site should not end with a slash!");
+}
+
+if (!Config.site?.startsWith("https://")) {
+  throw new Error("config.site should start with https://");
+}
+
 if (frontmatter.ogImg) {
-  const parts = frontmatter.ogImg.url.split(".");
-  const type = parts[parts.length - 1] as "png"; // it's one or the other and the type is validated in the schema
   ogImg = {
-    ...frontmatter.ogImg,
-    url: frontmatter.ogImg.url as ImageInfo["url"],
-    type,
+    url: `${Config.site}${frontmatter.ogImg.src}` as AbsoluteUrl,
+    width: frontmatter.ogImg.width,
+    height: frontmatter.ogImg.height,
+    type: frontmatter.ogImg.format,
   };
 }
 
@@ -50,7 +63,13 @@ const h1Styles = [
 
 // can replace specific markdown components: https://mdxjs.com/table-of-components/
 // TODO: if I ever need to differentiate between internal and external links in markdown, could do that in a wrapper component
-const components = { a: ExternalLink };
+// these are each available in MDX without imports
+const components = {
+  a: ExternalLink,
+  YoutubeEmbed,
+  ReviewSummary,
+  RoundedLink,
+};
 ---
 
 <!-- articles get a slightly wider layout -->

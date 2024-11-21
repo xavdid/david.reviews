@@ -2,53 +2,44 @@ import { defineCollection, z } from "astro:content";
 
 const articles = defineCollection({
   type: "content",
-  schema: z
-    .object({
-      title: z.string(),
-      ogDesc: z
-        .string()
-        .refine(
-          (v) => v.endsWith(".") || v.endsWith("?"),
-          "ogDesc must end with punctuation.",
-        ),
-      ogImg: z
-        .object({
-          url: z
-            .string()
-            .startsWith("https://")
-            .refine(
-              // this probably true, but can adjust as needed
-              (v) => v.endsWith(".png") || v.endsWith(".jpeg"),
-              "ogImg.url must end with .png or .jpeg",
-            ),
-          height: z.number(),
-          width: z.number(),
-        })
-        .strict()
-        .optional(),
-      publishedOn: z.optional(z.string().date()),
-      gameSlugs: z.optional(
-        z.array(
-          z.string().refine(
-            (val) => !val.endsWith("/"),
-            (val) => ({
-              message: `Slug "${val}" should not end with a slash`,
-            }),
+  schema: ({ image }) =>
+    z
+      .object({
+        title: z.string(),
+        ogDesc: z
+          .string()
+          .refine(
+            (v) => v.endsWith(".") || v.endsWith("?"),
+            "ogDesc must end with punctuation.",
           ),
-        ),
+        ogImg: image().optional(),
+        publishedOn: z.string().date().optional(),
+        gameSlugs: z
+          .array(
+            z.string().refine(
+              (val) => !val.endsWith("/"),
+              (val) => ({
+                message: `Slug "${val}" should not end with a slash`,
+              }),
+            ),
+          )
+          .optional(),
+        review: z
+          .object({
+            rating: z.number().min(1).max(4),
+            blurb: z.string(),
+            plusses: z.array(z.string()).default([]),
+            minuses: z.array(z.string()).default([]),
+            gotPressKey: z.boolean().default(false),
+          })
+          .strict()
+          .optional(),
+      })
+      .strict()
+      .refine(
+        ({ publishedOn, ogImg }) => (publishedOn ? ogImg : true),
+        "published posts must have OG images",
       ),
-      review: z
-        .object({
-          rating: z.number().min(1).max(4),
-          blurb: z.string(),
-          plusses: z.array(z.string()).default([]),
-          minuses: z.array(z.string()).default([]),
-          gotPressKey: z.boolean().default(false),
-        })
-        .strict()
-        .optional(),
-    })
-    .strict(),
 });
 
 export const collections = {
