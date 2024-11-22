@@ -1,5 +1,7 @@
 ---
+import { ratingPage } from "../../utils/data";
 import Rating from "../Rating.astro";
+import SubtleLink from "../links/SubtleLink.astro";
 type Props = {
   // matches zod schema
   review: {
@@ -28,6 +30,11 @@ const {
       <ul class="mt-4 list-['-_'] text-lg">
         {minuses.map((p) => <li class="py-2">{p}</li>)}
       </ul>
+    </div>
+    <div class="pt-2 italic">
+      Score based on my <SubtleLink href={ratingPage("games")}>
+        {"4-point rating scale"}
+      </SubtleLink>.
     </div>
   </div>
 </blockquote>
