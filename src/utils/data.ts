@@ -90,7 +90,9 @@ export const maxIsoDate = (first: string | undefined, next: string): string => {
  * inlines info about a review suitable for sharing elsewhere
  */
 export const slimReview = (rating: number, notes: string): string =>
-  `${"★".repeat(rating)}${"☆".repeat(4 - rating)}: ${notes || NO_REVIEW}`;
+  `${"★".repeat(rating)}${"☆".repeat(4 - rating)}: ${
+    notes || NO_REVIEW
+  }`.trim();
 
 export const isProdBuild = import.meta.env.PROD;
 
@@ -99,12 +101,15 @@ const numDaysAgo = (date: string): number =>
   Math.floor((new Date().valueOf() - Date.parse(date)) / (1000 * 60 * 60 * 24));
 
 const truncate = (s: string, length = 200): string => {
-  if (s.length <= 200) {
+  if (s.length <= length) {
     return s;
   }
 
   return s.substring(0, length) + "...";
 };
+
+const isFinalPunctuation = (s: string): boolean =>
+  s.endsWith(".") || s.endsWith("?") || s.endsWith("!");
 
 /**
  * Given a media page, generate the SEO blurb that shows up below the title when shared
@@ -126,7 +131,7 @@ export const buildSeoDescription = (
 ): `${string}.` => {
   if (reviews.length === 1 || numDaysAgo(reviews[0].dateFinished) < 15) {
     const desc = truncate(slimReview(reviews[0].rating, reviews[0].notes));
-    return (desc.endsWith(".") ? desc : desc + ".") as `${string}.`;
+    return (isFinalPunctuation(desc) ? desc : desc + ".") as `${string}.`;
   }
 
   return `It averages ${averageRating(reviews)}⭐ after ${
