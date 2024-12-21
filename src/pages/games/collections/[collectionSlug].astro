@@ -13,7 +13,7 @@ import SubtleLink from "../../../components/links/SubtleLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
-  NO_REVIEW,
+  noReview,
   averageRating,
   collectionPermalink,
   ratingPage,
@@ -85,9 +85,10 @@ const sortedGames = games
     posterUrl,
     // the longest review is probably the best one?
     blurb:
-      plays.reduce<string>((result, { notes }) => {
-        return result.length > notes.length ? result : notes;
-      }, "") || NO_REVIEW,
+      plays.reduce<string>(
+        (result, { notes }) => (result.length > notes.length ? result : notes),
+        "",
+      ) || noReview("plays"),
   }))
   .toSorted(
     (a, b) => b.avgRating - a.avgRating || (a.title > b.title ? 1 : -1),

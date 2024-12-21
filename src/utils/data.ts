@@ -25,7 +25,8 @@ export const capitalize = (s: string): string =>
   s.charAt(0).toUpperCase() + s.slice(1);
 
 // don't want to make it sound like it was so bad I didn't have anything to say
-export const NO_REVIEW = "no additional notes, see rating";
+export const noReview = (pluralNoun: "plays" | "watches" | "reads"): string =>
+  `no additional notes, see rating and/or other ${pluralNoun}.`;
 export const collectionPermalink = (
   category: `${Category}s`,
   slug: string,
@@ -89,9 +90,13 @@ export const maxIsoDate = (first: string | undefined, next: string): string => {
 /**
  * inlines info about a review suitable for sharing elsewhere
  */
-export const slimReview = (rating: number, notes: string): string =>
+export const slimReview = (
+  rating: number,
+  notes: string,
+  verbNoun: "plays" | "watches" | "reads",
+): string =>
   `${"★".repeat(rating)}${"☆".repeat(4 - rating)}: ${
-    notes || NO_REVIEW
+    notes || noReview(verbNoun)
   }`.trim();
 
 export const isProdBuild = import.meta.env.PROD;
@@ -130,7 +135,9 @@ export const buildSeoDescription = (
   verbNoun: "plays" | "watches" | "reads",
 ): `${string}.` => {
   if (reviews.length === 1 || numDaysAgo(reviews[0].dateFinished) < 15) {
-    const desc = truncate(slimReview(reviews[0].rating, reviews[0].notes));
+    const desc = truncate(
+      slimReview(reviews[0].rating, reviews[0].notes, verbNoun),
+    );
     return (isFinalPunctuation(desc) ? desc : desc + ".") as `${string}.`;
   }
 

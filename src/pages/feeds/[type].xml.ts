@@ -108,8 +108,14 @@ export const GET: APIRoute = async (context) => {
           feedType === "everything" ? `the ${item.type} ` : ""
         }"${item.media.title}"`,
         link: item.media.permalink,
-        pubDate: new Date(item.dateFinished),
-        content: slimReview(item.rating, item.notes),
+        pubDate: new Date(item.dateFinished), // want to increment this for things published the same day, since clients might not respect the actual feed ordering
+        content: slimReview(
+          item.rating,
+          item.notes,
+          ({ game: "plays", movie: "watches", book: "reads" } as const)[
+            item.type
+          ],
+        ),
       };
     },
     feedType === "everything" ? "everything" : undefined,
