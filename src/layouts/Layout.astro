@@ -2,7 +2,7 @@
 import { SEO, type Props as SEOProps } from "astro-seo";
 
 import Navbar from "../components/Navbar.astro";
-import type { Category } from "../utils/data";
+import { getGitSha, type Category } from "../utils/data";
 import { feedTypes } from "../utils/rss";
 import { type ImageInfo } from "../utils/images";
 
@@ -132,6 +132,7 @@ const groupedSeo: SEOProps = {
     }
 
     <meta name="generator" content={Astro.generator} />
+    <meta name="revision" content={getGitSha()} />
     <script
       is:inline
       data-goatcounter="https://david-reviews.goatcounter.com/count"

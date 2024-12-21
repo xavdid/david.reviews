@@ -1,4 +1,5 @@
 import slugify from "@sindresorhus/slugify";
+import childProcess from "node:child_process";
 import type { Collection, Permalink } from "../airtable/types";
 
 export type Category = "book" | "movie" | "game";
@@ -144,4 +145,16 @@ export const buildSeoDescription = (
   return `It averages ${averageRating(reviews)}⭐ after ${
     reviews.length
   } ${verbNoun}.`;
+};
+
+// cache this on each server run
+let hash = "";
+export const getGitSha = (): string => {
+  if (hash === "") {
+    hash = childProcess
+      .execSync("git rev-parse --short HEAD")
+      .toString()
+      .trim();
+  }
+  return hash;
 };
