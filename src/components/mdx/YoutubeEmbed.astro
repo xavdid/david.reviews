@@ -4,7 +4,9 @@ import { stringify } from "querystring";
 type Props = {
   youtubeId: string;
   params?: {
+    // when to start/stop the video, in seconds
     start?: number;
+    end?: number;
   };
 };
 
@@ -14,27 +16,14 @@ if (!youtubeId) {
 }
 ---
 
-<div
-  class="video"
-  style={{
-    position: "relative",
-    paddingBottom: "56.25%" /* 16:9 */,
-    paddingTop: 25,
-    height: 0,
-  }}
->
+<div class:list={["video", "relative", "pb-[56.25%]", "pt-[25px]", "h-0"]}>
   <iframe
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-    }}
-    src={`https://www.youtube-nocookie.com/embed/${youtubeId}?${stringify(
-      params,
-    )}`}
-    frameborder="0"
+    class:list={["absolute", "top-0", "left-0", "w-full", "h-full"]}
+    src={`https://www.youtube-nocookie.com/embed/${youtubeId}?${stringify({
+      ...params,
+      // don't show related videos at the end of the embe
+      rel: 0,
+    })}`}
     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
     allowfullscreen></iframe>
 </div>
