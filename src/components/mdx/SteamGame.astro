@@ -1,0 +1,29 @@
+---
+type Props = {
+  steamId: string;
+  /**
+   * What's in the textbox. Defaults to the game's steam description if not present.
+   */
+  description?: string;
+};
+
+const { steamId, description } = Astro.props;
+---
+
+<!-- this doesn't look good on mobile, unfortunately -->
+<div class="hidden md:block">
+  <hr />
+
+  <iframe
+    src={`https://store.steampowered.com/widget/${steamId}/?utm_source=david-reviews${
+      description ? `&t=${encodeURIComponent(description)}` : ""
+    }`}
+    class:list={[
+      "mx-auto",
+      "my-4",
+      "border-none",
+      "focus-visible:outline-none",
+      "w-[646px]",
+      "h-[190px]",
+    ]}></iframe>
+</div>
