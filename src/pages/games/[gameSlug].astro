@@ -212,10 +212,15 @@ const {
     </div>
   </div>
   {
-    articles.length ? (
+    articles.length || award ? (
       <div class="pb-4">
         <h2 class="pb-0 text-xl">Mentioned In</h2>
         <ul class="list-disc pl-8">
+          {award && (
+            <li class="py-1">
+              <AwardBlurb {...award} category="game" />
+            </li>
+          )}
           {articles.map(({ permalink, title }) => (
             <li class="py-1">
               <SubtleLink href={permalink} classes={["text-lg"]}>

@@ -24,6 +24,7 @@ const SCHEMA = {
     awardTier: "fldAPUbtMJspTm2bP",
     awardAnchor: "fldvFTgyv1c2Q5M1G",
     collection: "fld3so0K95cIwegiu",
+    steamId: "fldn9P97UHVr73R6I",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
@@ -35,6 +36,7 @@ type NonStringFields = {
   [fields.simpleGenre]?: string;
   [fields.collection]?: string;
   [fields.awardAnchor]?: string;
+  [fields.steamId]?: string;
   [fields.awardYear]: number; // always defined because it's calculated; unwatched movies are `0`, but those are filtered
 };
 type StringFields = {
@@ -58,6 +60,7 @@ export type Game = {
   posterUrl: ExternalUrl;
   bigPosterUrl: ExternalUrl;
   award?: AwardDetails;
+  steamId?: string;
 };
 
 const materialize = (gameRow: GameRecord): Game => {
@@ -85,6 +88,7 @@ const materialize = (gameRow: GameRecord): Game => {
     bigPosterUrl: `https://images.igdb.com/igdb/image/upload/t_cover_big_2x/${
       gameRow[fields.igdbCoverId]
     }.jpg`,
+    steamId: gameRow[fields.steamId],
   };
 
   const collection = gameRow[fields.collection];
