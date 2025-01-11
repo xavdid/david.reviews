@@ -9,6 +9,8 @@ import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import YoutubeEmbed from "../../components/mdx/YoutubeEmbed.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import ReviewSummary from "../../components/mdx/ReviewSummary.astro";
+import SteamGame from "../../components/mdx/SteamGame.astro";
+import Details from "../../components/mdx/Details.astro";
 
 import Config from "../../../astro.config.mjs";
 import type { ExternalUrl as AbsoluteUrl } from "../../airtable/types";
@@ -69,6 +71,8 @@ const components = {
   YoutubeEmbed,
   ReviewSummary,
   RoundedLink,
+  SteamGame,
+  Details,
 };
 ---
 
@@ -96,6 +100,8 @@ const components = {
 
     <!-- could do this, but I like the "buy this on" coming after the blurb and that's hard without putting it in frontmatter -->
     <!-- {frontmatter.review && <ReviewSummary review={frontmatter.review} />} -->
+
+    {frontmatter.steamId && <SteamGame steamId={frontmatter.steamId} />}
 
     <hr />
 
