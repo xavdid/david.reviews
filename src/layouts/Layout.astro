@@ -98,6 +98,12 @@ const groupedSeo: SEOProps = {
         }
       : undefined,
   },
+  // I didn't want to add any twitter tags, but this is what gives nice images (instead of tiny thumbnails) on discord
+  // see: https://www.reddit.com/r/discordapp/comments/82p8i6/a_basic_tutorial_on_how_to_get_the_most_out_of/
+  // or: https://stackoverflow.com/questions/69025891/open-graph-data-does-not-display-on-discord
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 ---
 
