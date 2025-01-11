@@ -1,0 +1,18 @@
+---
+type Props = {
+  /**
+   * `(click to reveal)` will be appended
+   */
+  summary: string;
+};
+
+const { summary } = Astro.props;
+---
+
+<details
+  class="cursor-pointer rounded-md bg-zinc-200 px-2 py-2 dark:bg-zinc-700 [&>p]:my-1"
+>
+  <summary>{summary} (click to reveal)</summary>
+
+  <slot />
+</details>
