@@ -24,6 +24,8 @@ const articles = defineCollection({
             ),
           )
           .optional(),
+        // If available, shows a steam store widget at the bottom of the page.
+        steamId: z.string().regex(/^\d+$/).optional(),
         review: z
           .object({
             rating: z.number().min(1).max(4),
