@@ -24,6 +24,8 @@ import {
   seoTitle,
 } from "../../utils/data";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
+import ExternalLink from "../../components/links/ExternalLink.astro";
+import SteamIcon from "../../components/icons/steam.astro";
 
 type Params = {
   gameSlug: string;
@@ -129,7 +131,7 @@ export const getStaticPaths = async (): Result => {
 const {
   plays,
   etcPlays,
-  game: { title, posterUrl, award, genre, bigPosterUrl, collection },
+  game: { title, posterUrl, award, genre, bigPosterUrl, collection, steamId },
   articles,
   publishedOn,
   updatedOn,
@@ -183,9 +185,14 @@ const {
         </SubtleLink>).
       </p>
       {
-        award && (
+        steamId && (
           <div class="pt-2">
-            <AwardBlurb {...award} category="game" />
+            <SteamIcon />
+            <ExternalLink
+              href={`https://store.steampowered.com/app/${steamId}/?curator_clanid=45203122`}
+            >
+              Steam store page
+            </ExternalLink>
           </div>
         )
       }
