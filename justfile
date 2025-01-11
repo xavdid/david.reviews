@@ -1,4 +1,4 @@
-set quiet
+# set quiet # not supported on the version of just that's apparently running in the build image
 
 # make installed binaries available at the top level
 export PATH := "./node_modules/.bin:" + env_var('PATH')
@@ -55,6 +55,7 @@ clear_build:
 # do a production build
 [no-exit-message]
 build: clean typecheck && clear_build
+    just --version
     astro build
 
 # remove the build artifact & data cache
