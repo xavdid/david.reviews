@@ -136,6 +136,8 @@ const {
   publishedOn,
   updatedOn,
 } = Astro.props;
+
+const hasArticleSection = Boolean(articles.length || award);
 ---
 
 <Layout
@@ -212,7 +214,7 @@ const {
     </div>
   </div>
   {
-    articles.length || award ? (
+    hasArticleSection ? (
       <div class="pb-4">
         <h2 class="pb-0 text-xl">Mentioned In</h2>
         <ul class="list-disc pl-8">
@@ -233,7 +235,7 @@ const {
     ) : null
   }
   <div>
-    {articles.length ? <h2 class="pb-2 text-xl">Full Plays</h2> : null}
+    {hasArticleSection ? <h2 class="pb-2 text-xl">Full Plays</h2> : null}
     {plays.map((play) => <PlaySummary play={play} />)}
   </div>
   {
