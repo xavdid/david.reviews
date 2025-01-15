@@ -1,46 +1,46 @@
-# set quiet # not supported on the version of just that's apparently running in the build image
+set quiet
 
 # make installed binaries available at the top level
 export PATH := "./node_modules/.bin:" + env_var('PATH')
 
-@_default:
+_default:
     just --list --unsorted
 
 # run the dev server
-@dev:
+dev:
     astro dev
 
 # general purpose handler for anstro commands
 [no-exit-message]
-@astro *args="":
+astro *args="":
     astro {{ args }}
 
 # run syle checks
 [no-exit-message]
-@lint:
+lint:
     eslint src
     prettier --check src
 
 # fix issues checks
 [no-exit-message]
-@lint-fix:
+lint-fix:
     eslint src --fix
     prettier src --write
 
 # run pre-reqs for building
 [no-exit-message]
-@typecheck:
+typecheck:
     # this only checks .astro files, but not .ts
     astro check
     # so we do this instead
     tsc --noEmit
 
 # do both style and structural checks
-@ci: typecheck lint
+ci: typecheck lint
 
 build_status_uuid := env("BUILD_STATUS_UUID", "")
 # tell zapier that a build has completed, skipping the next auto-build
-@clear_build:
+clear_build:
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -54,18 +54,18 @@ build_status_uuid := env("BUILD_STATUS_UUID", "")
 
 # do a production build
 [no-exit-message]
-@build: clean typecheck && clear_build
+build: clean typecheck && clear_build
     just --version
     astro build
 
 # remove the build artifact & data cache
-@clean:
+clean:
     rm -rf dist src/airtable/_cache
 
-@prod-preview: build
+prod-preview: build
     astro preview
 
 # generate a new blank article for slug
-@article slug:
+article slug:
     mkdir "src/content/articles/{{ slug }}"
     cp misc/article-template.mdx "src/content/articles/{{ slug }}/index.mdx"
