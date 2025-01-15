@@ -2,7 +2,7 @@
 # netlify has just, but it's undocumented
 # it also has mise? so I can set my build command to use that, I guess
 # see: https://answers.netlify.com/t/update-just-version/136800/2
-command = "mise use -g just@latest && just build"
+command = "mise use -g just@latest && just --version && just build"
 # the rest is pretty standard; figure I'd move it here from UI
 publish = "dist"
 
