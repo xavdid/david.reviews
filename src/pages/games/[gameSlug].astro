@@ -4,7 +4,6 @@ import { Image } from "astro:assets";
 import type { Game } from "../../airtable/data/games";
 import { loadInProgessPlays } from "../../airtable/data/inProgressPlays";
 import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
-import AwardBlurb from "../../components/AwardBlurb.astro";
 import PlaySummary from "../../components/infoboxes/PlaySummary.astro";
 import RoundedLink from "../../components/links/RoundedLink.astro";
 import SubtleLink from "../../components/links/SubtleLink.astro";
@@ -26,6 +25,8 @@ import {
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import SteamIcon from "../../components/icons/steam.astro";
+import { buildAwardUrl } from "../../awards";
+import { medals } from "../../airtable/data/common";
 
 type Params = {
   gameSlug: string;
@@ -220,7 +221,15 @@ const hasArticleSection = Boolean(articles.length || award);
         <ul class="list-disc pl-8">
           {award && (
             <li class="py-1">
-              <AwardBlurb {...award} category="game" />
+              <SubtleLink
+                external
+                href={buildAwardUrl(award.year, award.anchor)}
+                classes={["text-lg"]}
+              >
+                Favorite Media of {award.year}
+              </SubtleLink>{" "}
+              ({medals[award.tier]}
+              {award.tier} medal winner)
             </li>
           )}
           {articles.map(({ permalink, title }) => (
