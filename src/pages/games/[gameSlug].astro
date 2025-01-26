@@ -26,7 +26,6 @@ import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import SteamIcon from "../../components/icons/steam.astro";
 import { buildAwardUrl } from "../../awards";
-import { medals } from "../../airtable/data/common";
 
 type Params = {
   gameSlug: string;
@@ -228,7 +227,7 @@ const hasArticleSection = Boolean(articles.length || award);
               >
                 Favorite Media of {award.year}
               </SubtleLink>{" "}
-              ({medals[award.tier]}
+              ({award.emoji}
               {award.tier} medal winner)
             </li>
           )}

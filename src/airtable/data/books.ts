@@ -1,6 +1,10 @@
 import slugify from "@sindresorhus/slugify";
 
-import { type AwardDetails, type AwardTier } from "../../awards";
+import {
+  buildAwardDetails,
+  type AwardDetails,
+  type AwardTier,
+} from "../../awards";
 import type { AirtableBase, Permalink, RecordBase } from "../types";
 import { loadAuthors, type Author } from "./authors";
 import { loadReferenceObjects } from "./common";
@@ -63,19 +67,12 @@ const materialize = (bookRow: BookRecord): LocalFields => {
     posterUrl: `https://books.google.com/books/content/images/frontcover/${
       bookRow[fields.gbid]
     }?fife=h188`,
+    award: buildAwardDetails(
+      bookRow[fields.awardTier],
+      bookRow[fields.awardYear],
+      bookRow[fields.awardAnchor],
+    ),
   };
-
-  if (bookRow[fields.awardTier]) {
-    item.award = {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      tier: bookRow[fields.awardTier]!,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      year: bookRow[fields.awardYear]!,
-      anchor: bookRow[fields.awardAnchor]
-        ? `#${bookRow[fields.awardAnchor]}`
-        : undefined,
-    };
-  }
 
   return item;
 };

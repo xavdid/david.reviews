@@ -1,14 +1,7 @@
 import Airtable from "airtable";
-import { type AwardTier } from "../../awards";
 import { isProdBuild } from "../../utils/data";
 import { readCache, writeCache } from "../cache";
 import type { AirtableBase } from "../types";
-
-export const medals: { [x in AwardTier]: string } = {
-  Gold: "🥇",
-  Silver: "🥈",
-  Bronze: "🥉",
-} as const;
 
 const client = new Airtable({
   apiKey: import.meta.env.AIRTABLE_API_KEY as string,

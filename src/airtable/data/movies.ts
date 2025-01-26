@@ -1,6 +1,10 @@
 import slugify from "@sindresorhus/slugify";
 
-import { type AwardDetails, type AwardTier } from "../../awards";
+import {
+  buildAwardDetails,
+  type AwardDetails,
+  type AwardTier,
+} from "../../awards";
 import { materializeCollection } from "../../utils/data";
 import type {
   AirtableBase,
@@ -75,19 +79,12 @@ const materialize = (movieRow: MovieRecord): Movie => {
     bigPosterUrl: `https://image.tmdb.org/t/p/w500${
       movieRow[fields.posterPath]
     }`,
+    award: buildAwardDetails(
+      movieRow[fields.awardTier],
+      movieRow[fields.awardYear],
+      movieRow[fields.awardAnchor],
+    ),
   };
-
-  if (movieRow[fields.awardTier]) {
-    item.award = {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      tier: movieRow[fields.awardTier]!,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      year: movieRow[fields.awardYear]!,
-      anchor: movieRow[fields.awardAnchor]
-        ? `#${movieRow[fields.awardAnchor]}`
-        : undefined,
-    };
-  }
 
   return item;
 };

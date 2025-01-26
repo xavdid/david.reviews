@@ -1,7 +1,6 @@
 ---
 import { Image } from "astro:assets";
 
-import { medals } from "../../airtable/data/common";
 import type { Watch } from "../../airtable/data/watches";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
@@ -38,7 +37,7 @@ const { watch, numWatch } = Astro.props;
     {
       watch.movie.award && (
         <div title="Award Winning" class="inline px-1">
-          {medals[watch.movie.award.tier]}
+          {watch.movie.award.emoji}
         </div>
       )
     }

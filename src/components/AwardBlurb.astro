@@ -1,5 +1,4 @@
 ---
-import { medals } from "../airtable/data/common";
 import { type AwardDetails } from "../awards";
 import { buildAwardUrl } from "../awards";
 import type { Category } from "../utils/data";
@@ -7,10 +6,10 @@ import ExternalLink from "./links/ExternalLink.astro";
 
 export type Props = AwardDetails & { category: Category };
 
-const { year, tier, anchor, category } = Astro.props;
+const { year, tier, anchor, category, emoji } = Astro.props;
 ---
 
-This {category} won the {medals[tier]}{tier} medal in my <ExternalLink
+This {category} won the {emoji}{tier} medal in my <ExternalLink
   href={buildAwardUrl(year, anchor)}
 >
   {`${year} Yearly Media Review`}

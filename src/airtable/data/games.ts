@@ -1,6 +1,10 @@
 import slugify from "@sindresorhus/slugify";
 
-import { type AwardDetails, type AwardTier } from "../../awards";
+import {
+  buildAwardDetails,
+  type AwardDetails,
+  type AwardTier,
+} from "../../awards";
 import { genrePermalink, materializeCollection } from "../../utils/data";
 import type {
   AirtableBase,
@@ -89,23 +93,16 @@ const materialize = (gameRow: GameRecord): Game => {
       gameRow[fields.igdbCoverId]
     }.jpg`,
     steamId: gameRow[fields.steamId],
+    award: buildAwardDetails(
+      gameRow[fields.awardTier],
+      gameRow[fields.awardYear],
+      gameRow[fields.awardAnchor],
+    ),
   };
 
   const collection = gameRow[fields.collection];
   if (collection) {
     item.collection = materializeCollection(collection, "game");
-  }
-
-  if (gameRow[fields.awardTier]) {
-    item.award = {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      tier: gameRow[fields.awardTier]!,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      year: gameRow[fields.awardYear]!,
-      anchor: gameRow[fields.awardAnchor]
-        ? `#${gameRow[fields.awardAnchor]}`
-        : undefined,
-    };
   }
 
   return item;
