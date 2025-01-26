@@ -3,6 +3,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
 import CalendarIcon from "../../components/icons/calendar.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import type { ImageInfo } from "../../utils/images";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
@@ -68,6 +69,7 @@ const h1Styles = [
 // these are each available in MDX without imports
 const components = {
   a: ExternalLink,
+  SubtleLink,
   YoutubeEmbed,
   ReviewSummary,
   RoundedLink,
@@ -103,14 +105,19 @@ const components = {
 
     {frontmatter.steamId && <SteamGame steamId={frontmatter.steamId} />}
 
-    <hr />
-
-    <SubscribeBlurb
-      pClasses={["!my-2"]}
-      centered
-      showSteamButton
-      blurb="If you liked this review and want to read more like it, subscribe via"
-    />
+    {
+      frontmatter.review && (
+        <>
+          <hr />
+          <SubscribeBlurb
+            pClasses={["!my-2"]}
+            centered
+            showSteamButton
+            blurb="If you liked this review and want to read more like it, subscribe via"
+          />
+        </>
+      )
+    }
 
     {
       frontmatter?.review?.gotPressKey && (
@@ -127,8 +134,6 @@ const components = {
       )
     }
   </RenderedMarkdown>
-
-  <!-- {frontmatter.} -->
 
   <!-- <hr class="my-6" />
   <p>

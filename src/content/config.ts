@@ -9,7 +9,7 @@ const articles = defineCollection({
         ogDesc: z
           .string()
           .refine(
-            (v) => v.endsWith(".") || v.endsWith("?"),
+            (v) => v.endsWith(".") || v.endsWith("?") || v.endsWith("!"),
             "ogDesc must end with punctuation.",
           ),
         ogImg: image().optional(),

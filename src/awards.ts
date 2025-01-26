@@ -9,6 +9,7 @@ export const lookbackLinks: Record<number, string> = {
   2021: "https://xavd.id/blog/post/favorite-media-2021/",
   2022: "https://xavd.id/blog/post/favorite-media-2022/",
   2023: "https://xavd.id/blog/post/favorite-media-2023/",
+  2024: "https://xavd.id/blog/post/favorite-media-2024/",
 } as const;
 export const awardYears = Object.keys(lookbackLinks).map((y) => parseInt(y));
 
