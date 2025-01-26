@@ -4,6 +4,7 @@ import type { Permalink } from "../../airtable/types";
 import TitleLink from "../links/TitleLink.astro";
 import type { Category } from "../../utils/data";
 import Rating from "../Rating.astro";
+import type { AwardDetails } from "../../awards";
 
 type Props = {
   permalink: Permalink;
@@ -12,9 +13,11 @@ type Props = {
   blurb: string;
   mediaType: `${Category}s`;
   rating: number;
+  award?: AwardDetails;
 };
 
-const { permalink, posterUrl, title, blurb, mediaType, rating } = Astro.props;
+const { permalink, posterUrl, title, blurb, mediaType, rating, award } =
+  Astro.props;
 
 const { height, width } = {
   games: { width: 135, height: 192 }, // original *= 3/4
@@ -52,7 +55,7 @@ const borderColors = {
   <div class="pl-4">
     <TitleLink classes={["text-xl"]} href={permalink}>
       {title}
-    </TitleLink>
+    </TitleLink>{award && ` (${award.emoji})`}
 
     <div class="pt-1">
       <Rating rating={rating} />
