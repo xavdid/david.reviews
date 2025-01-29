@@ -29,6 +29,7 @@ const SCHEMA = {
     awardAnchor: "fldvFTgyv1c2Q5M1G",
     collection: "fld3so0K95cIwegiu",
     steamId: "fldn9P97UHVr73R6I",
+    dekuDealsSlug: "fld8UuCSUEUipZhTN",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
@@ -41,6 +42,7 @@ type NonStringFields = {
   [fields.collection]?: string;
   [fields.awardAnchor]?: string;
   [fields.steamId]?: string;
+  [fields.dekuDealsSlug]?: string;
   [fields.awardYear]: number; // always defined because it's calculated; unwatched movies are `0`, but those are filtered
 };
 type StringFields = {
@@ -64,7 +66,8 @@ export type Game = {
   posterUrl: ExternalUrl;
   bigPosterUrl: ExternalUrl;
   award?: AwardDetails;
-  steamId?: string;
+  steamUrl?: string;
+  dekuDealsUrl?: string;
 };
 
 const materialize = (gameRow: GameRecord): Game => {
@@ -92,7 +95,17 @@ const materialize = (gameRow: GameRecord): Game => {
     bigPosterUrl: `https://images.igdb.com/igdb/image/upload/t_cover_big_2x/${
       gameRow[fields.igdbCoverId]
     }.jpg`,
-    steamId: gameRow[fields.steamId],
+    steamUrl: gameRow[fields.steamId]
+      ? `https://store.steampowered.com/app/${
+          gameRow[fields.steamId]
+        }/?curator_clanid=45203122`
+      : undefined,
+    // use steamId if present, otherwise try the slug, otherwise it's just missing
+    dekuDealsUrl: gameRow[fields.steamId]
+      ? `https://dekudeals.com/app/${gameRow[fields.steamId]}`
+      : gameRow[fields.dekuDealsSlug]
+        ? `https://www.dekudeals.com/items/${gameRow[fields.dekuDealsSlug]}`
+        : undefined,
     award: buildAwardDetails(
       gameRow[fields.awardTier],
       gameRow[fields.awardYear],
