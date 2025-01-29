@@ -23,7 +23,7 @@ const filteredReads = rawReviews
   .filter((r) => !r.isReread && r.dateFinished.startsWith(year))
   .toReversed();
 
-const awardUrl = buildAwardUrl(parseInt(year), "#books");
+const awardUrl = buildAwardUrl(parseInt(year), "books");
 ---
 
 <Layout

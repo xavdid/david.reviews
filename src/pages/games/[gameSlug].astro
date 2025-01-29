@@ -26,7 +26,6 @@ import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import ExternalLink from "../../components/links/ExternalLink.astro";
 import SteamIcon from "../../components/icons/steam.astro";
 import DekuDealsIcon from "../../components/icons/deku-deals.astro";
-import { buildAwardUrl } from "../../awards";
 
 type Params = {
   gameSlug: string;
@@ -233,11 +232,7 @@ const hasArticleSection = Boolean(articles.length || award);
         <ul class="list-disc pl-8">
           {award && (
             <li class="py-1">
-              <SubtleLink
-                external
-                href={buildAwardUrl(award.year, award.anchor)}
-                classes={["text-lg"]}
-              >
+              <SubtleLink external href={award.url} classes={["text-lg"]}>
                 Favorite Media of {award.year}
               </SubtleLink>{" "}
               ({award.emoji}

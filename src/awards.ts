@@ -22,23 +22,26 @@ const medals: { [x in AwardTier]: string } = {
 export type AwardDetails = {
   year: number;
   tier: AwardTier;
-  anchor?: `#${string}`;
   emoji: string;
+  url: string;
 };
 
 export const buildAwardDetails = (
   tier: AwardTier | undefined,
   year: number,
   anchor?: string,
-): AwardDetails | undefined =>
-  tier
-    ? {
-        tier,
-        year,
-        anchor: anchor ? `#${anchor}` : undefined,
-        emoji: medals[tier],
-      }
-    : undefined;
+): AwardDetails | undefined => {
+  if (!tier) {
+    return undefined;
+  }
+
+  return {
+    tier,
+    year,
+    emoji: medals[tier],
+    url: buildAwardUrl(year, anchor),
+  };
+};
 
 export const buildAwardUrl = (year: number, anchor?: string): string => {
   const url = lookbackLinks[year];
@@ -46,5 +49,5 @@ export const buildAwardUrl = (year: number, anchor?: string): string => {
   if (!url) {
     throw new Error(`Missing writeup url for year ${year}`);
   }
-  return `${url}${anchor ?? ""}`;
+  return `${url}${anchor ? `#${anchor}` : ""}`;
 };

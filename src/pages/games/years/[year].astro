@@ -24,7 +24,7 @@ const filteredPlays = plays
   .filter((p) => p.playType === "First Time" && p.dateFinished.startsWith(year))
   .toReversed();
 
-const awardUrl = buildAwardUrl(parseInt(year), "#videogames");
+const awardUrl = buildAwardUrl(parseInt(year), "videogames");
 
 const collectionEmoji = new Set<string>(
   plays
