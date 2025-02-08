@@ -1,0 +1,26 @@
+---
+import { getPlayForGame } from "../../airtable/data/plays";
+import Rating from "../Rating.astro";
+
+type Props = {
+  slug: string;
+  index?: number;
+};
+
+const { slug, index } = Astro.props;
+
+const play = await getPlayForGame(slug, index);
+---
+
+{
+  play === null ? (
+    <p class="bg-yellow-300 p-2 text-black">
+      WARN: Unable to embed play for "{slug}".
+    </p>
+  ) : (
+    <blockquote class="not-italic">
+      <Rating rating={play.rating} />
+      {play.notes}
+    </blockquote>
+  )
+}

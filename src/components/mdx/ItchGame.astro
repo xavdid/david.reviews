@@ -1,0 +1,31 @@
+---
+type Props = {
+  itchId: string;
+};
+
+// this can be found from the "embed" link at the very bottom of every page. There's also an API, but I didn't try using it
+const { itchId } = Astro.props;
+---
+
+{
+  // don't love loading each of these twice, but i'm not sure there's a better way to know what mode a user is in? especially because it's static.
+  [false, true].map((dark) => (
+    <iframe
+      src={`https://itch.io/embed/${itchId}?${dark ? "dark=1" : ""}`}
+      class:list={[
+        "mx-auto",
+        "w-full",
+        "md:w-[552px]",
+        "h-[167px]",
+        "border",
+        "border-blue-600",
+        "dark:border-amber-300",
+        // hide the light one in dark mode and hide the dark one in light mode
+        {
+          "hidden dark:block": dark,
+          "dark:hidden": !dark,
+        },
+      ]}
+    />
+  ))
+}
