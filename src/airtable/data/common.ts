@@ -32,8 +32,15 @@ const loadRecords = async <T>(
 
 /**
  * used to load and materialize support records, like Movies or Books, which are referenced by the main tables (Watches, Reads, etc).
- *
  * It caches the materialized result.
+ * @param schema The full schema which defines fields and their relationships / types
+ * @param materializer a function that takes an Airtable row and returns an object with all of a record's local fields (in the correct type)
+ * @param foreignKeyRelationships a list of objects that describe foreign keys. It needs:
+ *   - `key`: the name of the key on `schema` that's an FK relationship
+ *   - `foreignItems`: the full table of items that this type has a relationship with. Map of rowId -> item
+ *   - `keyGrabber`: a function that gets the list of foreign keys on a record. It mostly just does a lookup with local field ids.
+ *   - `condense?`: if a row will only ever have 0 or 1 foreign items, `condense` ensures we get a singleton instead of an array. Useful for catching duplicates where there shouldn't be, since it errors if it tries to condense 2+ items (e.g. a book is linked to 2 series when it shouldn't be).
+ * @returns
  */
 export const loadReferenceObjects = async <
   RecordType,
@@ -108,7 +115,7 @@ const materializeRecordIds = <T>(
     throw new Error(
       `tried to condense list ${JSON.stringify(
         result,
-      )} that had more than one item`,
+      )} that had more than one item; a record probably has duplicate links.`,
     );
   }
 
