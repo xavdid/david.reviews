@@ -96,9 +96,8 @@ const materialize = (gameRow: GameRecord): Game => {
       gameRow[fields.igdbCoverId]
     }.jpg`,
     steamUrl: gameRow[fields.steamId]
-      ? `https://store.steampowered.com/app/${
-          gameRow[fields.steamId]
-        }/?curator_clanid=45203122`
+      ? // could include curator, but I bet they check the referrer; ?curator_clanid=45203122`
+        `https://store.steampowered.com/app/${gameRow[fields.steamId]}/`
       : undefined,
     // use steamId if present, otherwise try the slug, otherwise it's just missing
     dekuDealsUrl: gameRow[fields.steamId]

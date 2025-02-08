@@ -1,0 +1,36 @@
+import { expect, test } from "vitest";
+import { linkMode } from "./links";
+
+test.for([
+  ...["https://xavd.id"].map((h) => [h, "external"]),
+  ...[
+    "/games/roottrees/",
+    "/games/roottrees/",
+    "/games/genre/puzzle/",
+    "/movies/kung-fu-panda/",
+    "/movies/collections/halloween/",
+    "/movies/collections/",
+    "/games/collections/",
+    "/books/thing/",
+    "/books/authors/josiah-bancroft/",
+    "/books/series/books-of-babel/",
+    "/games/genres/",
+    "/books/authors/",
+  ].map((h) => [h, "rounded"]),
+  ...[
+    "/games/",
+    "/contact/",
+    "/about/",
+    "/search/",
+    "/books/",
+    "/movies/",
+    "/",
+    "/articles/the-roottrees-are-dead-review/",
+    "/contact/#developers--publishers",
+    "/games/awarded/",
+    "/games/recommended/",
+    "/games/years/2024/",
+  ].map((h) => [h, "subtle"]),
+])("%s -> %s", ([href, expected]) => {
+  expect(linkMode(href)).toBe(expected);
+});

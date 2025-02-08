@@ -1,0 +1,36 @@
+---
+import { linkMode } from "../../utils/links";
+import { exhaustive } from "../../utils/typechecking";
+import ExternalLink from "../links/ExternalLink.astro";
+import RoundedLink from "../links/RoundedLink.astro";
+import SubtleLink from "../links/SubtleLink.astro";
+
+// a "smart" link component to present everything correctly. Doesn't support overriding classes- just use the class directly if you care that much
+
+type Props = {
+  href: string;
+};
+
+const { href } = Astro.props;
+
+const mode = linkMode(href);
+---
+
+{
+  mode === "external" ? (
+    <ExternalLink href={href}>
+      <slot />
+    </ExternalLink>
+  ) : mode === "subtle" ? (
+    <SubtleLink href={href}>
+      <slot />
+    </SubtleLink>
+  ) : mode === "rounded" ? (
+    <RoundedLink href={href}>
+      <slot />
+    </RoundedLink>
+  ) : (
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+    exhaustive(mode)
+  )
+}

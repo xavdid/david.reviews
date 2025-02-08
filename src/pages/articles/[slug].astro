@@ -2,13 +2,10 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
 import CalendarIcon from "../../components/icons/calendar.astro";
-import ExternalLink from "../../components/links/ExternalLink.astro";
-import SubtleLink from "../../components/links/SubtleLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import type { ImageInfo } from "../../utils/images";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import YoutubeEmbed from "../../components/mdx/YoutubeEmbed.astro";
-import RoundedLink from "../../components/links/RoundedLink.astro";
 import ReviewSummary from "../../components/mdx/ReviewSummary.astro";
 import SteamGame from "../../components/mdx/SteamGame.astro";
 import ItchGame from "../../components/mdx/ItchGame.astro";
@@ -17,6 +14,7 @@ import EmbeddedPlay from "../../components/mdx/EmbeddedPlay.astro";
 
 import Config from "../../../astro.config.mjs";
 import type { ExternalUrl as AbsoluteUrl } from "../../airtable/types";
+import OmniLink from "../../components/mdx/OmniLink.astro";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -70,15 +68,14 @@ const h1Styles = [
 // TODO: if I ever need to differentiate between internal and external links in markdown, could do that in a wrapper component
 // these are each available in MDX without imports
 const components = {
-  a: ExternalLink,
-  SubtleLink,
+  a: OmniLink,
   YoutubeEmbed,
   ReviewSummary,
-  RoundedLink,
   SteamGame,
   ItchGame,
   Details,
   EmbeddedPlay,
+  SubscribeBlurb,
 };
 ---
 
