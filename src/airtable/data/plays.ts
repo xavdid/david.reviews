@@ -73,10 +73,8 @@ export const loadPlays = async (): Promise<Play[]> =>
     },
   ]);
 
-const gameToPlays = new Map<string, Play[]>();
-
 /**
- * get data suitable for adding a playbox to an MDX document. Should only compute data once; all other loads should be fast.
+ * get data suitable for adding a playbox to an MDX document. ~~Should only compute data once; all other loads should be fast.~~ See below
  * @param slug the slug of the game to load. May change, but the site will be loud about it
  * @param index All plays are sorted chronologically, earliest to latest. Unless I'm backfilling something, this should be a stable way to point to a play
  */
@@ -84,28 +82,13 @@ export const getPlayForGame = async (
   slug: string,
   index = 0,
 ): Promise<Play | null> => {
-  if (gameToPlays.size === 0) {
-    // TODO: this doesn't really do at-most-once calling, since all embeds fire ~ the same time and see an empty map
-    // could lock it and have everything else return promises?
-    console.log("filling game -> plays map!");
-    const plays = await loadPlays();
+  const plays = await loadPlays();
+  const playForGame = plays
+    .toReversed()
+    .filter((p) => p.game.slug === slug)
+    .at(index);
 
-    plays.forEach((play) => {
-      gameToPlays.get(play.game.slug)?.push(play) ??
-        gameToPlays.set(play.game.slug, [play]);
-    });
-
-    for (const id of gameToPlays.keys()) {
-      gameToPlays
-        .get(id)
-        ?.sort(
-          (a, b) => Date.parse(b.dateFinished) - Date.parse(a.dateFinished),
-        );
-    }
-  }
-
-  const plays = gameToPlays.get(slug);
-  if (!plays) {
+  if (!playForGame) {
     const message = `Tried to load review for igdbId: ${slug}, but it wasn't found`;
     if (isProdBuild) {
       throw new Error(message);
