@@ -32,9 +32,6 @@ const {
 } = Astro.props;
 
 // I don't love the UTM, but the widget adds one anyway so I might as well get credit
-const url = `https://store.steampowered.com/widget/${steamId}/?utm_source=david-reviews${
-  description ? `&t=${encodeURIComponent(description)}` : ""
-}`;
 ---
 
 <!-- make an extra block that's mobile-only? that describes where to get it? Have to balance that --><!-- maybe add param thats: platforms?: Array<string | {name: string, url: string}> which I can smartly join --><!-- that probably always goes after the embed, since I can use that in full reviews too --><!-- this doesn't look good on mobile, unfortunately -->
@@ -42,7 +39,9 @@ const url = `https://store.steampowered.com/widget/${steamId}/?utm_source=david-
   {addHr && <hr />}
 
   <iframe
-    src={url}
+    src={`https://store.steampowered.com/widget/${steamId}/?utm_source=david-reviews${
+      description ? `&t=${encodeURIComponent(description)}` : ""
+    }`}
     class:list={[
       "mx-auto",
       "my-4",
@@ -56,7 +55,7 @@ const url = `https://store.steampowered.com/widget/${steamId}/?utm_source=david-
   showMobileFallback && (
     <div class="text-center">
       <a
-        href={url}
+        href={`https://store.steampowered.com/app/${steamId}/`}
         target="_blank"
         rel="noopener"
         class:list={[
