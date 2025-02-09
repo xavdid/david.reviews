@@ -2,10 +2,12 @@ import { expect, test } from "vitest";
 import { linkMode } from "./links";
 
 test.for([
-  ...["https://xavd.id", "mailto:cool@cool.com", "/og.png"].map((h) => [
-    h,
-    "external",
-  ]),
+  ...[
+    "https://xavd.id",
+    "mailto:cool@cool.com",
+    "/og.png",
+    "/feeds/everything.xml",
+  ].map((h) => [h, "external"]),
   ...[
     "/games/roottrees/",
     "/games/roottrees/",

@@ -35,8 +35,11 @@ typecheck:
     # so we do this instead
     tsc --noEmit
 
+test:
+    vitest run
+
 # do both style and structural checks
-ci: typecheck lint
+ci: test typecheck lint
 
 build_status_uuid := env("BUILD_STATUS_UUID", "")
 zap_url := "https://store.zapier.com/api/records?secret=" + build_status_uuid
@@ -73,7 +76,7 @@ get-build:
 
 # do a production build
 [no-exit-message]
-build: clean typecheck && set-build
+build: clean typecheck test && set-build
     just --version
     astro build
 

@@ -11,11 +11,13 @@ const subtleSubroutes = [
   "rating",
 ];
 
+const externalPrefixes = ["http", "mailto"];
+const externalSuffixes = [".png", ".xml"];
+
 export const linkMode = (href: string): "subtle" | "rounded" | "external" => {
   if (
-    href.startsWith("http") ||
-    href.startsWith("mailto") ||
-    href.endsWith(".png")
+    externalPrefixes.some((p) => href.startsWith(p)) ||
+    externalSuffixes.some((s) => href.endsWith(s))
   ) {
     return "external";
   }
