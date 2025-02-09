@@ -85,6 +85,8 @@ export const getPlayForGame = async (
   index = 0,
 ): Promise<Play | null> => {
   if (gameToPlays.size === 0) {
+    // TODO: this doesn't really do at-most-once calling, since all embeds fire ~ the same time and see an empty map
+    // could lock it and have everything else return promises?
     console.log("filling game -> plays map!");
     const plays = await loadPlays();
 

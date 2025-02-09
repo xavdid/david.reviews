@@ -8,7 +8,7 @@ import Layout from "../layouts/Layout.astro";
 import { getPublishedArticles } from "../utils/content";
 import { seoTitle } from "../utils/data";
 import SubscribeBlurb from "../components/SubscribeBlurb.astro";
-import OmniLink from "../components/mdx/OmniLink.astro";
+import OmniLink from "../components/links/OmniLink.astro";
 
 const inProgressPlays = (await loadInProgessPlays()).toSorted(
   (a, b) =>

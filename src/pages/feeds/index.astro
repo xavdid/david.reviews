@@ -13,7 +13,7 @@ import MastodonIcon from "../../components/icons/mastodon.astro";
 import Layout from "../../layouts/Layout.astro";
 import { capitalize } from "../../utils/data";
 import { feedTypes } from "../../utils/rss";
-import OmniLink from "../../components/mdx/OmniLink.astro";
+import OmniLink from "../../components/links/OmniLink.astro";
 
 const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
   games: GameIcon,
