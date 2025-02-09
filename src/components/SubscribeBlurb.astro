@@ -4,8 +4,7 @@ import SteamFollowButton from "./SteamFollowButton.astro";
 import BlueskyIcon from "./icons/bluesky.astro";
 import MastodonIcon from "./icons/mastodon.astro";
 import RssIcon from "./icons/rss.astro";
-import ExternalLink from "./links/ExternalLink.astro";
-import SubtleLink from "./links/SubtleLink.astro";
+import OmniLink from "./mdx/OmniLink.astro";
 
 type Props = {
   /**
@@ -52,22 +51,18 @@ const {
         }, consider subscribing via`
     }
     <span class="whitespace-nowrap"
-      ><RssIcon classes={["inline", "mr-1"]} /><SubtleLink href="/feeds">
+      ><RssIcon classes={["inline", "mr-1"]} /><OmniLink href="/feeds/">
         {"RSS Feeds"}
-      </SubtleLink></span
+      </OmniLink></span
     >, <span class="whitespace-nowrap"
-      ><BlueskyIcon classes={["inline h-5 pr-1", "mb-1"]} /><ExternalLink
-        href="https://bsky.app/profile/david.reviews"
-      >
+      ><BlueskyIcon /><OmniLink href="https://bsky.app/profile/david.reviews">
         {"Bluesky"}
-      </ExternalLink></span
+      </OmniLink></span
     >, {showSteamButton ? "" : "or"}
     <span class="whitespace-nowrap"
-      ><MastodonIcon classes={["inline h-6 pr-1"]} /><ExternalLink
-        href="https://mastodon.social/@xavdid"
-      >
+      ><MastodonIcon /><OmniLink href="https://mastodon.social/@xavdid">
         {"Mastodon"}
-      </ExternalLink></span
+      </OmniLink></span
     >{showSteamButton ? ", or:" : "!"}
   </p>
   {showSteamButton && <SteamFollowButton />}

@@ -6,7 +6,7 @@ import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
 import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
-import SubtleLink from "../../../components/links/SubtleLink.astro";
+import OmniLink from "../../../components/mdx/OmniLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
   maxIsoDate,
@@ -87,9 +87,9 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
     {reads.length} review{pluralize(reads)} of {numUniqueBooks}
      book{pluralize(numUniqueBooks)} with an average score of {
       averageRating(reads)
-    } (<SubtleLink href={ratingPage("books")}>
+    } (<OmniLink href={ratingPage("books")}>
       {"out of 4"}
-    </SubtleLink>).
+    </OmniLink>).
   </p>
   <BookLegend />
   <div>

@@ -1,7 +1,7 @@
 ---
 import { GENRE_DESCRIPTIONS, loadGames } from "../../../airtable/data/games";
 import PageTitle from "../../../components/PageTitle.astro";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
+import OmniLink from "../../../components/mdx/OmniLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { genrePermalink, pluralize } from "../../../utils/data";
 
@@ -55,9 +55,7 @@ const genres = Object.values(games).reduce<Record<string, GenreRecord>>(
         )
         .map(({ genre, games }) => (
           <li class="py-2">
-            <RoundedLink href={genrePermalink(genre.slug)}>
-              {genre.name}
-            </RoundedLink>
+            <OmniLink href={genrePermalink(genre.slug)}>{genre.name}</OmniLink>
             games ({games.size} play{pluralize(games.size)}) are categorized by{" "}
             {GENRE_DESCRIPTIONS[genre.slug] ?? "MISSING GENRE DESCRIPTION!"}
           </li>

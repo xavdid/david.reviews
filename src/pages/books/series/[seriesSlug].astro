@@ -4,7 +4,7 @@ import type { Series } from "../../../airtable/data/series";
 import AuthorList from "../../../components/AuthorList.astro";
 import BookLegend from "../../../components/BookLegend.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
-import SubtleLink from "../../../components/links/SubtleLink.astro";
+import OmniLink from "../../../components/mdx/OmniLink.astro";
 import PageTitle from "../../../components/PageTitle.astro";
 import Rating from "../../../components/Rating.astro";
 import RoundedText from "../../../components/RoundedText.astro";
@@ -121,9 +121,9 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
     } book{pluralize(numUniqueBooks)} for an average score of {
       averageRating(reads)
     }
-     (<SubtleLink href={`${ratingPage("books")}`}>
+     (<OmniLink href={`${ratingPage("books")}`}>
       {"out of 4"}
-    </SubtleLink>).
+    </OmniLink>).
   </p>
   {
     remarks && (

@@ -50,6 +50,7 @@ const { header, rows } = Astro.props;
                   </div>
                 </>
               ) : linkTo ? (
+                // omni is too busy for this table
                 <SubtleLink href={linkTo}>{text}</SubtleLink>
               ) : (
                 text

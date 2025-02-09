@@ -18,6 +18,19 @@ type Props = {
 const { href, isHeading } = Astro.props;
 
 const mode = linkMode(href);
+
+let LinkComponent: typeof ExternalLink;
+
+if (mode === "external") {
+  LinkComponent = ExternalLink;
+} else if (mode === "rounded") {
+  LinkComponent = RoundedLink;
+} else if (mode === "subtle") {
+  LinkComponent = SubtleLink;
+} else {
+  exhaustive(mode);
+  throw new Error(`unknown link mode`);
+}
 ---
 
 {
@@ -33,20 +46,9 @@ const mode = linkMode(href);
     >
       <slot />
     </a>
-  ) : mode === "external" ? (
-    <ExternalLink href={href}>
-      <slot />
-    </ExternalLink>
-  ) : mode === "subtle" ? (
-    <SubtleLink href={href}>
-      <slot />
-    </SubtleLink>
-  ) : mode === "rounded" ? (
-    <RoundedLink href={href}>
-      <slot />
-    </RoundedLink>
   ) : (
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-    exhaustive(mode)
+    <LinkComponent href={href}>
+      <slot />
+    </LinkComponent>
   )
 }

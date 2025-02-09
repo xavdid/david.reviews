@@ -10,10 +10,10 @@ import {
 } from "../../components/icons/allIcons";
 import BlueskyIcon from "../../components/icons/bluesky.astro";
 import MastodonIcon from "../../components/icons/mastodon.astro";
-import ExternalLink from "../../components/links/ExternalLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { capitalize } from "../../utils/data";
 import { feedTypes } from "../../utils/rss";
+import OmniLink from "../../components/mdx/OmniLink.astro";
 
 const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
   games: GameIcon,
@@ -48,9 +48,9 @@ const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
           <li class="py-1">
             <Icon />
             {capitalize(type)}:{" "}
-            <ExternalLink
+            <OmniLink
               href={`/feeds/${type.toLowerCase()}.xml`}
-            >{`https://david.reviews/feeds/${type.toLowerCase()}.xml`}</ExternalLink>
+            >{`https://david.reviews/feeds/${type.toLowerCase()}.xml`}</OmniLink>
           </li>
         );
       })
@@ -58,14 +58,14 @@ const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
   </ul>
 
   <p class="py-2">
-    Additionally, I post most reviews to a dedicated <BlueskyIcon
-      classes={["inline h-5 pr-1", "mb-1"]}
-    /><ExternalLink href="https://bsky.app/profile/david.reviews">
+    Additionally, I post most reviews to a dedicated <BlueskyIcon /><OmniLink
+      href="https://bsky.app/profile/david.reviews"
+    >
       {"Bluesky account"}
-    </ExternalLink>, as well as to my personal account on <MastodonIcon
-      classes={["inline h-6 pr-1"]}
-    /><ExternalLink href="https://mastodon.social/@xavdid">
+    </OmniLink>, as well as to my personal account on <MastodonIcon /><OmniLink
+      href="https://mastodon.social/@xavdid"
+    >
       {"Mastodon"}
-    </ExternalLink>
+    </OmniLink>.
   </p>
 </Layout>

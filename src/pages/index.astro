@@ -3,12 +3,12 @@ import { Image } from "astro:assets";
 
 import { loadInProgessPlays } from "../airtable/data/inProgressPlays";
 import { loadInProgressReads } from "../airtable/data/inProgressReads";
-import ExternalLink from "../components/links/ExternalLink.astro";
 import SubtleLink from "../components/links/SubtleLink.astro";
 import Layout from "../layouts/Layout.astro";
 import { getPublishedArticles } from "../utils/content";
 import { seoTitle } from "../utils/data";
 import SubscribeBlurb from "../components/SubscribeBlurb.astro";
+import OmniLink from "../components/mdx/OmniLink.astro";
 
 const inProgressPlays = (await loadInProgessPlays()).toSorted(
   (a, b) =>
@@ -31,9 +31,9 @@ const latestArticle = (await getPublishedArticles())[0];
 >
   <p class="pb-3 pt-4">
     Welcome to <strong>david.reviews</strong>, my small, independent media
-    review site. I'm <ExternalLink href="https://xavd.id">
+    review site. I'm <OmniLink href="https://xavd.id">
       {"David"}
-    </ExternalLink> and I've reviewing things and writing them down since 2016.
+    </OmniLink> and I've reviewing things and writing them down since 2016.
   </p>
 
   <SubscribeBlurb showSteamButton />
@@ -54,13 +54,13 @@ const latestArticle = (await getPublishedArticles())[0];
         <p>
           I'm not playing anything at the moment but I'll be starting something
           from my
-          <ExternalLink href="https://airtable.com/appLZQMgewaSP7Gg3/shrajGTisjQqBwxLf/tbl0H4RdvzHEZWgdC">
+          <OmniLink href="https://airtable.com/appLZQMgewaSP7Gg3/shrajGTisjQqBwxLf/tbl0H4RdvzHEZWgdC">
             {"Play Next"}
-          </ExternalLink>{" "}
+          </OmniLink>{" "}
           list (or the{" "}
-          <ExternalLink href="https://airtable.com/appLZQMgewaSP7Gg3/shrMB1f0PQcfg1tnM/tbl0H4RdvzHEZWgdC">
+          <OmniLink href="https://airtable.com/appLZQMgewaSP7Gg3/shrMB1f0PQcfg1tnM/tbl0H4RdvzHEZWgdC">
             {"Play Soon"}
-          </ExternalLink>
+          </OmniLink>
           list) shortly.
         </p>
       )
@@ -93,9 +93,9 @@ const latestArticle = (await getPublishedArticles())[0];
         <p>
           I'm not reading anything at the moment but I'll be starting something
           from my
-          <ExternalLink href="https://airtable.com/appv2mhWOgkRhR4rK/shrzRTbsZiBhVeugG">
+          <OmniLink href="https://airtable.com/appv2mhWOgkRhR4rK/shrzRTbsZiBhVeugG">
             {"To Read"}
-          </ExternalLink>{" "}
+          </OmniLink>{" "}
           list shortly.
         </p>
       )

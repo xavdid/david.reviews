@@ -5,8 +5,7 @@ import GameLegend from "../../../components/GameLegend.astro";
 import PageTitle from "../../../components/PageTitle.astro";
 import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
 import PlayBox from "../../../components/infoboxes/PlayBox.astro";
-import ExternalLink from "../../../components/links/ExternalLink.astro";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
+import OmniLink from "../../../components/mdx/OmniLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { genrePermalink, seoTitle } from "../../../utils/data";
 
@@ -42,17 +41,17 @@ const collectionEmoji = new Set<string>(
 >
   <PageTitle>Every Game I Played in {year}</PageTitle>
   <p class="py-2">
-    I played {filteredPlays.length} new-to-me games in {year}. I <ExternalLink
+    I played {filteredPlays.length} new-to-me games in {year}. I <OmniLink
       href={awardUrl}
     >
       {"wrote in more detail"}
-    </ExternalLink> about my favorites.
+    </OmniLink> about my favorites.
   </p>
   <p class="py-2">
-    Each game notes its <RoundedLink href={genrePermalink("")}>
+    Each game notes its <OmniLink href={genrePermalink("")}>
       {"genre"}
-    </RoundedLink>, and you can click through to see all the others games from
-    that genre I've played.
+    </OmniLink>, and you can click through to see all the others games from that
+    genre I've played.
   </p>
   <SubscribeBlurb mediaType="game" classes="pb-3" />
   <GameLegend collectionEmoji={collectionEmoji} specificAwardUrl={awardUrl} />

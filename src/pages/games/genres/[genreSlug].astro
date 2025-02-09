@@ -7,11 +7,10 @@ import {
 } from "../../../airtable/data/plays";
 import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { genrePermalink, ratingPage, seoTitle } from "../../../utils/data";
 import SlimBox from "../../../components/infoboxes/SlimBox.astro";
-import SubtleLink from "../../../components/links/SubtleLink.astro";
+import OmniLink from "../../../components/mdx/OmniLink.astro";
 
 type Params = {
   genreSlug: string;
@@ -120,14 +119,14 @@ const processedGames = games
       genre so far.
     </p>
     <p class="py-3">
-      Each game is scored on my <SubtleLink href={ratingPage("games")}>
+      Each game is scored on my <OmniLink href={ratingPage("games")}>
         {"4-point rating system"}
-      </SubtleLink>.
+      </OmniLink>.
     </p>
     <p class="pt-2">
-      ⬅️ You can also go back to <RoundedLink href={genrePermalink("")}>
+      ⬅️ You can also go back to <OmniLink href={genrePermalink("")}>
         {"all genres"}
-      </RoundedLink>
+      </OmniLink>
     </p>
   </div>
   <div>

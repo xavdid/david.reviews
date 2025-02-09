@@ -4,8 +4,7 @@ import { loadBooks } from "../../../airtable/data/books";
 import type { Series } from "../../../airtable/data/series";
 import PageTitle from "../../../components/PageTitle.astro";
 import StickyTable from "../../../components/StickyTable.astro";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
-import SubtleLink from "../../../components/links/SubtleLink.astro";
+import OmniLink from "../../../components/mdx/OmniLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { ratingPage } from "../../../utils/data";
 
@@ -36,19 +35,19 @@ const series = Object.values(books).reduce<
   <PageTitle>All Series</PageTitle>
   <p class="py-2">
     I've read at least one book in {Object.keys(series).length} different
-    series. Completed series are rated using my <SubtleLink
+    series. Completed series are rated using my <OmniLink
       href={ratingPage("books")}
     >
       {"4-point rating system"}
-    </SubtleLink>.
+    </OmniLink>.
   </p>
   <p class="pb-3">See also:</p>
   <ul class="list-disc pb-1 pl-8">
     <li class="pb-3">
-      <RoundedLink href="/books/">recent reads</RoundedLink>
+      <OmniLink href="/books/">recent reads</OmniLink>
     </li>
     <li class="pb-3">
-      <RoundedLink href="/books/authors/">all authors</RoundedLink>
+      <OmniLink href="/books/authors/">all authors</OmniLink>
     </li>
   </ul>
 

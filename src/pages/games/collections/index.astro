@@ -5,7 +5,7 @@ import {
 } from "../../../airtable/data/games";
 import { type Collection } from "../../../airtable/types";
 import PageTitle from "../../../components/PageTitle.astro";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
+import OmniLink from "../../../components/mdx/OmniLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 
 const games = await loadGames();
@@ -46,9 +46,9 @@ const collections = Object.values(games).reduce<
         .toSorted((a, b) => b.games.size - a.games.size)
         .map(({ collection, games }) => (
           <li class="py-2 leading-7">
-            <RoundedLink href={collection.permalink}>
+            <OmniLink href={collection.permalink}>
               {collection.fullName}
-            </RoundedLink>
+            </OmniLink>
             {/* these counts may not match the page in dev, since it tracks plays and this tracks games */}
             - {games.size} games where{" "}
             {COLLECTION_DESCRIPTIONS[collection.slug]}

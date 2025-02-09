@@ -5,8 +5,7 @@ import ButtonGroup from "../../components/ButtonGroup.astro";
 import PageTitle from "../../components/PageTitle.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import ReadBox from "../../components/infoboxes/ReadBox.astro";
-import RoundedLink from "../../components/links/RoundedLink.astro";
-import SubtleLink from "../../components/links/SubtleLink.astro";
+import OmniLink from "../../components/mdx/OmniLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { ratingPage, seoTitle } from "../../utils/data";
 
@@ -109,17 +108,17 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
       slug === "all"
         ? `Showing every single review (${reads.length} reviews for ${numUniqueBooks} books).`
         : introText
-    } Each review is scored on my <SubtleLink href={ratingPage("books")}>
+    } Each review is scored on my <OmniLink href={ratingPage("books")}>
       {"4-point rating system"}
-    </SubtleLink>.
+    </OmniLink>.
   </p>
   <p class="pb-3">You can also see lists of:</p>
   <ul class="list-disc pl-8">
     <li class="pb-3">
-      <RoundedLink href="/books/series/">all series</RoundedLink>
+      <OmniLink href="/books/series/">all series</OmniLink>
     </li>
     <li class="pb-3">
-      <RoundedLink href="/books/authors/">all authors</RoundedLink>
+      <OmniLink href="/books/authors/">all authors</OmniLink>
     </li>
   </ul>
 

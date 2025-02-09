@@ -3,8 +3,6 @@ import { Image } from "astro:assets";
 import type { Movie } from "../../../airtable/data/movies";
 import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import type { Collection } from "../../../airtable/types";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
-import SubtleLink from "../../../components/links/SubtleLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
@@ -16,6 +14,7 @@ import {
   ratingPage,
   seoTitle,
 } from "../../../utils/data";
+import OmniLink from "../../../components/mdx/OmniLink.astro";
 
 type Params = {
   collectionSlug: string;
@@ -107,16 +106,16 @@ const sortedMovies = movies
       >. Either way, these are the cream of their respective crop.
     </p>
     <p class="py-2">
-      Each movie is scored on my <SubtleLink href={ratingPage("movies")}>
+      Each movie is scored on my <OmniLink href={ratingPage("movies")}>
         {"4-point rating system"}
-      </SubtleLink>. Please <SubtleLink href="/contact">
+      </OmniLink>. Please <OmniLink href="/contact/">
         {"let me know"}
-      </SubtleLink> if you'd like to nominate an addition!
+      </OmniLink> if you'd like to nominate an addition!
     </p>
     <p class="py-2">
-      ⬅️ Or, head back to <RoundedLink href={collectionPermalink("movies", "")}>
+      ⬅️ Or, head back to <OmniLink href={collectionPermalink("movies", "")}>
         {"All Collections"}
-      </RoundedLink>
+      </OmniLink>
     </p>
   </div>
   <div>

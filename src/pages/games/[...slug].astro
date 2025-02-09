@@ -3,8 +3,7 @@ import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
 import ButtonGroup from "../../components/ButtonGroup.astro";
 import GameLegend from "../../components/GameLegend.astro";
 import PlayBox from "../../components/infoboxes/PlayBox.astro";
-import RoundedLink from "../../components/links/RoundedLink.astro";
-import SubtleLink from "../../components/links/SubtleLink.astro";
+import OmniLink from "../../components/mdx/OmniLink.astro";
 import PageTitle from "../../components/PageTitle.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -118,17 +117,17 @@ const collectionEmoji = new Set<string>(
       slug === "all"
         ? `Showing every single review (${filteredPlays.length} reviews for ${numUniqueGames} games).`
         : introText
-    } Each review is scored on my <SubtleLink href={ratingPage("games")}>
+    } Each review is scored on my <OmniLink href={ratingPage("games")}>
       {"4-point rating system"}
-    </SubtleLink>.
+    </OmniLink>.
   </p>
    Each game notes its:
   <ul class="list-disc pb-2 pl-8">
     <li class="py-1">Play type (first time, replays, DLC, etc.)</li>
     <li class="py-1">
-      <RoundedLink href={genrePermalink("")}>
+      <OmniLink href={genrePermalink("")}>
         {"genre"}
-      </RoundedLink>, and you can click through to see all the others games from
+      </OmniLink>, and you can click through to see all the others games from
       that genre I've played.
     </li>
   </ul>

@@ -5,7 +5,7 @@ import BookLegend from "../../../components/BookLegend.astro";
 import PageTitle from "../../../components/PageTitle.astro";
 import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
 import ReadBox from "../../../components/infoboxes/ReadBox.astro";
-import ExternalLink from "../../../components/links/ExternalLink.astro";
+import OmniLink from "../../../components/mdx/OmniLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { seoTitle } from "../../../utils/data";
 
@@ -34,11 +34,9 @@ const awardUrl = buildAwardUrl(parseInt(year), "books");
 >
   <PageTitle>Every Book I Read in {year}</PageTitle>
   <p class="pb-3">
-    I read {filteredReads.length} books in {year}. I <ExternalLink
-      href={awardUrl}
-    >
+    I read {filteredReads.length} books in {year}. I <OmniLink href={awardUrl}>
       {"wrote in more detail"}
-    </ExternalLink> about my favorites.
+    </OmniLink> about my favorites.
   </p>
   <SubscribeBlurb mediaType="book" classes="pb-3" />
   <BookLegend awardUrl={awardUrl} showRereads={false} />

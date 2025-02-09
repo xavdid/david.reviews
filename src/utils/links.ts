@@ -1,3 +1,6 @@
+// top level routes with subpaths that should be subtle
+const subtleRoutes = ["articles", "rating"];
+
 // certain subsegments are informational, not grouped
 const subtleSubroutes = [
   "years",
@@ -5,15 +8,16 @@ const subtleSubroutes = [
   "all",
   "awarded",
   "unrecommended",
+  "rating",
 ];
 
 export const linkMode = (href: string): "subtle" | "rounded" | "external" => {
-  if (href.startsWith("http")) {
+  if (
+    href.startsWith("http") ||
+    href.startsWith("mailto") ||
+    href.endsWith(".png")
+  ) {
     return "external";
-  }
-
-  if (href.startsWith("/articles")) {
-    return "subtle";
   }
 
   // get rid of any anchors
@@ -39,7 +43,10 @@ export const linkMode = (href: string): "subtle" | "rounded" | "external" => {
     return "subtle";
   }
 
-  if (subtleSubroutes.includes(segments[1])) {
+  if (
+    subtleRoutes.includes(segments[0]) ||
+    subtleSubroutes.includes(segments[1])
+  ) {
     return "subtle";
   }
 

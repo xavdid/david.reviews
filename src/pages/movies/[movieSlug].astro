@@ -4,7 +4,6 @@ import { Image } from "astro:assets";
 import type { Movie } from "../../airtable/data/movies";
 import { loadWatches, type Watch } from "../../airtable/data/watches";
 import AwardBlurb from "../../components/AwardBlurb.astro";
-import RoundedLink from "../../components/links/RoundedLink.astro";
 import MediaTitle from "../../components/MediaTitle.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -17,8 +16,8 @@ import {
   averageRating,
   ratingPage,
 } from "../../utils/data";
-import SubtleLink from "../../components/links/SubtleLink.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
+import OmniLink from "../../components/mdx/OmniLink.astro";
 
 type Params = {
   movieSlug: string;
@@ -113,11 +112,11 @@ const {
       </p>
       <p class="pr-2 pt-2">
         I've watched this movie {watches.length} time{pluralize(watches)}
-         and given it an average score of {averageRating(watches)}⭐ (<SubtleLink
+         and given it an average score of {averageRating(watches)}⭐ (<OmniLink
           href={ratingPage("movies")}
         >
           {"out of 4"}
-        </SubtleLink>).
+        </OmniLink>).
       </p>
       {
         award && (
@@ -136,9 +135,9 @@ const {
             <ul class="pt-2">
               {collections.map((collection) => (
                 <li class="pb-2 pl-4">
-                  <RoundedLink href={collection.permalink}>
+                  <OmniLink href={collection.permalink}>
                     {collection.fullName}
-                  </RoundedLink>
+                  </OmniLink>
                 </li>
               ))}
             </ul>

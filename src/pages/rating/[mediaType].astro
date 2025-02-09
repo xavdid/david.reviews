@@ -6,8 +6,7 @@ import type { Permalink } from "../../airtable/types";
 import PageTitle from "../../components/PageTitle.astro";
 import RatingHeaderWithStars from "../../components/RatingHeaderWithStars.astro";
 import SlimBox from "../../components/infoboxes/SlimBox.astro";
-import ExternalLink from "../../components/links/ExternalLink.astro";
-import SubtleLink from "../../components/links/SubtleLink.astro";
+import OmniLink from "../../components/mdx/OmniLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { capitalize, type Category } from "../../utils/data";
 
@@ -16,13 +15,21 @@ type Params = {
 };
 type Props = {
   verb: string;
+  verbPast: string;
 };
 
 type Result = Array<{ params: Params; props: Props }>;
 export const getStaticPaths = (): Result => [
-  { params: { mediaType: "books" }, props: { verb: "read" } },
-  { params: { mediaType: "movies" }, props: { verb: "watch" } },
-  { params: { mediaType: "games" }, props: { verb: "play" } },
+  // verb is "re" because "ed" is appended
+  { params: { mediaType: "books" }, props: { verb: "read", verbPast: "read" } },
+  {
+    params: { mediaType: "movies" },
+    props: { verb: "watch", verbPast: "watched" },
+  },
+  {
+    params: { mediaType: "games" },
+    props: { verb: "play", verbPast: "played" },
+  },
 ];
 
 type SlimboxProps = {
@@ -75,7 +82,7 @@ const getMovies = async (ofRating: number): Promise<SlimboxProps[]> =>
     );
 
 const { mediaType } = Astro.params;
-const { verb } = Astro.props;
+const { verb, verbPast } = Astro.props;
 
 const mediaTypeSingular = mediaType.slice(0, -1);
 
@@ -177,11 +184,9 @@ const sections: Array<{
       verb
     } and I tend to choose things I think I'll enjoy. Keep that in mind when you
     see how many things earn a 4. It's a very different grade than a perfect 10
-    on something like <ExternalLink
-      href="https://corp.ign.com/review-practices"
-    >
+    on something like <OmniLink href="https://corp.ign.com/review-practices">
       {"IGN's rating system"}
-    </ExternalLink>.
+    </OmniLink>.
   </p>
 
   <p>
@@ -202,9 +207,9 @@ const sections: Array<{
               If you want to see the absolute cream of the {mediaTypeSingular}{" "}
               crop, you can check my list of {mediaType} that were been the best
               thing I
-              <SubtleLink href={`/${mediaType}/awarded/`}>
-                {`${verb}ed that year`}
-              </SubtleLink>
+              <OmniLink href={`/${mediaType}/awarded/`}>
+                {`${verbPast} that year`}
+              </OmniLink>
               {/* . */}
             </p>
           )}

@@ -3,7 +3,7 @@ import type { Author } from "../../../airtable/data/authors";
 import { loadReads, type Read } from "../../../airtable/data/reads";
 import PageTitle from "../../../components/PageTitle.astro";
 import StickyTable from "../../../components/StickyTable.astro";
-import RoundedLink from "../../../components/links/RoundedLink.astro";
+import OmniLink from "../../../components/mdx/OmniLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { averageRating } from "../../../utils/data";
 
@@ -41,10 +41,10 @@ const authors = Object.values(reads).reduce<
   </p>
   <ul class="list-disc pb-1 pl-8">
     <li class="pb-3">
-      <RoundedLink href="/books/">recent reads</RoundedLink>
+      <OmniLink href="/books/">recent reads</OmniLink>
     </li>
     <li class="pb-3">
-      <RoundedLink href="/books/series/">all series</RoundedLink>
+      <OmniLink href="/books/series/">all series</OmniLink>
     </li>
   </ul>
 

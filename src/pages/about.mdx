@@ -4,8 +4,6 @@ activeTab: "about"
 ogDescription: "Why I made this site, what it stands for, and how you can help."
 ---
 
-import ExternalLink from "../components/links/ExternalLink.astro";
-import SubtleLink from "../components/links/SubtleLink.astro";
 import SteamFollowButton from "../components/SteamFollowButton.astro";
 import OmniLink from "../components/mdx/OmniLink.astro";
 // could make this generic and not have to redo it for every page, but there's only 2 so far?
@@ -13,11 +11,11 @@ export const components = { a: OmniLink };
 
 # About / Manifesto
 
-I'm <ExternalLink href="https://xavd.id">David</ExternalLink>; these are my reviews! I run this site to share what I think of everything I play, watch, and read.
+I'm [David](https://xavd.id); these are my reviews! I run this site to share what I think of everything I play, watch, and read.
 
 ## Why This Exists
 
-Since 2016, I've used <ExternalLink href="https://airtable.com/">Airtable</ExternalLink> to catalog my media consumption. Then, each January, I'd write a <ExternalLink href="https://xavd.id/blog/tags/yearly-review">yearly review</ExternalLink> of my favorite things from the previous year.
+Since 2016, I've used [Airtable](https://airtable.com/) to catalog my media consumption. Then, each January, I'd write a [yearly review](https://xavd.id/blog/tags/yearly-review) of my favorite things from the previous year.
 
 Eventually, I wanted a place where I could share _all_ my reviews with friends and family, not just the best ones, so `david.reviews` was released in late 2023.
 
@@ -41,9 +39,9 @@ Like I mentioned, this site aims to be non-commercial. That means no ads, no ban
 
 To help, you can:
 
-- Sign up for Airtable: <ExternalLink href="https://airtable.com/invite/r/7A1YRa26">airtable.com/invite/r/7A1YRa26</ExternalLink>
-- Follow me on Steam: <ExternalLink href="https://store.steampowered.com/curator/45203122/">steampowered.com/curator/45203122</ExternalLink>
-- <SubtleLink href="/contact">Send me</SubtleLink> your game or book
+- Sign up for Airtable: [airtable.com/invite/r/7A1YRa26](https://airtable.com/invite/r/7A1YRa26).
+- Follow me on Steam: [steampowered.com/curator/45203122](https://store.steampowered.com/curator/45203122/).
+- [Send me](/contact/) your game or book.
 
 and optionally keep reading to find out why that's useful.
 
@@ -51,15 +49,15 @@ and optionally keep reading to find out why that's useful.
 
 My biggest cost is Airtable, which costs $20 / month. (I may eventually stand up a Django server instead, but I've built a lot onto Airtable and moving would be a lot of work that I'm not prioritizing now.)
 
-The best and easiest thing you can do is **sign up for Airtable** using <ExternalLink href="https://airtable.com/invite/r/7A1YRa26">my referral link</ExternalLink>. Each person that does this gets me $10 in credit, which goes a long way towards making this site cheap to run.
+The best and easiest thing you can do is **sign up for Airtable** using [my referral link](https://airtable.com/invite/r/7A1YRa26). Each person that does this gets me $10 in credit, which goes a long way towards making this site cheap to run.
 
-Plus, Airtable rocks; there's a reason I backed my whole site with it. So sign up, and enjoy: <ExternalLink href="https://airtable.com/invite/r/7A1YRa26">airtable.com/invite/r/7A1YRa26</ExternalLink>.
+Plus, Airtable rocks; there's a reason I backed my whole site with it. So sign up, and enjoy: [airtable.com/invite/r/7A1YRa26](https://airtable.com/invite/r/7A1YRa26).
 
 ### Follow My Steam Curator
 
-In order to prove I'm an outlet worth sending review copies to, I typically have to demonstrate some level of readership and audience. Because everything on this site is available via <SubtleLink href="/feeds">RSS feeds</SubtleLink>, it can be hard to prove I have an audience. A Steam curator page helps solve this by showing an explicit follower count and some basic analytics from Steam about how often people buy games I've recommended.
+In order to prove I'm an outlet worth sending review copies to, I typically have to demonstrate some level of readership and audience. Because everything on this site is available via [RSS feeds](/feeds/), it can be hard to prove I have an audience. A Steam curator page helps solve this by showing an explicit follower count and some basic analytics from Steam about how often people buy games I've recommended.
 
-So, kindly hit that big "Follow" button: <ExternalLink href="https://store.steampowered.com/curator/45203122/">steampowered.com/curator/45203122</ExternalLink>
+So, kindly hit that big "Follow" button: ][steampowered.com/curator/45203122](https://store.steampowered.com/curator/45203122/)
 
 As a bonus, my recommendations will show up on your Steam store pages:
 
@@ -75,14 +73,14 @@ If that sounds great, please:
 
 ### Send Me Your Game
 
-I play a lot of indie games, which typically cost money. If you're a developer (or publisher) who wants to see your game reviewed here, please <SubtleLink href="/contact">get in touch</SubtleLink>!
+I play a lot of indie games, which typically cost money. If you're a developer (or publisher) who wants to see your game reviewed here, please [get in touch](/contact/)!
 
 ## Tech Stack
 
-- This site is (almost) entirely static, built with <ExternalLink href="https://astro.build/">Astro</ExternalLink>, and styled with <ExternalLink href="https://tailwindcss.com/">Tailwind</ExternalLink>
-- The data is stored in <ExternalLink href="https://airtable.com/">Airtable</ExternalLink>
-- The source is available on <ExternalLink href="https://github.com/xavdid/david.reviews">GitHub</ExternalLink>
-- The <ExternalLink href="/og.png">social media image</ExternalLink> was created by <ExternalLink href="https://www.karenbrownman.com/">Karen Brownman</ExternalLink>
-- Game covers are sourced from <ExternalLink href="https://www.igdb.com/">IGDB</ExternalLink>
-- Movie posters are sourced from <ExternalLink href="https://www.themoviedb.org/">TMDb</ExternalLink>
-- Book covers are sourced from the Google <ExternalLink href="https://developers.google.com/books">Books API</ExternalLink>
+- This site is (almost) entirely static, built with [Astro](https://astro.build/), and styled with [Tailwind](https://tailwindcss.com/)
+- The data is stored in [Airtable](https://airtable.com/) ([referral link](https://airtable.com/invite/r/7A1YRa26))
+- The source is available on [GitHub](https://github.com/xavdid/david.reviews)
+- The [social media image](/og.png) was created by [Karen Brownman](https://www.karenbrownman.com/)
+- Game covers are sourced from [IGDB](https://www.igdb.com/)
+- Movie posters are sourced from [TMDb](https://www.themoviedb.org/)
+- Book covers are sourced from the Google's [Books API](https://developers.google.com/books)

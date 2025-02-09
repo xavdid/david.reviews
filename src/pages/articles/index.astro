@@ -2,6 +2,7 @@
 import PageTitle from "../../components/PageTitle.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import SubtleLink from "../../components/links/SubtleLink.astro";
+import OmniLink from "../../components/mdx/OmniLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getPublishedArticles } from "../../utils/content";
 
@@ -18,9 +19,9 @@ const allArticles = await getPublishedArticles();
   <p class="pb-3 pt-1">
     In addition to micro-reviews, I've also published {allArticles.length}
      longer-form reviews and design articles. If you'd like me to review your
-    game, please <SubtleLink href="/contact">
+    game, please <OmniLink href="/contact/">
       {"get in touch"}
-    </SubtleLink>!
+    </OmniLink>!
   </p>
 
   <SubscribeBlurb mediaType="article" />

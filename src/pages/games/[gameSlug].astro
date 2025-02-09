@@ -5,7 +5,6 @@ import type { Game } from "../../airtable/data/games";
 import { loadInProgessPlays } from "../../airtable/data/inProgressPlays";
 import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
 import PlaySummary from "../../components/infoboxes/PlaySummary.astro";
-import RoundedLink from "../../components/links/RoundedLink.astro";
 import SubtleLink from "../../components/links/SubtleLink.astro";
 import MediaTitle from "../../components/MediaTitle.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -23,9 +22,9 @@ import {
   seoTitle,
 } from "../../utils/data";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
-import ExternalLink from "../../components/links/ExternalLink.astro";
 import SteamIcon from "../../components/icons/steam.astro";
 import DekuDealsIcon from "../../components/icons/deku-deals.astro";
+import OmniLink from "../../components/mdx/OmniLink.astro";
 
 type Params = {
   gameSlug: string;
@@ -183,23 +182,23 @@ const hasArticleSection = Boolean(articles.length || award);
     <div class="pl-3">
       <MediaTitle>{title}</MediaTitle>
       <p class="pt-2">
-        Genre: <RoundedLink href={genre.permalink}>
+        Genre: <OmniLink href={genre.permalink}>
           {genre.name}
-        </RoundedLink>
+        </OmniLink>
       </p>
       <p class="pr-2 pt-2">
         I've played the main story {plays.length} time{pluralize(plays)}
-         and given it an average score of {averageRating(plays)} (<SubtleLink
+         and given it an average score of {averageRating(plays)} (<OmniLink
           href={`${ratingPage("games")}`}
         >
           {"out of 4"}
-        </SubtleLink>).
+        </OmniLink>).
       </p>
       {
         steamUrl && (
           <div class="pt-2">
             <SteamIcon />
-            <ExternalLink href={steamUrl}>Steam</ExternalLink>
+            <OmniLink href={steamUrl}>Steam</OmniLink>
           </div>
         )
       }
@@ -207,7 +206,7 @@ const hasArticleSection = Boolean(articles.length || award);
         dekuDealsUrl && (
           <div class="pt-1">
             <DekuDealsIcon />
-            <ExternalLink href={dekuDealsUrl}>Deku Deals</ExternalLink>
+            <OmniLink href={dekuDealsUrl}>Deku Deals</OmniLink>
           </div>
         )
       }
@@ -216,9 +215,9 @@ const hasArticleSection = Boolean(articles.length || award);
           <div class="pt-2">
             <p>
               This game is part of the{" "}
-              <RoundedLink href={collection.permalink}>
+              <OmniLink href={collection.permalink}>
                 {collection.fullName}
-              </RoundedLink>{" "}
+              </OmniLink>{" "}
               collection.
             </p>
           </div>

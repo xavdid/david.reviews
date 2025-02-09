@@ -5,7 +5,6 @@ import type { Book } from "../../airtable/data/books";
 import { loadReads, type Read } from "../../airtable/data/reads";
 import AuthorList from "../../components/AuthorList.astro";
 import AwardBlurb from "../../components/AwardBlurb.astro";
-import RoundedLink from "../../components/links/RoundedLink.astro";
 import MediaTitle from "../../components/MediaTitle.astro";
 import Rating from "../../components/Rating.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -17,8 +16,8 @@ import {
   ratingPage,
   seoTitle,
 } from "../../utils/data";
-import SubtleLink from "../../components/links/SubtleLink.astro";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
+import OmniLink from "../../components/mdx/OmniLink.astro";
 
 type Params = {
   bookSlug: string;
@@ -113,19 +112,16 @@ const authorsStr = authors.map((a) => a.name).join(", ");
         an average score of {
           reads.reduce((total, { rating }) => rating + total, 0) / reads.length
         }
-         (<SubtleLink href={`${ratingPage("books")}`}>
+         (<OmniLink href={`${ratingPage("books")}`}>
           {"out of 4"}
-        </SubtleLink>).
+        </OmniLink>).
       </p>
       {
         series && (
           <div class="py-2">
             <p>
               This is book #{numberInSeries} in the
-              <RoundedLink href={series.permalink}>
-                {series.name}
-              </RoundedLink>{" "}
-              series.
+              <OmniLink href={series.permalink}>{series.name}</OmniLink> series.
             </p>
           </div>
         )

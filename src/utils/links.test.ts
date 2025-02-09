@@ -2,7 +2,10 @@ import { expect, test } from "vitest";
 import { linkMode } from "./links";
 
 test.for([
-  ...["https://xavd.id"].map((h) => [h, "external"]),
+  ...["https://xavd.id", "mailto:cool@cool.com", "/og.png"].map((h) => [
+    h,
+    "external",
+  ]),
   ...[
     "/games/roottrees/",
     "/games/roottrees/",
@@ -24,6 +27,7 @@ test.for([
     "/search/",
     "/books/",
     "/movies/",
+    "/rating/games/",
     "/",
     "/articles/the-roottrees-are-dead-review/",
     "/contact/#developers--publishers",

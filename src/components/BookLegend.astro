@@ -1,5 +1,5 @@
 ---
-import ExternalLink from "./links/ExternalLink.astro";
+import OmniLink from "./mdx/OmniLink.astro";
 
 type Props = {
   awardUrl?: string;
@@ -19,8 +19,8 @@ const {
   {showRereads && <li>🔁 - Re-read</li>}
   <li>
     🥇 / 🥈 / 🥉 -
-    <ExternalLink href={awardUrl}>
+    <OmniLink href={awardUrl}>
       {"Favorite of the Year"}
-    </ExternalLink> honoree.
+    </OmniLink> honoree.
   </li>
 </ul>
