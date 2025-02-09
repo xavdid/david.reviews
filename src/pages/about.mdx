@@ -7,6 +7,9 @@ ogDescription: "Why I made this site, what it stands for, and how you can help."
 import ExternalLink from "../components/links/ExternalLink.astro";
 import SubtleLink from "../components/links/SubtleLink.astro";
 import SteamFollowButton from "../components/SteamFollowButton.astro";
+import OmniLink from "../components/mdx/OmniLink.astro";
+// could make this generic and not have to redo it for every page, but there's only 2 so far?
+export const components = { a: OmniLink };
 
 # About / Manifesto
 

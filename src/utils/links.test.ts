@@ -30,6 +30,7 @@ test.for([
     "/games/awarded/",
     "/games/recommended/",
     "/games/years/2024/",
+    "#cool",
   ].map((h) => [h, "subtle"]),
 ])("%s -> %s", ([href, expected]) => {
   expect(linkMode(href)).toBe(expected);

@@ -9,15 +9,31 @@ import SubtleLink from "../links/SubtleLink.astro";
 
 type Props = {
   href: string;
+  /**
+   * passed by rehype when styling anchors
+   */
+  isHeading?: true;
 };
 
-const { href } = Astro.props;
+const { href, isHeading } = Astro.props;
 
 const mode = linkMode(href);
 ---
 
 {
-  mode === "external" ? (
+  href.startsWith("#") && isHeading ? (
+    // heading anchors are basically unstyled
+    <a
+      class:list={[
+        "not-prose",
+        // works on mobile while the element is the last selected one!
+        "hover:after:content-['_#']",
+      ]}
+      href={href}
+    >
+      <slot />
+    </a>
+  ) : mode === "external" ? (
     <ExternalLink href={href}>
       <slot />
     </ExternalLink>
