@@ -152,7 +152,9 @@ const groupedSeo: SEOProps = {
     <main
       class:list={[
         "mx-auto max-w-[95%] pb-4",
-        wide ? "md:max-w-prose" : "md:max-w-xl",
+        // could use max-w-prose, but it uses `ch` and isn't the same across devices
+        // the steam embeds _are_ fixed width, so they overshoot on windows
+        wide ? "md:max-w-2xl" : "md:max-w-xl",
       ]}
     >
       <slot />
