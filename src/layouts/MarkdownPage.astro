@@ -6,7 +6,7 @@ import { capitalize } from "../utils/data";
 
 // these are not validated (like a content collection would be)
 type Props = MarkdownLayoutProps<{
-  activeTab: "about" | "contact";
+  activeTab?: "about" | "contact";
   ogDescription: `${string}.`;
 }>;
 
@@ -16,7 +16,7 @@ const {
 ---
 
 <Layout
-  pageTitle={capitalize(activeTab)}
+  pageTitle={activeTab ? capitalize(activeTab) : "404"}
   pageDescription={ogDescription}
   wide
   activeTab={activeTab}

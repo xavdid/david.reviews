@@ -31,8 +31,12 @@ export const pluralize = (
   return useSuffix ? singular + plural : singular;
 };
 
-export const capitalize = (s: string): string =>
-  s.charAt(0).toUpperCase() + s.slice(1);
+export const capitalize = (s?: string): string => {
+  if (!s) {
+    return "";
+  }
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 
 // don't want to make it sound like it was so bad I didn't have anything to say
 export const noReview = (pluralNoun: "plays" | "watches" | "reads"): string =>
