@@ -100,5 +100,5 @@ export const getPlayForGame = async (
     }
   }
 
-  return plays[index];
+  return playForGame;
 };
