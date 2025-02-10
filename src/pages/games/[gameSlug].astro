@@ -4,9 +4,13 @@ import { Image } from "astro:assets";
 import type { Game } from "../../airtable/data/games";
 import { loadInProgessPlays } from "../../airtable/data/inProgressPlays";
 import { isEtcPlay, loadPlays, type Play } from "../../airtable/data/plays";
+import DekuDealsIcon from "../../components/icons/deku-deals.astro";
+import SteamIcon from "../../components/icons/steam.astro";
 import PlaySummary from "../../components/infoboxes/PlaySummary.astro";
+import OmniLink from "../../components/links/OmniLink.astro";
 import SubtleLink from "../../components/links/SubtleLink.astro";
 import MediaTitle from "../../components/MediaTitle.astro";
+import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import Layout from "../../layouts/Layout.astro";
 import {
   getPublishedArticles,
@@ -21,10 +25,6 @@ import {
   ratingPage,
   seoTitle,
 } from "../../utils/data";
-import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
-import SteamIcon from "../../components/icons/steam.astro";
-import DekuDealsIcon from "../../components/icons/deku-deals.astro";
-import OmniLink from "../../components/links/OmniLink.astro";
 
 type Params = {
   gameSlug: string;
@@ -150,9 +150,10 @@ const hasArticleSection = Boolean(articles.length || award);
 
 <Layout
   pageTitle={`${title} - Games`}
-  pageDescription={`David shares thoughts about the ${plays.length} time${
-    plays.length > 1 ? "s" : ""
-  } he's played the ${genre.name} game ${title}.`}
+  pageDescription={`David shares thoughts about the ${plays.length} ${pluralize(
+    plays,
+    "time",
+  )} he's played the ${genre.name} game ${title}.`}
   seoTitle={seoTitle(title)}
   seoDescription={buildSeoDescription(
     [...plays, ...etcPlays].toSorted(
@@ -187,10 +188,10 @@ const hasArticleSection = Boolean(articles.length || award);
         </OmniLink>
       </p>
       <p class="pr-2 pt-2">
-        I've played the main story {plays.length} time{pluralize(plays)}
-         and given it an average score of {averageRating(plays)} (<OmniLink
-          href={`${ratingPage("games")}`}
-        >
+        I've played the main story {plays.length}
+        {pluralize(plays, "time")} and given it an average score of {
+          averageRating(plays)
+        } (<OmniLink href={`${ratingPage("games")}`}>
           {"out of 4"}
         </OmniLink>).
       </p>

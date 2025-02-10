@@ -83,13 +83,14 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 
 <Layout
   pageTitle={`${name} Series - Books`}
-  pageDescription={`David shares thoughts about the ${numUniqueBooks} book${
-    numUniqueBooks > 1 ? "s" : ""
-  } he's read from the ${name} series.`}
+  pageDescription={`David shares thoughts about the ${numUniqueBooks} ${pluralize(
+    numUniqueBooks,
+    "book",
+  )} he's read from the ${name} series.`}
   seoTitle={seoTitle(`The ${name} Series`)}
   seoDescription={`There's an average score of ${averageRating(
     reads,
-  )}⭐ for the ${numUniqueBooks} book${pluralize(numUniqueBooks)}.`}
+  )}⭐ for the ${numUniqueBooks} ${pluralize(numUniqueBooks, "book")}.`}
   activeTab="books"
   publishedOn={publishedOn}
   updatedOn={updatedOn}
@@ -105,20 +106,19 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
     {
       seriesComplete && numBooksInSeries != null ? (
         <>
-          I've read {readAll ? "all" : numUniqueBooks} of the {numBooksInSeries}
-          book{pluralize(numBooksInSeries)} in this series.
+          I've read {readAll ? "all" : numUniqueBooks} of the {numBooksInSeries}{" "}
+          {pluralize(numBooksInSeries, "book")} in this series.
         </>
       ) : (
         <>
-          I've read {numUniqueBooks} book{pluralize(numUniqueBooks)} in this
+          I've read {numUniqueBooks} {pluralize(numUniqueBooks, "book")} in this
           series so far.
         </>
       )
-    }
-     There {reads.length > 1 ? "are" : "is"}{" "}
-    {reads.length} review{pluralize(reads)} of {
-      numUniqueBooks > 1 ? "those" : "that"
-    } book{pluralize(numUniqueBooks)} for an average score of {
+    } There {pluralize(reads, "is", "are", true)}
+    {reads.length}
+    {pluralize(reads, "review")} of {numUniqueBooks > 1 ? "those" : "that"}
+    {pluralize(numUniqueBooks, "book")} for an average score of {
       averageRating(reads)
     }
      (<OmniLink href={`${ratingPage("books")}`}>

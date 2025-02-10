@@ -7,10 +7,15 @@ import {
 } from "../../../airtable/data/plays";
 import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
-import Layout from "../../../layouts/Layout.astro";
-import { genrePermalink, ratingPage, seoTitle } from "../../../utils/data";
 import SlimBox from "../../../components/infoboxes/SlimBox.astro";
 import OmniLink from "../../../components/links/OmniLink.astro";
+import Layout from "../../../layouts/Layout.astro";
+import {
+  genrePermalink,
+  pluralize,
+  ratingPage,
+  seoTitle,
+} from "../../../utils/data";
 
 type Params = {
   genreSlug: string;
@@ -115,8 +120,8 @@ const processedGames = games
           (() => {
             throw new Error("MISSING GENRE DESCRIPTION!");
           })()
-      } I've played {games.length} game{games.length > 1 ? "s" : ""} in this
-      genre so far.
+      } I've played {games.length}
+      {pluralize(games, "game")} in this genre so far.
     </p>
     <p class="py-3">
       Each game is scored on my <OmniLink href={ratingPage("games")}>

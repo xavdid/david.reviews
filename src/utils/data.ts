@@ -5,21 +5,30 @@ import type { Collection, Permalink } from "../airtable/types";
 export type Category = "book" | "movie" | "game";
 
 /**
- * a function that returns an `s` based on whether a word should be pluralized. Example:
+ * take a number and pair of words. Return one or the other based on the length/count of the input. Can add the words together if one is a suffix.
+ * Example:
  * ```js
- * `book${pluralize(books)}`
+ * asdf
  * ```
- * Will return `book` or `books` correctly depending on the length of a `books` array.
+ * @param l number or list of items to determine plurality
+ * @param singular the singular word
+ * @param plural the stuffix to add to `singular`, if the plural is used
+ * @param fullReplace if `true`, return `plural` instead of adding it to `singular` if we take the `plural` case
+ * @returns the correct word
  */
-export const pluralize = (l: unknown[] | number): string => {
-  let calc;
-  if (Array.isArray(l)) {
-    calc = l.length > 1;
-  } else {
-    calc = l > 1;
+export const pluralize = (
+  l: unknown[] | number,
+  singular: string,
+  plural = "s",
+  fullReplace?: boolean,
+): string => {
+  const useSuffix = Array.isArray(l) ? l.length > 1 : l > 1;
+
+  if (fullReplace) {
+    return useSuffix ? plural : singular;
   }
 
-  return calc ? "s" : "";
+  return useSuffix ? singular + plural : singular;
 };
 
 export const capitalize = (s: string): string =>

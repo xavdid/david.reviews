@@ -56,8 +56,8 @@ const genres = Object.values(games).reduce<Record<string, GenreRecord>>(
         .map(({ genre, games }) => (
           <li class="py-2">
             <OmniLink href={genrePermalink(genre.slug)}>{genre.name}</OmniLink>
-            games ({games.size} play{pluralize(games.size)}) are categorized by{" "}
-            {GENRE_DESCRIPTIONS[genre.slug] ?? "MISSING GENRE DESCRIPTION!"}
+            games ({games.size} {pluralize(games.size, "play")}) are categorized
+            by {GENRE_DESCRIPTIONS[genre.slug] ?? "MISSING GENRE DESCRIPTION!"}
           </li>
         ))
     }

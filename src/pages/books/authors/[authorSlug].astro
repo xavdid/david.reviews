@@ -9,11 +9,11 @@ import ReadBox from "../../../components/infoboxes/ReadBox.astro";
 import OmniLink from "../../../components/links/OmniLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
-  maxIsoDate,
   averageRating,
+  maxIsoDate,
   pluralize,
-  seoTitle,
   ratingPage,
+  seoTitle,
 } from "../../../utils/data";
 
 type Params = {
@@ -72,8 +72,9 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   seoTitle={seoTitle(`Books by ${name}`)}
   seoDescription={`There's an average score of ${averageRating(
     reads,
-  )}⭐ for the ${numUniqueBooks} book${pluralize(
+  )}⭐ for the ${numUniqueBooks} ${pluralize(
     numUniqueBooks,
+    "book",
   )} he's read by ${name}.`}
   activeTab="books"
   publishedOn={publishedOn}
@@ -83,9 +84,10 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
     Reviews for <RoundedText text={name} />
   </PageTitle>
   <p class="pb-3">
-    There {reads.length > 1 ? "are" : "is"}{" "}
-    {reads.length} review{pluralize(reads)} of {numUniqueBooks}
-     book{pluralize(numUniqueBooks)} with an average score of {
+    There {pluralize(reads, "is", "are", true)}
+    {reads.length}
+    {pluralize(reads, "review")} of {numUniqueBooks}
+    {pluralize(numUniqueBooks, "book")} with an average score of {
       averageRating(reads)
     } (<OmniLink href={ratingPage("books")}>
       {"out of 4"}

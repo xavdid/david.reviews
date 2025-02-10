@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import type { Movie } from "../../../airtable/data/movies";
 import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import type { Collection } from "../../../airtable/types";
+import OmniLink from "../../../components/links/OmniLink.astro";
 import TitleLink from "../../../components/links/TitleLink.astro";
 import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
@@ -14,7 +15,6 @@ import {
   ratingPage,
   seoTitle,
 } from "../../../utils/data";
-import OmniLink from "../../../components/links/OmniLink.astro";
 
 type Params = {
   collectionSlug: string;
@@ -138,7 +138,7 @@ const sortedMovies = movies
               </TitleLink>
 
               <div>
-                Watched {numWatches} time{pluralize(numWatches)}
+                Watched {numWatches} {pluralize(numWatches, "time")}.
               </div>
               <div>Avg Rating: {avgRating}/4⭐</div>
               <p class="mt-2 border-l-2 border-red-600 pl-2 italic">{blurb}</p>
