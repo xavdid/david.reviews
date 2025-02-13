@@ -93,9 +93,7 @@ export const getPlayForGame = async (
     if (isProdBuild) {
       throw new Error(message);
     } else {
-      console.warn(
-        `Tried to load review for igdbId: ${slug}, but it wasn't found`,
-      );
+      console.warn(message);
       return null;
     }
   }
