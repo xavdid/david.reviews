@@ -41,9 +41,9 @@ const buildOgDesc = (
 // could probably DRY this up? idk
 
 export const GET: APIRoute = async () => {
-  const plays: Array<CompletedItem & { playedOnSteam: boolean }> = (
-    await loadPlays()
-  )
+  const plays: Array<
+    CompletedItem & { playedOnSteam: boolean; steamUrl?: string }
+  > = (await loadPlays())
     .slice(0, 50)
     .map(
       ({
@@ -53,7 +53,7 @@ export const GET: APIRoute = async () => {
         notes,
         rating,
         playedOnSteam,
-        game: { permalink, title, bigPosterUrl },
+        game: { permalink, title, bigPosterUrl, steamUrl },
       }) => ({
         recordId,
         permalink: `https://david.reviews${permalink}`,
@@ -67,6 +67,7 @@ export const GET: APIRoute = async () => {
         playedOnSteam,
         notes,
         rating,
+        steamUrl,
       }),
     );
 
