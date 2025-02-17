@@ -10,17 +10,26 @@ import {
 } from "../../utils/data";
 
 type CompletedItem = {
+  // used for filtering
   category: Category;
+  // used for deduplicating
   recordId: string;
   permalink: string;
+  // bluesky needs these to be built from scratch
   ogImgUrl: string;
   ogDescription: string;
+  // also bluesky
   title: string;
+  // post body should capitalize
   titleCapitalized: string;
+  // sorting
   dateFinished: string;
+  // either pulled from airtable, calculated, or just `true`
   shouldAutoPost: boolean;
-  offset: number;
+  // text of the review, useful for sending along elsewhere
   notes: string;
+  // useful thing to have
+  rating: number;
 };
 
 const buildOgDesc = (
@@ -55,9 +64,9 @@ export const GET: APIRoute = async () => {
         category: "game",
         dateFinished,
         shouldAutoPost,
-        offset: 0,
         playedOnSteam,
         notes,
+        rating,
       }),
     );
 
@@ -80,8 +89,8 @@ export const GET: APIRoute = async () => {
         category: "movie",
         dateFinished,
         shouldAutoPost: notes.length > 0,
-        offset: 0,
         notes,
+        rating,
       }),
     );
 
@@ -104,8 +113,8 @@ export const GET: APIRoute = async () => {
         category: "book",
         dateFinished,
         shouldAutoPost: true,
-        offset: 0,
         notes,
+        rating,
       }),
     );
 
@@ -116,10 +125,6 @@ export const GET: APIRoute = async () => {
         new Date(b.dateFinished).valueOf() - new Date(a.dateFinished).valueOf(),
     ),
   };
-
-  result.completedItems.forEach((i) => {
-    i.offset = 3;
-  });
 
   return new Response(JSON.stringify(result, null, isProdBuild ? 0 : 2));
 };
