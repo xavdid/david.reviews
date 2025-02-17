@@ -8,6 +8,7 @@ const SCHEMA = {
   tableName: "Reads",
   // https://airtable.com/appv2mhWOgkRhR4rK/api/docs#javascript/table:reads
   fields: {
+    recordId: "fld75nxeBObGy25Qc",
     rating: "fldcYBkA0w9G49ZRr",
     notes: "fldt0Xy3ncrVOxGAI",
     dateFinished: "fldqmKpPjPt6VNgAn",
@@ -38,6 +39,7 @@ type LocalFields = {
   dateFinished: string;
   isReread: boolean;
   medium: ReadMedium;
+  recordId: string;
 };
 type ForeignKeyFields = {
   book: Book;
@@ -50,6 +52,7 @@ const materialize = (readRow: ReadRecord): LocalFields => ({
   dateFinished: readRow[fields.dateFinished],
   isReread: readRow[fields.isReread],
   medium: readRow[fields.medium],
+  recordId: readRow[fields.recordId],
 });
 
 export const loadReads = async (): Promise<Read[]> =>

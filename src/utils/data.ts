@@ -119,7 +119,7 @@ export const isProdBuild = import.meta.env.PROD;
 const numDaysAgo = (date: string): number =>
   Math.floor((new Date().valueOf() - Date.parse(date)) / (1000 * 60 * 60 * 24));
 
-const truncate = (s: string, length = 200): string => {
+export const truncate = (s: string, length = 200): string => {
   if (s.length <= length) {
     return s;
   }

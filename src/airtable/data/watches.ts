@@ -8,6 +8,7 @@ const SCHEMA = {
   tableName: "Watches",
   // https://airtable.com/appctKQDyHbyqNJOY/api/docs#javascript/table:watches:fields
   fields: {
+    recordId: "fldRdLYZsXmAgyO0Q",
     dateWatched: "fldhJwKvRV18ox99t",
     isFirstWatch: "fldpSxAP9mpw0D7V6",
     rating: "fld120ruFVH8sml4B",
@@ -31,6 +32,7 @@ type StringFields = {
 type WatchRecord = StringFields & NonStringFields & RecordBase;
 
 type LocalFields = {
+  recordId: string;
   rating: number;
   notes: string;
   dateFinished: string;
@@ -43,6 +45,7 @@ type ForeignKeyFields = {
 export type Watch = LocalFields & ForeignKeyFields;
 
 const materialize = (watchRow: WatchRecord): LocalFields => ({
+  recordId: watchRow[fields.recordId],
   rating: watchRow[fields.rating],
   notes: watchRow[fields.notes] ?? "",
   dateFinished: watchRow[fields.dateWatched],

@@ -8,6 +8,7 @@ const SCHEMA = {
   viewId: "viwkq3nYj6SIHuujT",
   tableName: "Playthroughs",
   fields: {
+    recordId: "fldhwsCGBg9JXtPUm",
     playType: "fldTLUb4amLT7GfQr",
     dateFinished: "fld1gZfopGuA6q13R",
     minutesPlayed: "fldZxVhvYZ193CI3I",
@@ -15,6 +16,7 @@ const SCHEMA = {
     notes: "fldKvvBC2dQyQDX5X",
     game: "fldTihZHDDFfttVoA",
     beatIfBeatable: "fldadrp1vEG1npkRK",
+    shouldAutoPost: "fldT2QUK5SYjopMz5",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
@@ -36,6 +38,7 @@ type NonStringFields = {
   [fields.minutesPlayed]: number;
   [fields.playType]: PlayTypes;
   [fields.beatIfBeatable]: "True" | "False" | "N/A";
+  [fields.shouldAutoPost]?: true;
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
@@ -49,6 +52,8 @@ type LocalFields = {
   playType: PlayTypes;
   minutesPlayed: number;
   didNotFinish: boolean;
+  recordId: string;
+  shouldAutoPost: boolean;
 };
 type ForeignKeyFields = {
   game: Game;
@@ -56,12 +61,14 @@ type ForeignKeyFields = {
 export type Play = LocalFields & ForeignKeyFields;
 
 const materialize = (playRow: PlayRecord): LocalFields => ({
+  recordId: playRow[fields.recordId],
   rating: playRow[fields.rating],
   notes: playRow[fields.notes] ?? "",
   dateFinished: playRow[fields.dateFinished],
   playType: playRow[fields.playType],
   minutesPlayed: playRow[fields.minutesPlayed],
   didNotFinish: playRow[fields.beatIfBeatable] === "False",
+  shouldAutoPost: Boolean(playRow[fields.shouldAutoPost]),
 });
 
 export const loadPlays = async (): Promise<Play[]> =>
