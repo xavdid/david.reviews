@@ -17,6 +17,7 @@ const SCHEMA = {
     game: "fldTihZHDDFfttVoA",
     beatIfBeatable: "fldadrp1vEG1npkRK",
     shouldAutoPost: "fldT2QUK5SYjopMz5",
+    playedOnSteam: "fldi0LzrevBvRVAl9",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
@@ -39,6 +40,7 @@ type NonStringFields = {
   [fields.playType]: PlayTypes;
   [fields.beatIfBeatable]: "True" | "False" | "N/A";
   [fields.shouldAutoPost]?: true;
+  [fields.playedOnSteam]: 0 | 1;
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
@@ -54,6 +56,7 @@ type LocalFields = {
   didNotFinish: boolean;
   recordId: string;
   shouldAutoPost: boolean;
+  playedOnSteam: boolean;
 };
 type ForeignKeyFields = {
   game: Game;
@@ -69,6 +72,7 @@ const materialize = (playRow: PlayRecord): LocalFields => ({
   minutesPlayed: playRow[fields.minutesPlayed],
   didNotFinish: playRow[fields.beatIfBeatable] === "False",
   shouldAutoPost: Boolean(playRow[fields.shouldAutoPost]),
+  playedOnSteam: Boolean(playRow[fields.playedOnSteam]),
 });
 
 export const loadPlays = async (): Promise<Play[]> =>

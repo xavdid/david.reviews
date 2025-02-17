@@ -20,6 +20,7 @@ type CompletedItem = {
   dateFinished: string;
   shouldAutoPost: boolean;
   offset: number;
+  notes: string;
 };
 
 const buildOgDesc = (
@@ -31,7 +32,9 @@ const buildOgDesc = (
 // could probably DRY this up? idk
 
 export const GET: APIRoute = async () => {
-  const plays: CompletedItem[] = (await loadPlays())
+  const plays: Array<CompletedItem & { playedOnSteam: boolean }> = (
+    await loadPlays()
+  )
     .slice(0, 50)
     .map(
       ({
@@ -40,6 +43,7 @@ export const GET: APIRoute = async () => {
         shouldAutoPost,
         notes,
         rating,
+        playedOnSteam,
         game: { permalink, title, bigPosterUrl },
       }) => ({
         recordId,
@@ -52,6 +56,8 @@ export const GET: APIRoute = async () => {
         dateFinished,
         shouldAutoPost,
         offset: 0,
+        playedOnSteam,
+        notes,
       }),
     );
 
@@ -75,6 +81,7 @@ export const GET: APIRoute = async () => {
         dateFinished,
         shouldAutoPost: notes.length > 0,
         offset: 0,
+        notes,
       }),
     );
 
@@ -98,6 +105,7 @@ export const GET: APIRoute = async () => {
         dateFinished,
         shouldAutoPost: true,
         offset: 0,
+        notes,
       }),
     );
 
