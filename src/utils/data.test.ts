@@ -1,5 +1,5 @@
-import { expect, test } from "vitest";
-import { pluralize } from "./data";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { numDaysAgo, pluralize } from "./data";
 
 type TestCase = [...Parameters<typeof pluralize>, string];
 const pluralizeTestCases: TestCase[] = [
@@ -23,3 +23,55 @@ test.for(pluralizeTestCases)(
     expect(pluralize(items, word, suffix, replace)).toBe(expected);
   },
 );
+
+// under normal circumstances, I can't see how the OG data could be being built incorrectly
+// but _something_ about the link previews is getting cached in an unexpected way sometimes??
+describe("numDaysAgo", () => {
+  describe("pushing the night before", () => {
+    // I have something that finished today and something that finishes tomorrow. The PT wall clock says it's todayThe actual date of the build is today
+    beforeEach(() => {
+      // `2025-02-18T05:38:35.569Z`, when I wrote this test; about 9:38pm PT on Feb 17, 2025
+      // it's as if I pushed in the evening
+      vi.useFakeTimers().setSystemTime(1739857115569);
+    });
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    test("published date is today", () => {
+      expect(numDaysAgo("2025-02-17")).toEqual(1);
+    });
+
+    test("published date is tomorrow", () => {
+      expect(numDaysAgo("2025-02-18")).toEqual(0);
+    });
+
+    test("published date is weeks ago", () => {
+      expect(numDaysAgo("2025-02-01")).toEqual(17);
+    });
+  });
+
+  describe("regular autobuild", () => {
+    // I have something that finished today and something that finishes tomorrow. The PT wall clock says it's todayThe actual date of the build is today
+    beforeEach(() => {
+      // `2025-02-18T13:07:43.000Z`, the regular build time the morning after I wrote this test; about 5:07am PT on Feb 18, 2025
+      // it's as if I pushed in the evening
+      vi.useFakeTimers().setSystemTime(1739884063000);
+    });
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    test("published date is today", () => {
+      expect(numDaysAgo("2025-02-17")).toEqual(1);
+    });
+
+    test("published date is tomorrow", () => {
+      expect(numDaysAgo("2025-02-18")).toEqual(0);
+    });
+
+    test("published date is weeks ago", () => {
+      expect(numDaysAgo("2025-02-01")).toEqual(17);
+    });
+  });
+});

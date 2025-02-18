@@ -116,7 +116,7 @@ export const slimReview = (
 export const isProdBuild = import.meta.env.PROD;
 
 // rough approximation, but it works well enough
-const numDaysAgo = (date: string): number =>
+export const numDaysAgo = (date: string): number =>
   Math.floor((new Date().valueOf() - Date.parse(date)) / (1000 * 60 * 60 * 24));
 
 export const truncate = (s: string, length = 200): string => {
