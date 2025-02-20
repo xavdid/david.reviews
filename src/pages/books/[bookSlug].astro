@@ -18,6 +18,8 @@ import {
   ratingPage,
   seoTitle,
 } from "../../utils/data";
+import { buildStructuredReview } from "../../utils/structuredData";
+import type { ExternalUrl } from "../../airtable/types";
 
 type Params = {
   bookSlug: string;
@@ -72,9 +74,12 @@ const {
   numberInSeries,
   publishedOn,
   updatedOn,
+  permalink,
 } = Astro.props;
 
 const authorsStr = authors.map((a) => a.name).join(", ");
+const coverUrl = (height: number): ExternalUrl =>
+  `https://books.google.com/books/content/images/frontcover/${gbid}?fife=h${height}`;
 ---
 
 <Layout
@@ -87,17 +92,23 @@ const authorsStr = authors.map((a) => a.name).join(", ");
   seoDescription={buildSeoDescription(reads, "reads")}
   activeTab="books"
   ogImg={{
-    url: `https://books.google.com/books/content/images/frontcover/${gbid}?fife=h700`,
+    url: coverUrl(700),
     height: 700,
     width: 461,
     type: "jpeg",
   }}
   publishedOn={publishedOn}
   updatedOn={updatedOn}
+  structuredData={buildStructuredReview("Book", reads, {
+    title,
+    permalink,
+    poster: coverUrl(700),
+    authors,
+  })}
 >
   <div class="flex py-3">
     <Image
-      src={`https://books.google.com/books/content/images/frontcover/${gbid}?fife=h225`}
+      src={coverUrl(225)}
       alt={`poster for ${title}`}
       height={450 / 2}
       width={300 / 2}

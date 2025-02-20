@@ -18,6 +18,7 @@ import {
   ratingPage,
   seoTitle,
 } from "../../utils/data";
+import { buildStructuredReview } from "../../utils/structuredData";
 
 type Params = {
   movieSlug: string;
@@ -74,6 +75,7 @@ const {
     collections,
     yearReleased,
     numWatches,
+    permalink,
   },
   publishedOn,
   updatedOn,
@@ -96,6 +98,11 @@ const {
   }}
   publishedOn={publishedOn}
   updatedOn={updatedOn}
+  structuredData={buildStructuredReview("Movie", watches, {
+    title,
+    permalink,
+    poster: bigPosterUrl,
+  })}
 >
   <div class="flex py-3">
     <Image

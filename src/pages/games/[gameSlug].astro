@@ -25,6 +25,7 @@ import {
   ratingPage,
   seoTitle,
 } from "../../utils/data";
+import { buildStructuredReview } from "../../utils/structuredData";
 
 type Params = {
   gameSlug: string;
@@ -139,6 +140,7 @@ const {
     collection,
     steamUrl,
     dekuDealsUrl,
+    permalink,
   },
   articles,
   publishedOn,
@@ -171,6 +173,11 @@ const hasArticleSection = Boolean(articles.length || award);
   }}
   publishedOn={publishedOn}
   updatedOn={updatedOn}
+  structuredData={buildStructuredReview("VideoGame", plays, {
+    title,
+    permalink,
+    poster: bigPosterUrl,
+  })}
 >
   <div class="flex py-3">
     <Image

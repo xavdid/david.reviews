@@ -43,6 +43,11 @@ type Props = {
    * the date of the last review published, if there's more than 1
    */
   updatedOn?: string;
+  /**
+   * json+ld structured data, if relevant
+   * see: https://developers.google.com/search/docs/appearance/structured-data/review-snippet#json-ld
+   */
+  structuredData?: object;
 };
 
 const OG_IMG_URL = "https://david.reviews/og.png";
@@ -64,6 +69,7 @@ const {
   wide,
   publishedOn,
   updatedOn,
+  structuredData,
 } = Astro.props;
 
 const groupedSeo: SEOProps = {
@@ -144,6 +150,16 @@ const groupedSeo: SEOProps = {
       data-goatcounter="https://david-reviews.goatcounter.com/count"
       async
       src="https://gc.zgo.at/count.js"></script>
+
+    {
+      structuredData && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(structuredData)}
+        />
+      )
+    }
 
     <SEO {...groupedSeo} />
   </head>

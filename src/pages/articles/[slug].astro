@@ -15,6 +15,7 @@ import EmbeddedPlay from "../../components/mdx/EmbeddedPlay.astro";
 import Config from "../../../astro.config.mjs";
 import type { ExternalUrl as AbsoluteUrl } from "../../airtable/types";
 import OmniLink from "../../components/links/OmniLink.astro";
+import { buildStructuredReview } from "../../utils/structuredData";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -29,6 +30,7 @@ export const getStaticPaths = async (): StaticPaths => {
 };
 
 const { entry } = Astro.props;
+const { slug } = Astro.params;
 const { Content } = await entry.render();
 
 const frontmatter = entry.data;
@@ -87,6 +89,27 @@ const components = {
   wide
   ogImg={ogImg}
   publishedOn={frontmatter.publishedOn}
+  structuredData={frontmatter.review
+    ? buildStructuredReview(
+        // TODO: change if I write a non-game article
+        "VideoGame",
+        [
+          {
+            rating: frontmatter.review.rating,
+            dateFinished: frontmatter.publishedOn ?? "",
+          },
+        ],
+        {
+          articleTitle: frontmatter.title,
+          articleSubject: frontmatter.gameSlugs?.[0]
+            ? `/games/${frontmatter.gameSlugs?.[0]}/`
+            : undefined,
+          blurb: frontmatter.review.blurb,
+          permalink: `/articles/${slug}/`,
+          poster: frontmatter.ogImg?.src,
+        },
+      )
+    : undefined}
 >
   <h1 class:list={h1Styles}>
     {frontmatter.title}

@@ -71,6 +71,9 @@ export const genrePermalink = (slug: string): Permalink =>
 export const ratingPage = (mediaType: `${Category}s`): Permalink =>
   `/rating/${mediaType}/`;
 
+/**
+ * takes a list of reviews and returns an average rounded to 2 decimals.
+ */
 export const averageRating = (items: Array<{ rating: number }>): number =>
   +(
     items.reduce((total, { rating }) => rating + total, 0) / items.length
@@ -170,4 +173,16 @@ export const getGitSha = (): string => {
       .trim();
   }
   return hash;
+};
+
+/**
+ * get the last item of an array
+ */
+export const last = <T>(items: T[]): T => {
+  const l = items.length;
+  if (l === 0) {
+    throw new Error("can't get last item of empty array");
+  }
+
+  return items[l - 1];
 };
