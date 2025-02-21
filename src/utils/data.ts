@@ -120,7 +120,7 @@ export const isProdBuild = import.meta.env.PROD;
 
 // rough approximation, but it works well enough
 export const numDaysAgo = (date: string): number =>
-  Math.floor((new Date().valueOf() - Date.parse(date)) / (1000 * 60 * 60 * 24));
+  Math.floor((sortableDateValue() - Date.parse(date)) / (1000 * 60 * 60 * 24));
 
 export const truncate = (s: string, length = 200): string => {
   if (s.length <= length) {
@@ -186,3 +186,18 @@ export const last = <T>(items: T[]): T => {
 
   return items[l - 1];
 };
+
+/**
+ * takes an nullable date value and returns its unix timestamp - perfect for sorting!
+ */
+export const sortableDateValue = (d?: string): number =>
+  (d ? new Date(d) : new Date()).valueOf();
+
+/**
+ * useful for sorting lists of things that have been finished. Newest to oldest.
+ */
+export const sortDateDescending = (
+  a: { dateFinished: string },
+  b: { dateFinished: string },
+): number =>
+  sortableDateValue(b.dateFinished) - sortableDateValue(a.dateFinished);

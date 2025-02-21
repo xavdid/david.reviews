@@ -15,6 +15,7 @@ import {
   pluralize,
   ratingPage,
   seoTitle,
+  sortableDateValue,
 } from "../../../utils/data";
 
 type Params = {
@@ -100,7 +101,7 @@ const processedGames = games
   .toSorted(
     (a, b) =>
       b.rating - a.rating ||
-      new Date(b.dateFinished).valueOf() - new Date(a.dateFinished).valueOf(),
+      sortableDateValue(b.dateFinished) - sortableDateValue(a.dateFinished),
   );
 ---
 

@@ -5,6 +5,7 @@ import { loadWatches } from "../../airtable/data/watches";
 import {
   isProdBuild,
   slimReview,
+  sortDateDescending,
   truncate,
   type Category,
 } from "../../utils/data";
@@ -122,8 +123,7 @@ export const GET: APIRoute = async () => {
   const result = {
     // zapier expects this key
     completedItems: [...plays, ...watches, ...reads].toSorted(
-      (a, b) =>
-        new Date(b.dateFinished).valueOf() - new Date(a.dateFinished).valueOf(),
+      sortDateDescending,
     ),
   };
 

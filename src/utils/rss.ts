@@ -1,5 +1,5 @@
 import rss, { type RSSFeedItem } from "@astrojs/rss";
-import { capitalize } from "./data";
+import { capitalize, sortDateDescending } from "./data";
 
 export const feedTypes = [
   "everything",
@@ -29,11 +29,7 @@ export const buildRssFeed = async <T extends { dateFinished: string }>(
     site,
     items: reviews
       // it's important that these stay sorted
-      .toSorted(
-        (a, b) =>
-          new Date(b.dateFinished).valueOf() -
-          new Date(a.dateFinished).valueOf(),
-      )
+      .toSorted(sortDateDescending)
       .slice(0, 50)
       .map(itemizer),
   });

@@ -6,18 +6,16 @@ import { loadInProgressReads } from "../airtable/data/inProgressReads";
 import SubtleLink from "../components/links/SubtleLink.astro";
 import Layout from "../layouts/Layout.astro";
 import { getPublishedArticles } from "../utils/content";
-import { seoTitle } from "../utils/data";
+import { seoTitle, sortableDateValue } from "../utils/data";
 import SubscribeBlurb from "../components/SubscribeBlurb.astro";
 import OmniLink from "../components/links/OmniLink.astro";
 
 const inProgressPlays = (await loadInProgessPlays()).toSorted(
-  (a, b) =>
-    new Date(b.dateStarted).valueOf() - new Date(a.dateStarted).valueOf(),
+  (a, b) => sortableDateValue(b.dateStarted) - sortableDateValue(a.dateStarted),
 );
 
 const inProgressReads = (await loadInProgressReads()).toSorted(
-  (a, b) =>
-    new Date(b.dateStarted).valueOf() - new Date(a.dateStarted).valueOf(),
+  (a, b) => sortableDateValue(b.dateStarted) - sortableDateValue(a.dateStarted),
 );
 
 const latestArticle = (await getPublishedArticles())[0];
