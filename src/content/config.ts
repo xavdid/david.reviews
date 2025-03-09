@@ -28,6 +28,8 @@ const articles = defineCollection({
         steamId: z.string().regex(/^\d+$/).optional(),
         review: z
           .object({
+            // used in structured data
+            gameTitle: z.string(),
             rating: z.number().min(1).max(4),
             blurb: z.string(),
             plusses: z.array(z.string()).default([]),
@@ -38,10 +40,9 @@ const articles = defineCollection({
           .optional(),
       })
       .strict()
-      .refine(
-        ({ publishedOn, ogImg }) => (publishedOn ? ogImg : true),
-        "published posts must have OG images",
-      ),
+      .refine(({ publishedOn, ogImg }) => {
+        return publishedOn ? ogImg : true;
+      }, "published posts must have OG images"),
 });
 
 export const collections = {
