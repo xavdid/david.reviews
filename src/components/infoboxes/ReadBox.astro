@@ -1,6 +1,4 @@
 ---
-import { Image } from "astro:assets";
-
 import type { Read } from "../../airtable/data/reads";
 import AuthorList from "../AuthorList.astro";
 import SubtleLink from "../links/SubtleLink.astro";
@@ -18,17 +16,18 @@ const authors = read.book.authors.filter(
 );
 ---
 
-<BaseBox type="book" notes={read.notes} rating={read.rating}>
-  <a slot="image" href={read.book.permalink}>
-    <Image
-      class="max-w-[unset]"
-      src={read.book.posterUrl}
-      alt={`cover for ${read.book.title}`}
-      height={188}
-      width={120}
-    /></a
-  >
-
+<BaseBox
+  type="book"
+  notes={read.notes}
+  rating={read.rating}
+  image={{
+    posterUrl: read.book.posterUrl,
+    height: 188,
+    width: 120,
+    title: read.book.title,
+    mediaPermalink: read.book.permalink,
+  }}
+>
   <div slot="title">
     <TitleLink href={read.book.permalink}>
       {read.book.title}

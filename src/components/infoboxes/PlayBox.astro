@@ -1,6 +1,4 @@
 ---
-import { Image } from "astro:assets";
-
 import type { Play } from "../../airtable/data/plays";
 import { minutesToDuration } from "../../utils/data";
 import SubtleLink from "../links/SubtleLink.astro";
@@ -13,17 +11,18 @@ type Props = {
 const { play } = Astro.props;
 ---
 
-<BaseBox type="game" notes={play.notes} rating={play.rating}>
-  <a slot="image" href={play.game.permalink}>
-    <Image
-      class="max-w-[unset]"
-      src={play.game.posterUrl}
-      alt={`poster for ${play.game.title}`}
-      height={180}
-      width={135}
-    /></a
-  >
-
+<BaseBox
+  type="game"
+  notes={play.notes}
+  rating={play.rating}
+  image={{
+    posterUrl: play.game.posterUrl,
+    height: 180,
+    width: 135,
+    title: play.game.title,
+    mediaPermalink: play.game.permalink,
+  }}
+>
   <span slot="title">
     <TitleLink href={play.game.permalink}>{play.game.title}</TitleLink>
   </span>

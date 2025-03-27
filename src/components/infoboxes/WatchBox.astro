@@ -1,6 +1,4 @@
 ---
-import { Image } from "astro:assets";
-
 import type { Watch } from "../../airtable/data/watches";
 import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
@@ -16,18 +14,15 @@ const { watch, numWatch } = Astro.props;
   type="movie"
   notes={watch.notes}
   rating={watch.rating}
+  image={{
+    posterUrl: watch.movie.posterUrl,
+    height: 187.5,
+    width: 125,
+    title: watch.movie.title,
+    mediaPermalink: watch.movie.permalink,
+  }}
   shrinkFooterText
 >
-  <a slot="image" href={watch.movie.permalink}>
-    <Image
-      class="max-w-[unset]"
-      src={watch.movie.posterUrl}
-      alt={`poster for ${watch.movie.title}`}
-      height={187.5}
-      width={125}
-    /></a
-  >
-
   <span slot="title">
     <TitleLink href={watch.movie.permalink}>{watch.movie.title}</TitleLink>
      ({watch.movie.yearReleased})

@@ -5,7 +5,12 @@ import {
   type AwardDetails,
   type AwardTier,
 } from "../../awards";
-import type { AirtableBase, Permalink, RecordBase } from "../types";
+import type {
+  AirtableBase,
+  ExternalUrl,
+  Permalink,
+  RecordBase,
+} from "../types";
 import { loadAuthors, type Author } from "./authors";
 import { loadReferenceObjects } from "./common";
 import { loadSeries, type Series } from "./series";
@@ -48,7 +53,7 @@ type LocalFields = {
   permalink: Permalink;
   award?: AwardDetails;
   numberInSeries?: number;
-  posterUrl: string;
+  posterUrl: ExternalUrl;
 };
 type ForeignKeyFields = {
   authors: Author[];
