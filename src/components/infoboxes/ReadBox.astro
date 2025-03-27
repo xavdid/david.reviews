@@ -27,6 +27,15 @@ const authors = read.book.authors.filter(
     title: read.book.title,
     mediaPermalink: read.book.permalink,
   }}
+  icons={[
+    { visible: read.medium === "Audio", title: "Audiobook", icon: "🔈" },
+    { visible: read.isReread, title: "Re-read", icon: "🔁" },
+    {
+      visible: Boolean(read.book.award),
+      title: "Award Winning",
+      icon: read.book.award?.emoji,
+    },
+  ]}
 >
   <div slot="title">
     <TitleLink href={read.book.permalink}>
@@ -41,30 +50,6 @@ const authors = read.book.authors.filter(
       )
     }
   </div>
-
-  <Fragment slot="icons">
-    {
-      read.medium === "Audio" && (
-        <div title="Audiobook" class="inline px-1">
-          🔈
-        </div>
-      )
-    }
-    {
-      read.isReread && (
-        <div title="Re-read" class="inline px-1">
-          🔁
-        </div>
-      )
-    }
-    {
-      read.book.award && (
-        <div title="Award Winning" class="inline px-1">
-          {read.book.award.emoji}
-        </div>
-      )
-    }
-  </Fragment>
 
   {
     read.book.series && (

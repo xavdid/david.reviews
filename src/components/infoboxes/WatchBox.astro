@@ -21,36 +21,29 @@ const { watch, numWatch } = Astro.props;
     title: watch.movie.title,
     mediaPermalink: watch.movie.permalink,
   }}
+  icons={[
+    ...(watch.movie.collections ?? []).map((collection) => ({
+      visible: true,
+      title: collection.nameOnly,
+      icon: collection.emoji,
+    })),
+    {
+      visible: watch.watchedInTheater,
+      title: "Watched in Theater",
+      icon: "🍿",
+    },
+    {
+      visible: Boolean(watch.movie.award),
+      title: "Award Winning",
+      icon: watch.movie.award?.emoji,
+    },
+  ]}
   shrinkFooterText
 >
   <span slot="title">
     <TitleLink href={watch.movie.permalink}>{watch.movie.title}</TitleLink>
      ({watch.movie.yearReleased})
   </span>
-
-  <Fragment slot="icons">
-    {
-      watch.movie.award && (
-        <div title="Award Winning" class="inline px-1">
-          {watch.movie.award.emoji}
-        </div>
-      )
-    }
-    {
-      watch.movie.collections?.map((collection) => (
-        <div title={collection.nameOnly} class="inline px-1">
-          {collection.emoji}
-        </div>
-      ))
-    }
-    {
-      watch.watchedInTheater && (
-        <div title="Watched in Theater" class="inline px-1">
-          🍿
-        </div>
-      )
-    }
-  </Fragment>
 
   <Fragment slot="footer">
     <span>{watch.dateFinished}</span>

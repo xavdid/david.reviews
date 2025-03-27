@@ -18,6 +18,11 @@ type Props = {
     title: string;
     mediaPermalink: string;
   };
+  icons: Array<{
+    visible: boolean;
+    title: string;
+    icon?: string;
+  }>;
 };
 
 const configs: {
@@ -48,13 +53,21 @@ const configs: {
   },
 } as const;
 
-const { type, notes, rating, shrinkFooterText, image } = Astro.props;
 const {
-  // icon: IconComponent,
-  // fillColor,
-  borderColor,
-  lightEvenColor,
-} = configs[type];
+  type,
+  notes,
+  rating,
+  shrinkFooterText,
+  image,
+  icons = [],
+} = Astro.props;
+const { borderColor, lightEvenColor } = configs[type];
+
+for (const { visible, icon, title } of icons) {
+  if (visible && !icon) {
+    throw new Error(`Missing an icon for "${title}";`);
+  }
+}
 
 const verb = ({ game: "plays", movie: "watches", book: "reads" } as const)[
   type
@@ -98,8 +111,15 @@ const verb = ({ game: "plays", movie: "watches", book: "reads" } as const)[
         </span>
         {/* icons */}
         <div class="whitespace-nowrap pl-1">
-          <slot name="icons" />
-          <!-- <IconComponent classes={["pb-[0.10em] inline h-6 px-1", fillColor]} /> -->
+          {
+            icons
+              .filter(({ visible }) => visible)
+              .map(({ title, icon }) => (
+                <div title={title} class="inline px-1">
+                  {icon}
+                </div>
+              ))
+          }
         </div>
       </div>
       {/* in a div so they're flexed together */}
