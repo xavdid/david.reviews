@@ -82,7 +82,7 @@ const verb = ({ game: "plays", movie: "watches", book: "reads" } as const)[
     "even:dark:bg-zinc-700",
   ]}
 >
-  {/* image area */}
+  {/* image column */}
   <div class="p-2">
     <a slot="image" href={image.mediaPermalink}>
       <Image
@@ -95,7 +95,7 @@ const verb = ({ game: "plays", movie: "watches", book: "reads" } as const)[
     >
   </div>
 
-  {/* info area */}
+  {/* info column */}
   <div class="flex w-full flex-col justify-between">
     <div>
       {/* title bar area */}
@@ -115,7 +115,7 @@ const verb = ({ game: "plays", movie: "watches", book: "reads" } as const)[
             icons
               .filter(({ visible }) => visible)
               .map(({ title, icon }) => (
-                <div title={title} class="inline px-1">
+                <div title={title} class="inline cursor-help px-1">
                   {icon}
                 </div>
               ))
