@@ -2,103 +2,86 @@
 import { Image } from "astro:assets";
 import { noReview, type Category } from "../../utils/data";
 import Rating from "../Rating.astro";
-import BookIcon from "../icons/book.astro";
-import GameIcon from "../icons/game.astro";
-import MovieIcon from "../icons/movie.astro";
+import TitleLink from "../links/TitleLink.astro";
 
 type Props = {
   type: Category;
   notes: string;
-  rating: number;
+  /**
+   * watch/play/read specific information.
+   * if there's only a single row, then it's vertically stacked.
+   * numbers are assumed to be ratings, everything else is put in a div
+   */
+  dataRows: Array<Array<string | number>>;
   shrinkFooterText?: boolean;
+  title: string;
+  permalink: string;
   image: {
     posterUrl: `https://${string}`;
     height: number;
     width: number;
-    title: string;
-    mediaPermalink: string;
   };
   icons: Array<{
     visible: boolean;
     title: string;
     icon?: string;
   }>;
+  /**
+   * if there's not a desktop corner box, it's nice to verically center the content
+   * currently movie and non-series books are centered
+   */
+  centeredContent?: boolean;
+  borderColor: `border-${string}-${number}`;
+  lightEvenColor: `even:bg-${string}-${number}`;
+  verb: "plays" | "watches" | "reads";
 };
 
-const configs: {
-  [type in Props["type"]]: {
-    fillColor: `fill-${string}-${number}`;
-    borderColor: `border-${string}-${number}`;
-    lightEvenColor: `even:bg-${string}-${number}`;
-    icon: typeof MovieIcon;
-  };
-} = {
-  movie: {
-    fillColor: "fill-red-600",
-    borderColor: "border-red-600",
-    lightEvenColor: "even:bg-red-50",
-    icon: MovieIcon,
-  },
-  book: {
-    fillColor: "fill-emerald-600",
-    borderColor: "border-emerald-600",
-    lightEvenColor: "even:bg-emerald-50",
-    icon: BookIcon,
-  },
-  game: {
-    fillColor: "fill-blue-600",
-    borderColor: "border-blue-600",
-    lightEvenColor: "even:bg-blue-50",
-    icon: GameIcon,
-  },
-} as const;
-
 const {
-  type,
   notes,
-  rating,
-  shrinkFooterText,
   image,
-  icons = [],
+  centeredContent,
+  title,
+  permalink,
+  dataRows,
+  icons,
+  borderColor,
+  lightEvenColor,
+  verb,
 } = Astro.props;
-const { borderColor, lightEvenColor } = configs[type];
 
 for (const { visible, icon, title } of icons) {
   if (visible && !icon) {
     throw new Error(`Missing an icon for "${title}";`);
   }
 }
-
-const verb = ({ game: "plays", movie: "watches", book: "reads" } as const)[
-  type
-];
 ---
 
 <div
   class:list={[
-    "mb-6 flex rounded border-2",
+    "mb-6 rounded border-2",
     borderColor,
     lightEvenColor,
     "even:dark:bg-zinc-700",
   ]}
 >
-  {/* image column */}
-  <div class="p-2">
-    <a slot="image" href={image.mediaPermalink}>
-      <Image
-        class="max-w-[unset]"
-        src={image.posterUrl}
-        alt={`poster for ${image.title}`}
-        height={image.height}
-        width={image.width}
-      /></a
-    >
-  </div>
+  <!-- desktop -->
+  <div class="hidden md:flex">
+    {/* image column */}
+    <div class="p-2">
+      <a href={permalink}>
+        <Image
+          class="max-w-[unset]"
+          src={image.posterUrl}
+          alt={`poster for ${title}`}
+          height={image.height}
+          width={image.width}
+        /></a
+      >
+    </div>
 
-  {/* info column */}
-  <div class="flex w-full flex-col justify-between">
-    <div>
-      {/* title bar area */}
+    {/* info column */}
+    <div class="flex w-full flex-col justify-between">
+      {/* title bar row */}
       <div
         class:list={[
           "flex justify-between border-b-2 border-l-2 pl-2",
@@ -107,8 +90,10 @@ const verb = ({ game: "plays", movie: "watches", book: "reads" } as const)[
       >
         {/* title */}
         <span>
-          <slot name="title" />
-        </span>
+          <TitleLink href={permalink}>{title}</TitleLink>
+          <slot name="desktop-authors" /></span
+        >
+
         {/* icons */}
         <div class="whitespace-nowrap pl-1">
           {
@@ -122,24 +107,117 @@ const verb = ({ game: "plays", movie: "watches", book: "reads" } as const)[
           }
         </div>
       </div>
-      {/* in a div so they're flexed together */}
-      <slot name="subtitle" />
+
+      {/* body area */}
+      <div
+        class:list={[
+          "flex-grow",
+          { "flex flex-col justify-around": centeredContent },
+        ]}
+      >
+        <slot name="desktop-info" />
+        <div class="px-4 py-2">
+          {notes || <em>{noReview(verb)}</em>}
+        </div>
+      </div>
+
+      {/* footer row */}
+      <div
+        class:list={[
+          "flex flex-wrap justify-between border-l-2 border-t-2 px-3",
+          borderColor,
+        ]}
+      >
+        {
+          // zip()-equivalent
+          // https://stackoverflow.com/questions/4856717/javascript-equivalent-of-pythons-zip-function
+          dataRows[0]
+            .flatMap((_, c) => dataRows.map((row) => row[c]))
+            // don't _need_ to re-map, but it separates out the ordering and the presentation
+            .map((item) =>
+              typeof item === "number" ? (
+                <Rating rating={item} />
+              ) : (
+                <span>{item}</span>
+              ),
+            )
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile -->
+  <div class="md:hidden">
+    {/* header row */}
+    <div class="flex gap-2 p-2">
+      {/* image column */}
+      <a href={permalink}>
+        <Image
+          class="max-w-[unset]"
+          src={image.posterUrl}
+          alt={`poster for ${title}`}
+          height={image.height}
+          width={image.width}
+        /></a
+      >
+      {/* info column row */}
+      <div
+        class:list={[
+          "flex",
+          "w-full",
+          "flex-col",
+          "justify-between",
+          "border-l-2",
+          borderColor,
+          "pl-2",
+        ]}
+      >
+        {/* title section */}
+        <div class="flex flex-col">
+          <TitleLink classes={["text-xl"]} href={permalink}>
+            {title}
+          </TitleLink>
+
+          <!-- center of the box, for: authors, genre, </span>series, etc -->
+          <slot name="mobile-info" />
+        </div>
+
+        {/* icon section */}
+        <ul>
+          {
+            icons.length &&
+              icons
+                .filter(({ visible }) => visible)
+                .map(({ title, icon }) => (
+                  <li>
+                    {icon} {title}
+                  </li>
+                ))
+          }
+        </ul>
+
+        {/* info section */}
+        <div class="flex w-full flex-col">
+          {
+            dataRows.map((row) => (
+              <div class:list={["flex w-full", "justify-between"]}>
+                {row.map((item) =>
+                  typeof item === "number" ? (
+                    <Rating rating={item} />
+                  ) : (
+                    <div>{item}</div>
+                  ),
+                )}
+              </div>
+            ))
+          }
+        </div>
+      </div>
     </div>
 
-    {/* body area */}
-    <p class="px-4 py-2">
+    {/* text row */}
+    <div class:list={["p-2", "border-t-2", borderColor]}>
       {notes || <em>{noReview(verb)}</em>}
-    </p>
-    {/* footer area */}
-    <div
-      class:list={[
-        "flex flex-wrap justify-between border-l-2 border-t-2 px-3",
-        borderColor,
-        shrinkFooterText && "text-sm md:text-base",
-      ]}
-    >
-      <slot name="footer" />
-      <Rating rating={rating} />
     </div>
   </div>
 </div>

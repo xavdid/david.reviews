@@ -34,7 +34,7 @@ const borderColors = {
 
 <div
   class:list={[
-    "mb-4 flex rounded border-2 p-2 dark:even:bg-zinc-700",
+    "mb-4 rounded border-2 p-2 dark:even:bg-zinc-700",
     borderColors,
     {
       "even:bg-blue-50": mediaType === "games",
@@ -43,23 +43,54 @@ const borderColors = {
     },
   ]}
 >
-  <a slot="image" href={permalink}>
-    <Image
-      class="max-w-[unset]"
-      src={posterUrl}
-      alt={`poster for ${title}`}
-      height={height}
-      width={width}
-    />
-  </a>
-  <div class="pl-4">
-    <TitleLink classes={["text-xl"]} href={permalink}>
-      {title}
-    </TitleLink>{award && ` (${award.emoji})`}
+  {/* desktop layout */}
+  <div class="hidden md:flex">
+    <a href={permalink}>
+      <Image
+        class="max-w-[unset]"
+        src={posterUrl}
+        alt={`poster for ${title}`}
+        height={height}
+        width={width}
+      />
+    </a>
+    <div class="pl-4">
+      <TitleLink classes={["text-xl"]} href={permalink}>
+        {title}
+      </TitleLink>{award && ` (${award.emoji})`}
 
-    <div class="pt-1">
-      <Rating rating={rating} />
+      <div class="pt-1">
+        <Rating rating={rating} />
+      </div>
+      <p class:list={["mt-2 border-l-2 pl-2 italic", borderColors]}>{blurb}</p>
     </div>
-    <p class:list={["mt-2 border-l-2 pl-2 italic", borderColors]}>{blurb}</p>
+  </div>
+
+  {/* mobile layout */}
+  <div class="flex flex-col md:hidden">
+    {/* top row */}
+    <div class="flex pb-3">
+      <a href={permalink}>
+        <Image
+          class="max-w-[unset]"
+          src={posterUrl}
+          alt={`poster for ${title}`}
+          height={height}
+          width={width}
+        />
+      </a>
+      <div class="pl-2">
+        <TitleLink classes={["text-xl"]} href={permalink}>
+          {title}
+        </TitleLink>
+        <div class="pt-2">
+          <Rating rating={rating} />
+        </div>
+        {award && <div class="pt-2">{award.emoji} Award Winning</div>}
+      </div>
+    </div>
+
+    {/* bottom row layout */}
+    <p class:list={["pt-1", "border-t-2", "italic", borderColors]}>{blurb}</p>
   </div>
 </div>

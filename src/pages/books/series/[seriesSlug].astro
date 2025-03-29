@@ -151,6 +151,7 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
             read={read}
             omitAuthorIds={read.book.authors.map((a) => a.recordId)}
             linkToSeries={false}
+            nameSeries={false}
           />
         ))
     }

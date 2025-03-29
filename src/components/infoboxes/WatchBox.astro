@@ -1,6 +1,5 @@
 ---
 import type { Watch } from "../../airtable/data/watches";
-import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
 
 type Props = {
@@ -13,13 +12,19 @@ const { watch, numWatch } = Astro.props;
 <BaseBox
   type="movie"
   notes={watch.notes}
-  rating={watch.rating}
+  title={watch.movie.title}
+  dataRows={[
+    [watch.rating, watch.dateFinished],
+    [
+      `Watch #${numWatch}${numWatch === 1 && !watch.isFirstWatch ? "*" : ""}`,
+      `Released: ${watch.movie.yearReleased}`,
+    ],
+  ]}
+  permalink={watch.movie.permalink}
   image={{
     posterUrl: watch.movie.posterUrl,
     height: 187.5,
     width: 125,
-    title: watch.movie.title,
-    mediaPermalink: watch.movie.permalink,
   }}
   icons={[
     ...(watch.movie.collections ?? []).map((collection) => ({
@@ -38,19 +43,8 @@ const { watch, numWatch } = Astro.props;
       icon: watch.movie.award?.emoji,
     },
   ]}
-  shrinkFooterText
->
-  <span slot="title">
-    <TitleLink href={watch.movie.permalink}>{watch.movie.title}</TitleLink>
-     ({watch.movie.yearReleased})
-  </span>
-
-  <Fragment slot="footer">
-    <span>{watch.dateFinished}</span>
-    <span
-      ><span class="hidden md:inline">Watch{" "}</span>#{numWatch}{
-        numWatch === 1 && !watch.isFirstWatch && "*"
-      }</span
-    >
-  </Fragment>
-</BaseBox>
+  borderColor="border-red-600"
+  lightEvenColor="even:bg-red-50"
+  centeredContent
+  verb="watches"
+/>

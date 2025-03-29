@@ -5,10 +5,11 @@ import SubtleLink from "./links/SubtleLink.astro";
 
 type Props = {
   authors: Author[];
-  style: "subtle" | "rounded";
+  style?: "subtle" | "rounded";
+  classes?: string | string[];
 };
 
-const { authors, style = "rounded" } = Astro.props;
+const { authors, style = "rounded", classes = [] } = Astro.props;
 const LinkComponent = style === "rounded" ? RoundedLink : SubtleLink;
 
 // https://stackoverflow.com/a/23619085/1825390
@@ -23,7 +24,7 @@ const intersperse = (arr: string[], sep: string): string[] => {
 };
 ---
 
-<span
+<span class:list={[classes]}
   >{
     intersperse(
       authors.map((author) => (

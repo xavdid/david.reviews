@@ -9,8 +9,14 @@ type Props = {
   read: Read;
   omitAuthorIds?: string[];
   linkToSeries?: boolean;
+  nameSeries?: boolean;
 };
-const { read, omitAuthorIds, linkToSeries = true } = Astro.props;
+const {
+  read,
+  omitAuthorIds,
+  linkToSeries = true,
+  nameSeries = true,
+} = Astro.props;
 const authors = read.book.authors.filter(
   (a) => !omitAuthorIds?.includes(a.recordId),
 );
@@ -19,14 +25,14 @@ const authors = read.book.authors.filter(
 <BaseBox
   type="book"
   notes={read.notes}
-  rating={read.rating}
+  title={read.book.title}
+  permalink={read.book.permalink}
   image={{
     posterUrl: read.book.posterUrl,
     height: 188,
     width: 120,
-    title: read.book.title,
-    mediaPermalink: read.book.permalink,
   }}
+  dataRows={[[read.rating, read.dateFinished]]}
   icons={[
     { visible: read.medium === "Audio", title: "Audiobook", icon: "🔈" },
     { visible: read.isReread, title: "Re-read", icon: "🔁" },
@@ -36,6 +42,10 @@ const authors = read.book.authors.filter(
       icon: read.book.award?.emoji,
     },
   ]}
+  centeredContent={!read.book.series}
+  borderColor="border-emerald-600"
+  lightEvenColor="even:bg-emerald-50"
+  verb="reads"
 >
   <div slot="title">
     <TitleLink href={read.book.permalink}>
@@ -51,10 +61,44 @@ const authors = read.book.authors.filter(
     }
   </div>
 
+  <Fragment slot="mobile-info">
+    {
+      authors.length > 0 && (
+        <span>
+          {Number(omitAuthorIds?.length) ? "with" : "by"}{" "}
+          <AuthorList authors={authors} style="subtle" />
+        </span>
+      )
+    }
+    {
+      read.book.series && (
+        <span class="pt-2">
+          {linkToSeries ? (
+            <SubtleLink href={read.book.series.permalink}>
+              Book #{read.book.numberInSeries}
+            </SubtleLink>
+          ) : (
+            <span>Book #{read.book.numberInSeries}</span>
+          )}
+          {nameSeries && `in ${read.book.series.name}`}
+        </span>
+      )
+    }
+  </Fragment>
+
+  {
+    authors.length > 0 && (
+      <span slot="desktop-authors">
+        {Number(omitAuthorIds?.length) ? "with" : "by"}{" "}
+        <AuthorList authors={authors} style="subtle" />
+      </span>
+    )
+  }
+
   {
     read.book.series && (
-      <div class="text-center md:text-end" slot="subtitle">
-        <span class="block border-b-2 border-l-2 border-emerald-600 px-2 md:inline-block">
+      <div slot="desktop-info" class="float-right pb-1 pl-3">
+        <span class="inline-block border-b-2 border-l-2 border-emerald-600 px-1">
           {linkToSeries ? (
             <SubtleLink href={read.book.series.permalink}>
               Book #{read.book.numberInSeries}
@@ -66,10 +110,4 @@ const authors = read.book.authors.filter(
       </div>
     )
   }
-
-  <Fragment slot="footer">
-    <div>
-      <span class="hidden md:inline">Finished on:{" "}</span>{read.dateFinished}
-    </div>
-  </Fragment>
 </BaseBox>

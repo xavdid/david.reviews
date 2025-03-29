@@ -1,8 +1,8 @@
 ---
 import type { Play } from "../../airtable/data/plays";
 import { minutesToDuration } from "../../utils/data";
+import OmniLink from "../links/OmniLink.astro";
 import SubtleLink from "../links/SubtleLink.astro";
-import TitleLink from "../links/TitleLink.astro";
 import BaseBox from "./BaseBox.astro";
 
 type Props = {
@@ -14,14 +14,17 @@ const { play } = Astro.props;
 <BaseBox
   type="game"
   notes={play.notes}
-  rating={play.rating}
   image={{
     posterUrl: play.game.posterUrl,
     height: 180,
     width: 135,
-    title: play.game.title,
-    mediaPermalink: play.game.permalink,
   }}
+  title={play.game.title}
+  dataRows={[
+    [play.rating, minutesToDuration(play.minutesPlayed)],
+    [play.dateFinished, play.playType],
+  ]}
+  permalink={play.game.permalink}
   icons={[
     {
       visible: play.didNotFinish,
@@ -39,24 +42,21 @@ const { play } = Astro.props;
       icon: play.game.award?.emoji,
     },
   ]}
+  borderColor="border-blue-600"
+  lightEvenColor="even:bg-blue-50"
+  verb="plays"
 >
-  <span slot="title">
-    <TitleLink href={play.game.permalink}>{play.game.title}</TitleLink>
-  </span>
-
-  <div class="text-center md:text-end" slot="subtitle">
-    <span
-      class="block border-b-2 border-l-2 border-blue-600 px-2 md:inline-block"
+  <div slot="desktop-info" class="float-right pb-1 pl-3">
+    <span class="inline-block border-b-2 border-l-2 border-blue-600 px-1"
       ><SubtleLink href={play.game.genre.permalink}>
         {play.game.genre.name}
       </SubtleLink></span
     >
   </div>
 
-  <Fragment slot="footer">
-    <span>{play.dateFinished}</span>
-    <span>{play.playType}</span>
-    <div class="basis-full md:hidden"></div>
-    <span>{minutesToDuration(play.minutesPlayed)}</span>
-  </Fragment>
+  <div slot="mobile-info" class="pt-2">
+    <OmniLink href={play.game.genre.permalink}>
+      {play.game.genre.name}
+    </OmniLink>
+  </div>
 </BaseBox>
