@@ -20,6 +20,7 @@ const {
 const authors = read.book.authors.filter(
   (a) => !omitAuthorIds?.includes(a.recordId),
 );
+const borderColor = "border-emerald-600";
 ---
 
 <BaseBox
@@ -43,7 +44,7 @@ const authors = read.book.authors.filter(
     },
   ]}
   centeredContent={!read.book.series}
-  borderColor="border-emerald-600"
+  borderColor={borderColor}
   lightEvenColor="even:bg-emerald-50"
   verb="reads"
 >
@@ -98,7 +99,16 @@ const authors = read.book.authors.filter(
   {
     read.book.series && (
       <div slot="desktop-info" class="float-right pb-1 pl-3">
-        <span class="inline-block border-b-2 border-l-2 border-emerald-600 px-1">
+        <span
+          class:list={[
+            "inline-block",
+            "rounded-bl",
+            "border-b-2",
+            "border-l-2",
+            "px-1",
+            borderColor,
+          ]}
+        >
           {linkToSeries ? (
             <SubtleLink href={read.book.series.permalink}>
               Book #{read.book.numberInSeries}

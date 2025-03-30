@@ -9,6 +9,7 @@ type Props = {
   play: Play;
 };
 const { play } = Astro.props;
+const borderColor = "border-blue-600";
 ---
 
 <BaseBox
@@ -42,12 +43,20 @@ const { play } = Astro.props;
       icon: play.game.award?.emoji,
     },
   ]}
-  borderColor="border-blue-600"
+  borderColor={borderColor}
   lightEvenColor="even:bg-blue-50"
   verb="plays"
 >
   <div slot="desktop-info" class="float-right pb-1 pl-3">
-    <span class="inline-block border-b-2 border-l-2 border-blue-600 px-1"
+    <span
+      class:list={[
+        "inline-block",
+        "rounded-bl",
+        "border-b-2",
+        "border-l-2",
+        "px-1",
+        borderColor,
+      ]}
       ><SubtleLink href={play.game.genre.permalink}>
         {play.game.genre.name}
       </SubtleLink></span
