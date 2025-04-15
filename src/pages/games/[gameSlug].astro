@@ -49,7 +49,9 @@ export const getStaticPaths = async (): Result => {
     plays: [],
     etcPlays: [],
     articles: allArticles
-      .filter((articles) => articles.data.gameSlugs?.includes(game.slug))
+      .filter((articles) =>
+        articles.data.mentionedGameSlugs?.includes(game.slug),
+      )
       .map(({ data: { title }, permalink }) => ({
         title,
         permalink,
@@ -104,8 +106,8 @@ export const getStaticPaths = async (): Result => {
 
     const issues: string[] = [];
 
-    allArticles.forEach(({ data: { gameSlugs }, slug }) => {
-      gameSlugs?.forEach((gameSlug) => {
+    allArticles.forEach(({ data: { mentionedGameSlugs }, slug }) => {
+      mentionedGameSlugs?.forEach((gameSlug) => {
         if (!allGameSlugs.has(gameSlug)) {
           issues.push(
             `! article "${slug}" has a game slug "${gameSlug}" that's not found in any games`,

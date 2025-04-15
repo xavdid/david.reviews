@@ -14,7 +14,7 @@ const articles = defineCollection({
           ),
         ogImg: image().optional(),
         publishedOn: z.string().date().optional(),
-        gameSlugs: z
+        mentionedGameSlugs: z
           .array(
             z.string().refine(
               (val) => !val.endsWith("/"),
@@ -24,12 +24,29 @@ const articles = defineCollection({
             ),
           )
           .optional(),
-        // If available, shows a steam store widget at the bottom of the page.
-        steamId: z.string().regex(/^\d+$/).optional(),
         review: z
           .object({
             // used in structured data
-            gameTitle: z.string(),
+            gameInfo: z
+              .object({
+                title: z.string(),
+                // If available, shows a steam store widget at the bottom of the page.
+                steamId: z.string().regex(/^\d+$/).optional(),
+                availability: z
+                  .array(
+                    z
+                      .object({
+                        text: z.string(),
+                        href: z
+                          .string()
+                          .refine((s) => s.startsWith("https://"))
+                          .optional(),
+                      })
+                      .strict(),
+                  )
+                  .default([]),
+              })
+              .strict(),
             rating: z.number().min(1).max(4),
             blurb: z.string(),
             plusses: z.array(z.string()).default([]),

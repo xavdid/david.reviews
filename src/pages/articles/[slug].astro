@@ -4,6 +4,7 @@ import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
 import CalendarIcon from "../../components/icons/calendar.astro";
 import Layout from "../../layouts/Layout.astro";
 import type { ImageInfo } from "../../utils/images";
+import { gamePermalink } from "../../utils/data";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import YoutubeEmbed from "../../components/mdx/YoutubeEmbed.astro";
 import ReviewSummary from "../../components/mdx/ReviewSummary.astro";
@@ -16,10 +17,17 @@ import Config from "../../../astro.config.mjs";
 import type { ExternalUrl as AbsoluteUrl } from "../../airtable/types";
 import OmniLink from "../../components/links/OmniLink.astro";
 import { buildStructuredReview } from "../../utils/structuredData";
+import MaybeOmniLink from "../../components/links/MaybeOmniLink.astro";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
 type StaticPaths = Promise<Array<{ params: Params; props: Props }>>;
+
+type Availability = {
+  gameTitle: string;
+  gameSlug: string;
+  links: Array<{ text: string; href?: string }>;
+};
 
 export const getStaticPaths = async (): StaticPaths => {
   const articles = await getCollection("articles");
@@ -51,6 +59,32 @@ if (frontmatter.ogImg) {
     height: frontmatter.ogImg.height,
     type: frontmatter.ogImg.format,
   };
+}
+
+let availability: Availability | undefined;
+
+if (frontmatter.review) {
+  // reviews have gameInfo and/or a steam ID. But, most games have steam IDs, I'll save myself the trouble of including it as an availability source
+  const o: Availability = {
+    gameTitle: frontmatter.review.gameInfo.title,
+    gameSlug: frontmatter.mentionedGameSlugs?.[0] ?? "",
+    links: [],
+  };
+
+  if (frontmatter.review.gameInfo.steamId) {
+    o.links.push({
+      text: "Steam",
+      href: `https://store.steampowered.com/app/${frontmatter.review.gameInfo.steamId}/`,
+    });
+  }
+
+  o.links.push(...frontmatter.review.gameInfo.availability);
+
+  availability = o;
+}
+
+if (availability && !availability.gameSlug) {
+  throw new Error("Game has listed availability, but no slug in the list");
 }
 
 // try to keep this in sync with RenderedMarkdown's h2 styles; wish this could be more programmatic
@@ -100,10 +134,10 @@ const components = {
           },
         ],
         {
-          title: frontmatter.review.gameTitle,
+          title: frontmatter.review.gameInfo.title,
           articleTitle: frontmatter.title,
-          articleSubject: frontmatter.gameSlugs?.[0]
-            ? `/games/${frontmatter.gameSlugs?.[0]}/`
+          articleSubject: frontmatter.mentionedGameSlugs?.[0]
+            ? gamePermalink(frontmatter.mentionedGameSlugs?.[0])
             : undefined,
           blurb: frontmatter.review.blurb,
           permalink: `/articles/${slug}/`,
@@ -125,13 +159,44 @@ const components = {
     <!-- https://github.com/withastro/astro/issues/12057 -->
     <Content components={components} frontmatter={frontmatter} />
 
-    <!-- could do this, but I like the "buy this on" coming after the blurb and that's hard without putting it in frontmatter -->
-    <!-- {frontmatter.review && <ReviewSummary review={frontmatter.review} />} -->
+    {frontmatter.review && <ReviewSummary review={frontmatter.review} />}
+
+    <!-- Text for 1, 2, and 3+ items. -->
+    {
+      availability && (
+        <p class="text-center italic">
+          <OmniLink href={gamePermalink(availability.gameSlug)}>
+            {availability.gameTitle}
+          </OmniLink>{" "}
+          is avaiable on{" "}
+          {availability.links.length === 1 ? (
+            <>
+              <MaybeOmniLink {...availability.links[0]} />.
+            </>
+          ) : availability.links.length === 2 ? (
+            <>
+              <MaybeOmniLink {...availability.links[0]} /> and{" "}
+              <MaybeOmniLink {...availability.links[1]} />.
+            </>
+          ) : (
+            <>
+              {availability.links.slice(0, -1).map((o) => (
+                <>
+                  <MaybeOmniLink {...o} />,{" "}
+                </>
+              ))}
+              {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+              and <MaybeOmniLink {...availability.links.at(-1)!} />.
+            </>
+          )}
+        </p>
+      )
+    }
 
     {
-      frontmatter.steamId && (
+      frontmatter.review?.gameInfo.steamId && (
         <SteamGame
-          steamId={frontmatter.steamId}
+          steamId={frontmatter.review.gameInfo.steamId}
           addHr
           showMobileFallback={false}
         />
@@ -143,6 +208,7 @@ const components = {
         <>
           <hr />
           <SubscribeBlurb
+            classes={["pb-1"]}
             pClasses={["!my-2"]}
             centered
             showSteamButton

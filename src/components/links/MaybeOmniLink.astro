@@ -1,0 +1,11 @@
+---
+import OmniLink from "./OmniLink.astro";
+
+type Props = {
+  text: string;
+  href?: string;
+};
+const { href, text } = Astro.props;
+---
+
+{href ? <OmniLink href={href}>{text}</OmniLink> : text}

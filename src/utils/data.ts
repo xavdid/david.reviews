@@ -65,6 +65,9 @@ export const materializeCollection = (
   };
 };
 
+export const gamePermalink = (slug: string): Permalink =>
+  `/games${slug === "" ? "" : `/${slug}`}/`;
+
 export const genrePermalink = (slug: string): Permalink =>
   `/games/genres${slug === "" ? "" : `/${slug}`}/`;
 

@@ -3,13 +3,18 @@ title: "Title Goes Here"
 ogDesc: "TKTK."
 # publishedOn: "2024-11-22"
 # ogImg: "./og.jpg"
-# steamId: "TKTK"
 # slugs must map to plays (regardless of completion)
 # if review, reviewed slug should come first
-# gameSlugs:
+# mentionedGameSlugs:
 #  - "TKTK"
 review:
-  gameTitle: ""
+  gameInfo:
+    title: "TKTK"
+    # steamId: "1234"
+    availability:
+      # - text: consoles
+      #   href: https://example.comi
+      # - text: Game Pass
   rating: 2
   blurb: "TKTK"
   plusses:
@@ -20,7 +25,3 @@ review:
 ---
 
 TKTK
-
-<ReviewSummary review={props.frontmatter.review} />
-
-_[TKTK](/games/TKTK/) is available on Steam (link TKTK)_.

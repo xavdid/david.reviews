@@ -5,7 +5,11 @@ import {
   type AwardDetails,
   type AwardTier,
 } from "../../awards";
-import { genrePermalink, materializeCollection } from "../../utils/data";
+import {
+  gamePermalink,
+  genrePermalink,
+  materializeCollection,
+} from "../../utils/data";
 import type {
   AirtableBase,
   Collection,
@@ -88,7 +92,7 @@ const materialize = (gameRow: GameRecord): Game => {
     },
     igdbId: gameRow[fields.igdbId],
     slug,
-    permalink: `/games/${slug}/`,
+    permalink: gamePermalink(slug),
     posterUrl: `https://images.igdb.com/igdb/image/upload/t_cover_small_2x/${
       gameRow[fields.igdbCoverId]
     }.jpg`,
