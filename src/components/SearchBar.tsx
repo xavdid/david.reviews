@@ -32,7 +32,7 @@ export const SearchBar = ({ items, index }: Props): JSX.Element => {
         <input
           id="search-box"
           autoFocus
-          className="w-full rounded bg-zinc-200 p-2 text-lg dark:bg-zinc-500"
+          className="w-full rounded-sm bg-zinc-200 p-2 text-lg dark:bg-zinc-500"
           type="text"
           value={searchTerm}
           placeholder="🔍 Enter a title or person..."
@@ -41,7 +41,17 @@ export const SearchBar = ({ items, index }: Props): JSX.Element => {
           }}
         />
         <button
-          className="my-1 ml-4 rounded  px-3 ring-1  ring-zinc-500 hover:bg-zinc-200 dark:ring-white dark:hover:bg-zinc-700"
+          className={[
+            "my-1",
+            "ml-4",
+            "rounded-sm",
+            "px-3",
+            "ring-1",
+            "ring-zinc-500",
+            "hover:bg-zinc-200",
+            "dark:ring-white",
+            "dark:hover:bg-zinc-700",
+          ].join(" ")}
           onClick={() => {
             setSearchTerm("");
             document.getElementById("search-box")?.focus();

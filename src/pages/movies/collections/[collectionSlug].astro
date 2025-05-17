@@ -122,7 +122,7 @@ const sortedMovies = movies
     {
       sortedMovies.map(
         ({ title, avgRating, numWatches, permalink, posterUrl, blurb }) => (
-          <div class="mb-4 flex rounded border-2 border-red-600 p-2 even:bg-red-50 dark:even:bg-zinc-700">
+          <div class="mb-4 flex rounded-sm border-2 border-red-600 p-2 even:bg-red-50 dark:even:bg-zinc-700">
             <a slot="image" href={permalink}>
               <Image
                 class="max-w-[unset]"

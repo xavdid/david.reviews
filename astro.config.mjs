@@ -2,7 +2,7 @@ import { rehypeHeadingIds } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
@@ -10,7 +10,6 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 export default defineConfig({
   site: "https://david.reviews",
   integrations: [
-    tailwind(),
     preact(),
     sitemap(),
     mdx({
@@ -24,9 +23,6 @@ export default defineConfig({
             properties: {
               // passed as a prop to OmniLink
               isHeading: true,
-            },
-            headingProperties: {
-              className: ["is-asdfsdf"],
             },
           },
         ],
@@ -47,5 +43,12 @@ export default defineConfig({
       //   hostname: "image.tmdb.org",
       // },
     ],
+  },
+
+  vite: {
+    server: {
+      allowedHosts: ["xavdid.ngrok.io"],
+    },
+    plugins: [tailwindcss()],
   },
 });

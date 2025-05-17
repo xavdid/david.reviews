@@ -19,6 +19,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
 );
 
 const latestArticle = (await getPublishedArticles())[0];
+const boxStyles = "align-center flex w-full rounded-sm border-2 p-2";
 ---
 
 <Layout
@@ -37,7 +38,7 @@ const latestArticle = (await getPublishedArticles())[0];
   <SubscribeBlurb showSteamButton />
 
   <h2 class="pb-2 pt-8 text-center text-3xl font-bold">Latest Article</h2>
-  <div class="align-center flex w-full rounded border-2 border-purple-600 p-2">
+  <div class:list={[boxStyles, "border-purple-600"]}>
     <SubtleLink href={latestArticle.permalink} classes={["text-xl"]}>
       {latestArticle.data.title}
     </SubtleLink>
@@ -66,7 +67,7 @@ const latestArticle = (await getPublishedArticles())[0];
     {
       inProgressPlays.map(
         ({ playType, dateStarted, game: { title, posterUrl } }) => (
-          <div class="align-center flex w-full rounded border-2 border-blue-600 p-2">
+          <div class:list={[boxStyles, "border-blue-600"]}>
             <Image
               class="max-w-[unset] py-1"
               src={posterUrl}
@@ -101,7 +102,7 @@ const latestArticle = (await getPublishedArticles())[0];
     {
       inProgressReads.map(
         ({ dateStarted, book: { title, posterUrl, authors }, medium }) => (
-          <div class="align-center flex w-full rounded border-2 border-emerald-600 p-2">
+          <div class:list={[boxStyles, "border-emerald-600"]}>
             <Image
               class="max-w-[unset] py-1"
               src={posterUrl}

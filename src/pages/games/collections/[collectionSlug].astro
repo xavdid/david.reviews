@@ -133,7 +133,7 @@ const sortedGames = games
   <div>
     {
       sortedGames.map(({ title, avgRating, permalink, posterUrl, blurb }) => (
-        <div class="mb-4 flex rounded border-2 border-blue-600 p-2 even:bg-blue-50 dark:even:bg-zinc-700">
+        <div class="mb-4 flex rounded-sm border-2 border-blue-600 p-2 even:bg-blue-50 dark:even:bg-zinc-700">
           <a slot="image" href={permalink}>
             <Image
               class="max-w-[unset]"

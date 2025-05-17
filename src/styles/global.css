@@ -1,0 +1,21 @@
+/* bring all of tailwind into scope */
+@import "tailwindcss";
+/* activate the typography plugin */
+@plugin "@tailwindcss/typography";
+/* reference my  */
+@config "../../tailwind.config.mjs";
+
+/* any custom variables go here  */
+/* https://tailwindcss.com/docs/theme */
+@theme {
+  /* NAVBAR INSET SHADOWS */
+  /*
+    I define these here beacuse I'm using a custom shadow value, but with tw-defined colors. I could maybe do them inline too, but this is pretty clean at the expense of a bit of repetition.
+  */
+  --shadow-insetGame: inset 0em -0.2em var(--color-blue-600);
+  --shadow-insetMovie: inset 0em -0.2em var(--color-red-600);
+  --shadow-insetBook: inset 0em -0.2em var(--color-emerald-600);
+  --shadow-insetArticles: inset 0em -0.2em var(--color-purple-600);
+  --shadow-insetInfo: inset 0em -0.2em var(--color-zinc-600);
+  --shadow-insetInfoDark: inset 0em -0.2em var(--color-white);
+}
