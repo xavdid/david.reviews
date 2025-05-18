@@ -2,7 +2,7 @@
 @import "tailwindcss";
 /* activate the typography plugin */
 @plugin "@tailwindcss/typography";
-/* reference my  */
+/* reference my JS config file (some things can only be done there) */
 @config "../../tailwind.config.mjs";
 
 /* any custom variables go here  */
