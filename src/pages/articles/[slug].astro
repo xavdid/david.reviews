@@ -1,7 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
-import CalendarIcon from "../../components/icons/calendar.astro";
+import CalendarIcon from "../../components/icons/svgs/calendar.svg";
 import Layout from "../../layouts/Layout.astro";
 import type { ImageInfo } from "../../utils/images";
 import { gamePermalink } from "../../utils/data";
@@ -151,7 +151,7 @@ const components = {
   </h1>
 
   <p class="pb-4 pt-2">
-    <CalendarIcon classes={["inline h-4 mb-1 pr-2", "dark:fill-white"]} />{
+    <CalendarIcon class:list={["mb-1 inline h-4 pr-2", "dark:fill-white"]} />{
       frontmatter.publishedOn ?? "TBD"
     }
   </p>

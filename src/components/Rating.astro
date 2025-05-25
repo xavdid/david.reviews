@@ -1,6 +1,6 @@
 ---
-import StarEmpty from "./icons/star-empty.astro";
-import StarFilled from "./icons/star-filled.astro";
+import StarEmpty from "./icons/svgs/star-empty.svg";
+import StarFilled from "./icons/svgs/star-filled.svg";
 
 type Props = {
   rating: number;
@@ -15,11 +15,11 @@ const starClasses = ["mb-[0.25em] inline", starHeight];
 <div class:list={[componentClasses, "whitespace-nowrap"]}>
   {
     Array.from({ length: rating }).map(() => (
-      <StarFilled classes={[starClasses]} />
+      <StarFilled class:list={[starClasses, "fill-amber-400"]} />
     ))
   }{
     Array.from({ length: 4 - rating }).map(() => (
-      <StarEmpty classes={[starClasses, "dark:fill-white"]} />
+      <StarEmpty class:list={[starClasses, "dark:fill-white"]} />
     ))
   }
 </div>

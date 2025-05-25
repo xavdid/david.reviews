@@ -7,7 +7,7 @@ import {
   GameIcon,
   MovieIcon,
   StarIcon,
-} from "../../components/icons/allIcons";
+} from "../../components/icons/inline-icons";
 import BlueskyIcon from "../../components/icons/bluesky.astro";
 import MastodonIcon from "../../components/icons/mastodon.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -15,6 +15,8 @@ import { capitalize } from "../../utils/data";
 import { feedTypes } from "../../utils/rss";
 import OmniLink from "../../components/links/OmniLink.astro";
 
+// reuse the "all icons" group because they have inline styles appied already
+// this only partially defeats the point of the svg thing, but it's not the end of the world
 const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
   games: GameIcon,
   movies: MovieIcon,

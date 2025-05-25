@@ -20,13 +20,11 @@ const buttonStyles = [
   "text-l",
   "md:text-xl",
 ];
-// applied to every SVG
-const iconStyles = ["inline h-6 md:pr-1"];
 ---
 
 <a
   href={`/${text}/`}
   class:list={[buttonStyles, classes, { "flex flex-col lg:block": stacked }]}
-  ><Icon classes={[iconStyles]} />
+  ><Icon class="inline h-6 md:pr-1" />
   <span class="inline px-1">{text}</span></a
 >

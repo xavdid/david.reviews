@@ -29,7 +29,7 @@ if (mode === "external") {
   LinkComponent = SubtleLink;
 } else {
   exhaustive(mode);
-  throw new Error(`unknown link mode`);
+  throw new Error("unreachable");
 }
 ---
 

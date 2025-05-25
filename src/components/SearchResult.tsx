@@ -1,7 +1,7 @@
 import { type JSX } from "preact";
 
 import type { SearchItem } from "../utils/search";
-import { BookIcon, GameIcon, MovieIcon } from "./icons/allIcons";
+import { BookIcon, GameIcon, MovieIcon } from "./icons/inline-icons";
 
 type Props = SearchItem;
 

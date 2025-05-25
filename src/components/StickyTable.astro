@@ -2,7 +2,7 @@
 import type { Author } from "../airtable/data/authors";
 import AuthorList from "./AuthorList.astro";
 import Rating from "./Rating.astro";
-import StarFilled from "./icons/star-filled.astro";
+import StarFilled from "./icons/svgs/star-filled.svg";
 import SubtleLink from "./links/SubtleLink.astro";
 
 type TableItem = {
@@ -46,7 +46,14 @@ const { header, rows } = Astro.props;
                   <Rating rating={rating} classes={["hidden", "md:block"]} />
                   <div class="md:hidden">
                     {rating}
-                    <StarFilled classes={["mb-[0.35em]", "h-4", "inline"]} />
+                    <StarFilled
+                      class:list={[
+                        "mb-[0.35em]",
+                        "h-4",
+                        "inline",
+                        "fill-amber-400",
+                      ]}
+                    />
                   </div>
                 </>
               ) : linkTo ? (
