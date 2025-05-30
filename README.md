@@ -14,3 +14,7 @@ I wrote a [custom typed ORM](https://xavd.id/blog/post/static-review-site-with-a
 4. If any added fields aren't `string`s, add them (by `field.NAME`) to `NonStringFields`
 5. Add the relevant output fields to the exported type. This represents the object returned by `materialize` (which turns a row into a usable object)
 6. Ensure those new types get materialized
+
+## Misc
+
+- I shrink images using https://compresspng.com/

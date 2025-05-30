@@ -83,10 +83,6 @@ if (frontmatter.review) {
   availability = o;
 }
 
-if (availability && !availability.gameSlug) {
-  throw new Error("Game has listed availability, but no slug in the list");
-}
-
 // try to keep this in sync with RenderedMarkdown's h2 styles; wish this could be more programmatic
 const h1Styles = [
   "pt-2",
@@ -165,9 +161,13 @@ const components = {
     {
       availability && (
         <p class="text-center italic">
-          <OmniLink href={gamePermalink(availability.gameSlug)}>
-            {availability.gameTitle}
-          </OmniLink>{" "}
+          {availability.gameSlug ? (
+            <OmniLink href={gamePermalink(availability.gameSlug)}>
+              {availability.gameTitle}
+            </OmniLink>
+          ) : (
+            <span class="font-bold not-italic">{availability.gameTitle}</span>
+          )}{" "}
           is avaiable on{" "}
           {availability.links.length === 1 ? (
             <>
