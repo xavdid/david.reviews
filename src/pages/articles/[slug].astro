@@ -97,10 +97,11 @@ const h1Styles = [
 ];
 
 // can replace specific markdown components: https://mdxjs.com/table-of-components/
-// TODO: if I ever need to differentiate between internal and external links in markdown, could do that in a wrapper component
-// these are each available in MDX without imports
 const components = {
+  // replacements
   a: OmniLink,
+
+  // custom components - these are each available in MDX without imports
   YoutubeEmbed,
   ReviewSummary,
   SteamGame,
@@ -153,7 +154,7 @@ const components = {
   </p>
   <RenderedMarkdown>
     <!-- https://github.com/withastro/astro/issues/12057 -->
-    <Content components={components} frontmatter={frontmatter} />
+    <Content components={components} />
 
     {frontmatter.review && <ReviewSummary review={frontmatter.review} />}
 
