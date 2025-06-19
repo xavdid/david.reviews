@@ -4,7 +4,8 @@ import { isProdBuild, sortableDateValue } from "./data";
 
 export type Article = CollectionEntry<"articles">;
 
-const articlePermalink = (slug: string): Permalink => `/articles/${slug}/`;
+export const articlePermalink = (slug: string): Permalink =>
+  `/articles/${slug}/`;
 
 // https://docs.astro.build/en/guides/content-collections/#filtering-collection-queries
 // everything in dev, published only in prod

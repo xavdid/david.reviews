@@ -10,6 +10,8 @@ import {
   type Category,
 } from "../../utils/data";
 
+// Zapier epxects this shape, so modify the zap if you change it in a breaking way
+// https://zapier.com/editor/279896688/published
 type CompletedItem = {
   // used for filtering
   category: Category;
@@ -41,6 +43,9 @@ const buildOgDesc = (
 
 // could probably DRY this up? idk
 
+/**
+ * this powers social media auto-posting.
+ */
 export const GET: APIRoute = async () => {
   const plays: Array<
     CompletedItem & { playedOnSteam: boolean; steamUrl?: string }

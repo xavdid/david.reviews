@@ -1,3 +1,4 @@
+import rss, { type RSSFeedItem } from "@astrojs/rss";
 import type { APIRoute } from "astro";
 
 import type { Book } from "../../airtable/data/books";
@@ -7,9 +8,15 @@ import { loadPlays } from "../../airtable/data/plays";
 import { loadReads } from "../../airtable/data/reads";
 import { loadWatches } from "../../airtable/data/watches";
 import type { Permalink } from "../../airtable/types";
-import { getPublishedArticles } from "../../utils/content";
-import { type Category, slimReview } from "../../utils/data";
-import { buildRssFeed, feedTypes } from "../../utils/rss";
+import { articlePermalink, getPublishedArticles } from "../../utils/content";
+import {
+  capitalize,
+  type Category,
+  ratingPage,
+  slimReview,
+  sortDateDescending,
+} from "../../utils/data";
+import { feedTypes } from "../../utils/rss";
 
 type Feeds = (typeof feedTypes)[number];
 
@@ -30,6 +37,7 @@ const reviews: Record<
         dateFinished: string;
         rating: number;
         notes: string;
+        fullReviewSlug?: string;
       }
     | {
         type: "article";
@@ -66,15 +74,15 @@ const reviews: Record<
 
 export const GET: APIRoute = async (context) => {
   const feedType = context.params.type as Feeds;
-  const items =
-    feedType === "everything"
-      ? [
-          ...reviews.games,
-          ...reviews.books,
-          ...reviews.movies,
-          ...reviews.articles,
-        ]
-      : reviews[feedType];
+  const isEverythingFeed = feedType === "everything";
+  const items = isEverythingFeed
+    ? [
+        ...reviews.games,
+        ...reviews.books,
+        ...reviews.movies,
+        ...reviews.articles,
+      ]
+    : reviews[feedType];
 
   const singular = {
     games: "game",
@@ -84,40 +92,66 @@ export const GET: APIRoute = async (context) => {
     articles: "article",
   }[feedType];
 
-  return await buildRssFeed(
-    context,
-    singular,
-    items,
-    (item) => {
-      if (item.type === "article") {
-        return {
-          title:
-            feedType === "everything" ? `Article: ${item.title}` : item.title,
-          link: item.permalink,
-          pubDate: new Date(item.dateFinished),
-          content: [
-            item.blurb,
-            "<br /><br />",
-            `<a href="${item.permalink}">Read the whole thing</a>.`,
-          ].join("\n"),
-        };
-      }
+  const { site } = context;
+  if (!site) {
+    throw new Error("must set site url!");
+  }
 
-      return {
-        title: `david.reviews: ${
-          feedType === "everything" ? `the ${item.type} ` : ""
-        }"${item.media.title}"`,
-        link: item.media.permalink,
-        pubDate: new Date(item.dateFinished), // want to increment this for things published the same day, since clients might not respect the actual feed ordering
-        content: slimReview(
-          item.rating,
-          item.notes,
-          ({ game: "plays", movie: "watches", book: "reads" } as const)[
-            item.type
-          ],
-        ),
-      };
-    },
-    feedType === "everything" ? "everything" : undefined,
-  );
+  const plural = isEverythingFeed ? "everything" : singular + "s";
+
+  return await rss({
+    title: `david.reviews: ${capitalize(plural)}!`,
+    description: `A feed of the 50 most recent ${
+      singular === "article" ? "articles" : `${singular} reviews`
+    } I've posted.`,
+    site,
+    items: items
+      // it's important that these stay sorted
+      .toSorted(sortDateDescending)
+      .slice(0, 50)
+      .map((item): RSSFeedItem => {
+        // might want to increment this for things published the same day, since clients might not respect the actual feed ordering
+        const pubDate = new Date(item.dateFinished);
+
+        return item.type === "article"
+          ? {
+              title: isEverythingFeed ? `Article: ${item.title}` : item.title,
+              link: item.permalink,
+              pubDate,
+              content: [
+                item.blurb,
+                "<br /><br />",
+                `<a href="${item.permalink}">Read the whole thing</a>.`,
+              ].join("\n"),
+            }
+          : {
+              title: `david.reviews: ${
+                isEverythingFeed ? `the ${item.type} ` : ""
+              }"${item.media.title}"`,
+              link: item.media.permalink,
+              pubDate,
+              content: [
+                slimReview(
+                  item.rating,
+                  item.notes,
+                  ({ game: "plays", movie: "watches", book: "reads" } as const)[
+                    item.type
+                  ],
+                ) +
+                  `${
+                    item.fullReviewSlug
+                      ? ` Read more in my <a href="${articlePermalink(
+                          item.fullReviewSlug,
+                        )}">full review</a>.`
+                      : ""
+                  }`,
+                "<br /><hr />",
+                `FYI: My reviews are scored <a href="${ratingPage(
+                  // @ts-expect-error - this is correct, i'm just lax with some string types
+                  item.type + "s",
+                )}">out of 4</a>. Also, thanks for subscribing to my RSS feed and supporting the indie web!`,
+              ].join("\n"),
+            };
+      }),
+  });
 };

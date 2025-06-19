@@ -41,6 +41,7 @@ export const capitalize = (s?: string): string => {
 // don't want to make it sound like it was so bad I didn't have anything to say
 export const noReview = (pluralNoun: "plays" | "watches" | "reads"): string =>
   `no additional notes, see rating and/or other ${pluralNoun}.`;
+
 export const collectionPermalink = (
   category: `${Category}s`,
   slug: string,
@@ -108,7 +109,7 @@ export const maxIsoDate = (first: string | undefined, next: string): string => {
 };
 
 /**
- * inlines info about a review suitable for sharing elsewhere
+ * inlines info about a review suitable for sharing elsewhere. Used in RSS, and masto/bsky posts, og-desc. It should be a pure string with no HTML or links or anything.
  */
 export const slimReview = (
   rating: number,

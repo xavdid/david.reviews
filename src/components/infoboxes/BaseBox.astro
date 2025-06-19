@@ -3,10 +3,14 @@ import { Image } from "astro:assets";
 import { noReview, type Category } from "../../utils/data";
 import Rating from "../Rating.astro";
 import TitleLink from "../links/TitleLink.astro";
+import OmniLink from "../links/OmniLink.astro";
+import { articlePermalink, getPublishedArticles } from "../../utils/content";
 
 type Props = {
   type: Category;
   notes: string;
+  // article slug for more info, if applicable
+  fullReviewSlug?: string;
   /**
    * watch/play/read specific information.
    * if there's only a single row, then it's vertically stacked.
@@ -38,6 +42,7 @@ type Props = {
 
 const {
   notes,
+  fullReviewSlug,
   image,
   centeredContent,
   title,
@@ -52,6 +57,21 @@ const {
 for (const { visible, icon, title } of icons) {
   if (visible && !icon) {
     throw new Error(`Missing an icon for "${title}";`);
+  }
+}
+
+if (fullReviewSlug) {
+  if (fullReviewSlug.startsWith("/") || fullReviewSlug.endsWith("/")) {
+    throw new Error(
+      `Article slugs must be _only_ the slug (no leading or trailing slashes (got ${fullReviewSlug})`,
+    );
+  }
+
+  const articles = await getPublishedArticles();
+  if (!articles.find(({ slug }) => fullReviewSlug === slug)) {
+    throw new Error(
+      `Unable to find article for play w/ slug: "${fullReviewSlug}"`,
+    );
   }
 }
 ---
@@ -118,6 +138,16 @@ for (const { visible, icon, title } of icons) {
         <slot name="desktop-info" />
         <div class="px-4 py-2">
           {notes || <em>{noReview(verb)}</em>}
+          {
+            fullReviewSlug ? (
+              /* prettier-ignore */ <span>
+                Read more in my{" "}
+                <OmniLink href={articlePermalink(fullReviewSlug)}>
+                  {"full review"}
+                </OmniLink>!
+              </span>
+            ) : null
+          }
         </div>
       </div>
 
@@ -218,6 +248,16 @@ for (const { visible, icon, title } of icons) {
     {/* text row */}
     <div class:list={["p-2", "border-t-2", borderColor]}>
       {notes || <em>{noReview(verb)}</em>}
+      {
+        fullReviewSlug ? (
+          /* prettier-ignore */ <span>
+            Read more in my{" "}
+            <OmniLink href={articlePermalink(fullReviewSlug)}>
+              {"full review"}
+            </OmniLink>!
+          </span>
+        ) : null
+      }
     </div>
   </div>
 </div>

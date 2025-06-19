@@ -3,6 +3,7 @@ import type { AirtableBase, RecordBase } from "../types";
 import { loadListedObjects } from "./common";
 import { loadGames, type Game } from "./games";
 
+// https://airtable.com/appLZQMgewaSP7Gg3/api/docs
 const SCHEMA = {
   baseId: "appLZQMgewaSP7Gg3",
   viewId: "viwkq3nYj6SIHuujT",
@@ -18,6 +19,7 @@ const SCHEMA = {
     beatIfBeatable: "fldadrp1vEG1npkRK",
     shouldAutoPost: "fldT2QUK5SYjopMz5",
     playedOnSteam: "fldi0LzrevBvRVAl9",
+    fullReviewSlug: "fld5JLtsPj4kcWt5r",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
@@ -41,6 +43,7 @@ type NonStringFields = {
   [fields.beatIfBeatable]: "True" | "False" | "N/A";
   [fields.shouldAutoPost]?: true;
   [fields.playedOnSteam]: 0 | 1;
+  [fields.fullReviewSlug]?: string;
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
@@ -57,6 +60,7 @@ type LocalFields = {
   recordId: string;
   shouldAutoPost: boolean;
   playedOnSteam: boolean;
+  fullReviewSlug?: string;
 };
 type ForeignKeyFields = {
   game: Game;
@@ -73,6 +77,7 @@ const materialize = (playRow: PlayRecord): LocalFields => ({
   didNotFinish: playRow[fields.beatIfBeatable] === "False",
   shouldAutoPost: Boolean(playRow[fields.shouldAutoPost]),
   playedOnSteam: Boolean(playRow[fields.playedOnSteam]),
+  fullReviewSlug: playRow[fields.fullReviewSlug],
 });
 
 export const loadPlays = async (): Promise<Play[]> =>
