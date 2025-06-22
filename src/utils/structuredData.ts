@@ -61,8 +61,9 @@ export const buildStructuredReview = (
       worstRating: 1,
       bestRating: 4,
     },
-    datePublished: items[0].dateFinished,
-    dateModified: items.length > 1 ? last(items).dateFinished : undefined,
+    // items are sorted newest -> oldest
+    datePublished: last(items).dateFinished,
+    dateModified: items.length > 1 ? items[0].dateFinished : undefined,
     publisher: {
       "@type": "Organization",
       name: "david.reviews",

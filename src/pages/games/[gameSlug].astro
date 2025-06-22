@@ -24,6 +24,7 @@ import {
   pluralize,
   ratingPage,
   seoTitle,
+  sortDateDescending,
 } from "../../utils/data";
 import { buildStructuredReview } from "../../utils/structuredData";
 
@@ -150,6 +151,7 @@ const {
 } = Astro.props;
 
 const hasArticleSection = Boolean(articles.length || award);
+const allPlaysSorted = [...plays, ...etcPlays].toSorted(sortDateDescending);
 ---
 
 <Layout
@@ -159,12 +161,7 @@ const hasArticleSection = Boolean(articles.length || award);
     "time",
   )} he's played the ${genre.name} game ${title}.`}
   seoTitle={seoTitle(title)}
-  seoDescription={buildSeoDescription(
-    [...plays, ...etcPlays].toSorted(
-      (a, b) => Date.parse(b.dateFinished) - Date.parse(a.dateFinished),
-    ),
-    "plays",
-  )}
+  seoDescription={buildSeoDescription(allPlaysSorted, "plays")}
   activeTab="games"
   ogImg={{
     url: bigPosterUrl,
@@ -175,7 +172,7 @@ const hasArticleSection = Boolean(articles.length || award);
   }}
   publishedOn={publishedOn}
   updatedOn={updatedOn}
-  structuredData={buildStructuredReview("VideoGame", plays, {
+  structuredData={buildStructuredReview("VideoGame", allPlaysSorted, {
     title,
     permalink,
     poster: bigPosterUrl,

@@ -1,8 +1,11 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { numDaysAgo, pluralize } from "./data";
+import { maxIsoDate, numDaysAgo, pluralize } from "./data";
 
-type TestCase = [...Parameters<typeof pluralize>, string];
-const pluralizeTestCases: TestCase[] = [
+type PluralizeTestCase = [
+  ...Parameters<typeof pluralize>,
+  ReturnType<typeof pluralize>,
+];
+const pluralizeTestCases: PluralizeTestCase[] = [
   [0, "time", undefined, false, "time"],
   [1, "time", undefined, false, "time"],
   [2, "time", undefined, false, "times"],
@@ -74,4 +77,19 @@ describe("numDaysAgo", () => {
       expect(numDaysAgo("2025-02-01")).toEqual(17);
     });
   });
+});
+
+type MaxIsoTestCase = [
+  ...Parameters<typeof maxIsoDate>,
+  ReturnType<typeof maxIsoDate>,
+];
+const maxIsoTests: MaxIsoTestCase[] = [
+  ["2025-05-05", "2025-05-04", "2025-05-05"],
+  ["2025-05-05", "2025-05-06", "2025-05-06"],
+  ["2025-05-05", "2025-05-05", "2025-05-05"],
+  [undefined, "2025-05-05", "2025-05-05"],
+];
+
+test.for(maxIsoTests)("(%s, %s, %s, %s) -> %s", ([first, next, expected]) => {
+  expect(maxIsoDate(first, next)).toBe(expected);
 });
