@@ -12,11 +12,9 @@ const { src } = Astro.props;
 
 if (src.startsWith("/public")) {
   throw new Error(
-    "Don't start a public asset w/ `/public/`; Use `/some-name.mp4` directly instead.",
+    "Don't start a public asset with `/public/`; Use `/some-name.mp4` directly instead.",
   );
 }
 ---
 
-<video autoplay loop muted playsinline>
-  <source src={src} type="video/mp4" />
-</video>
+<video autoplay loop muted playsinline src={src}></video>
