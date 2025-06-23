@@ -81,13 +81,14 @@ if (!gameTitle) {
       );
     }
     gameTitle = game.title;
-  } else {
-    throw new Error("no title");
   }
 }
 
 if (frontmatter.review) {
   // reviews have gameInfo and/or a steam ID. But, most games have steam IDs, I'll save myself the trouble of including it as an availability source
+  if (!gameTitle) {
+    throw new Error("no title");
+  }
   const o: Availability = {
     gameTitle,
     gameSlug: frontmatter.mentionedGameSlugs?.[0] ?? "",
