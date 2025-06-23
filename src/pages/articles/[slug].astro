@@ -12,6 +12,7 @@ import SteamGame from "../../components/mdx/SteamGame.astro";
 import ItchGame from "../../components/mdx/ItchGame.astro";
 import Details from "../../components/mdx/Details.astro";
 import EmbeddedPlay from "../../components/mdx/EmbeddedPlay.astro";
+import Video from "../../components/mdx/Video.astro";
 
 import Config from "../../../astro.config.mjs";
 import type { ExternalUrl as AbsoluteUrl } from "../../airtable/types";
@@ -37,13 +38,14 @@ export const getStaticPaths = async (): StaticPaths => {
   }));
 };
 
-const { entry } = Astro.props;
 const { slug } = Astro.params;
+const { entry } = Astro.props;
 const { Content } = await entry.render();
 
 const frontmatter = entry.data;
 let ogImg: ImageInfo | undefined;
 
+// these are used in link building below, so assert assumptions here
 if (Config.site?.endsWith("/")) {
   throw new Error("config.site should not end with a slash!");
 }
@@ -109,6 +111,7 @@ const components = {
   Details,
   EmbeddedPlay,
   SubscribeBlurb,
+  Video,
 };
 ---
 

@@ -1,0 +1,20 @@
+---
+// useful for showing local mp4 video natively (since it's not directly supported by astro).
+// see: https://docs.astro.build/en/guides/imports/#supported-file-types
+
+type Props = {
+  src: `/${string}.mp4`;
+};
+
+const { src } = Astro.props;
+
+if (src.startsWith("/public")) {
+  throw new Error(
+    "Don't start a public asset w/ `/public/`; Use `/some-name.mp4` directly instead.",
+  );
+}
+---
+
+<video autoplay loop muted>
+  <source src={src} type="video/mp4" />
+</video>
