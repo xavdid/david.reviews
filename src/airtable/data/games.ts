@@ -70,6 +70,7 @@ export type Game = {
   posterUrl: ExternalUrl;
   bigPosterUrl: ExternalUrl;
   award?: AwardDetails;
+  steamId?: string;
   steamUrl?: string;
   dekuDealsUrl?: string;
 };
@@ -99,6 +100,7 @@ const materialize = (gameRow: GameRecord): Game => {
     bigPosterUrl: `https://images.igdb.com/igdb/image/upload/t_cover_big_2x/${
       gameRow[fields.igdbCoverId]
     }.jpg`,
+    steamId: gameRow[fields.steamId],
     steamUrl: gameRow[fields.steamId]
       ? // could include curator, but I bet they check the referrer; ?curator_clanid=45203122`
         `https://store.steampowered.com/app/${gameRow[fields.steamId]}/`

@@ -29,7 +29,7 @@ const articles = defineCollection({
             // used in structured data
             gameInfo: z
               .object({
-                title: z.string(),
+                title: z.string().optional(),
                 // If available, shows a steam store widget at the bottom of the page.
                 steamId: z.string().regex(/^\d+$/).optional(),
                 availability: z
@@ -46,7 +46,11 @@ const articles = defineCollection({
                   )
                   .default([]),
               })
-              .strict(),
+              .strict()
+              .refine(
+                ({ title, steamId }) => steamId ?? title,
+                "If steamId is missing in a review, must provide title.",
+              ),
             rating: z.number().min(1).max(4),
             blurb: z.string(),
             plusses: z.array(z.string()).default([]),

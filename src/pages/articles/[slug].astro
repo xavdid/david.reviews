@@ -19,6 +19,7 @@ import type { ExternalUrl as AbsoluteUrl } from "../../airtable/types";
 import OmniLink from "../../components/links/OmniLink.astro";
 import { buildStructuredReview } from "../../utils/structuredData";
 import MaybeOmniLink from "../../components/links/MaybeOmniLink.astro";
+import { loadGames } from "../../airtable/data/games";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -65,10 +66,30 @@ if (frontmatter.ogImg) {
 
 let availability: Availability | undefined;
 
+let gameTitle = frontmatter.review?.gameInfo.title;
+
+if (!gameTitle) {
+  const reviewSteamId = frontmatter.review?.gameInfo.steamId;
+  if (reviewSteamId) {
+    const games = await loadGames();
+    const game = Object.values(games).find(
+      ({ steamId }) => steamId === reviewSteamId,
+    );
+    if (!game) {
+      throw new Error(
+        `Unable to find game for Steam ID "${reviewSteamId}" and there's no title available`,
+      );
+    }
+    gameTitle = game.title;
+  } else {
+    throw new Error("no title");
+  }
+}
+
 if (frontmatter.review) {
   // reviews have gameInfo and/or a steam ID. But, most games have steam IDs, I'll save myself the trouble of including it as an availability source
   const o: Availability = {
-    gameTitle: frontmatter.review.gameInfo.title,
+    gameTitle,
     gameSlug: frontmatter.mentionedGameSlugs?.[0] ?? "",
     links: [],
   };
