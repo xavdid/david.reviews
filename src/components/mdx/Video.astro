@@ -2,6 +2,8 @@
 // useful for showing local mp4 video natively (since it's not directly supported by astro).
 // see: https://docs.astro.build/en/guides/imports/#supported-file-types
 
+// for making mp4s act like gifs, see: https://css-tricks.com/what-does-playsinline-mean-in-web-video/
+
 type Props = {
   src: `/${string}.mp4`;
 };
@@ -15,6 +17,6 @@ if (src.startsWith("/public")) {
 }
 ---
 
-<video autoplay loop muted>
+<video autoplay loop muted playsinline>
   <source src={src} type="video/mp4" />
 </video>
