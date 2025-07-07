@@ -4,6 +4,7 @@ import { loadReads } from "../../airtable/data/reads";
 import { loadWatches } from "../../airtable/data/watches";
 import {
   isProdBuild,
+  ordinal,
   slimReview,
   sortDateDescending,
   truncate,
@@ -33,6 +34,8 @@ type CompletedItem = {
   notes: string;
   // useful thing to have
   rating: number;
+  // only applicable for movies
+  watchNum?: string;
 };
 
 const buildOgDesc = (
@@ -77,29 +80,29 @@ export const GET: APIRoute = async () => {
       }),
     );
 
-  const watches: CompletedItem[] = (await loadWatches())
-    .slice(0, 50)
-    .map(
-      ({
-        recordId,
-        dateFinished,
-        notes,
-        rating,
-        movie: { permalink, bigPosterUrl, title },
-      }) => ({
-        recordId,
-        permalink: `https://david.reviews${permalink}`,
-        ogImgUrl: bigPosterUrl,
-        ogDescription: buildOgDesc(rating, notes, "watches"),
-        title,
-        titleCapitalized: title.toUpperCase(),
-        category: "movie",
-        dateFinished,
-        shouldAutoPost: notes.length > 0,
-        notes,
-        rating,
-      }),
-    );
+  const watches: CompletedItem[] = (await loadWatches()).slice(0, 50).map(
+    ({
+      recordId,
+      dateFinished,
+      notes,
+      rating,
+      // it's unlikely that a movie shows up in this list twice, but if it did, the later one will have the wrong watch num in the social post
+      movie: { permalink, bigPosterUrl, title, numWatches },
+    }) => ({
+      recordId,
+      permalink: `https://david.reviews${permalink}`,
+      ogImgUrl: bigPosterUrl,
+      ogDescription: buildOgDesc(rating, notes, "watches"),
+      title,
+      titleCapitalized: title.toUpperCase(),
+      category: "movie",
+      dateFinished,
+      shouldAutoPost: notes.length > 0,
+      notes,
+      rating,
+      watchNum: ordinal(numWatches),
+    }),
+  );
 
   const reads: CompletedItem[] = (await loadReads())
     .slice(0, 50)

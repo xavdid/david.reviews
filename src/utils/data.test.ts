@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { maxIsoDate, numDaysAgo, pluralize } from "./data";
+import { maxIsoDate, numDaysAgo, ordinal, pluralize } from "./data";
 
 type PluralizeTestCase = [
   ...Parameters<typeof pluralize>,
@@ -92,4 +92,23 @@ const maxIsoTests: MaxIsoTestCase[] = [
 
 test.for(maxIsoTests)("(%s, %s, %s, %s) -> %s", ([first, next, expected]) => {
   expect(maxIsoDate(first, next)).toBe(expected);
+});
+
+type OrdinalTestCase = [
+  ...Parameters<typeof ordinal>,
+  ReturnType<typeof ordinal>,
+];
+const ordinalTests: OrdinalTestCase[] = [
+  [1, "1st"],
+  [2, "2nd"],
+  [3, "3rd"],
+  [4, "4th"],
+  [11, "11th"],
+  [15, "15th"],
+  [22, "22nd"],
+  [31, "31st"],
+];
+
+test.for(ordinalTests)("(%s) -> %s", ([input, expected]) => {
+  expect(ordinal(input)).toBe(expected);
 });

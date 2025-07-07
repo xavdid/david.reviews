@@ -205,3 +205,25 @@ export const sortDateDescending = (
   b: { dateFinished: string },
 ): number =>
   sortableDateValue(b.dateFinished) - sortableDateValue(a.dateFinished);
+
+const ordinalRules = new Intl.PluralRules("en", { type: "ordinal" });
+const suffixes: Partial<Record<Intl.LDMLPluralRule, string>> = {
+  one: "st",
+  two: "nd",
+  few: "rd",
+  other: "th",
+};
+/**
+ * given any number, return a string with its ordinal attached.
+ *
+ * ```
+ * ordinal(3) // '3rd'
+ * ordinal(7) // '7th'
+ * ordinal(12) // '12th'
+ * ```
+ */
+export const ordinal = (n: number): string => {
+  const category = ordinalRules.select(n);
+  const suffix = suffixes[category];
+  return `${n}${suffix ?? ""}`;
+};
