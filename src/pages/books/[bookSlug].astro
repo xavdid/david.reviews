@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 
-import type { Book } from "../../airtable/data/books";
+import { type Book, posterUrlForHeight } from "../../airtable/data/books";
 import { loadReads, type Read } from "../../airtable/data/reads";
 import AuthorList from "../../components/AuthorList.astro";
 import AwardBlurb from "../../components/AwardBlurb.astro";
@@ -19,7 +19,6 @@ import {
   seoTitle,
 } from "../../utils/data";
 import { buildStructuredReview } from "../../utils/structuredData";
-import type { ExternalUrl } from "../../airtable/types";
 
 type Params = {
   bookSlug: string;
@@ -69,8 +68,8 @@ const {
   reads,
   series,
   award,
-  authors,
   gbid,
+  authors,
   numberInSeries,
   publishedOn,
   updatedOn,
@@ -78,8 +77,6 @@ const {
 } = Astro.props;
 
 const authorsStr = authors.map((a) => a.name).join(", ");
-const coverUrl = (height: number): ExternalUrl =>
-  `https://books.google.com/books/content/images/frontcover/${gbid}?fife=h${height}`;
 ---
 
 <Layout
@@ -92,7 +89,7 @@ const coverUrl = (height: number): ExternalUrl =>
   seoDescription={buildSeoDescription(reads, "reads")}
   activeTab="books"
   ogImg={{
-    url: coverUrl(700),
+    url: posterUrlForHeight(gbid, 700),
     height: 700,
     width: 461,
     type: "jpeg",
@@ -102,13 +99,13 @@ const coverUrl = (height: number): ExternalUrl =>
   structuredData={buildStructuredReview("Book", reads, {
     title,
     permalink,
-    poster: coverUrl(700),
+    poster: posterUrlForHeight(gbid, 700),
     authors,
   })}
 >
   <div class="flex py-3">
     <Image
-      src={coverUrl(225)}
+      src={posterUrlForHeight(gbid, 225)}
       alt={`poster for ${title}`}
       height={450 / 2}
       width={300 / 2}

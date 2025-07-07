@@ -61,6 +61,12 @@ type ForeignKeyFields = {
 };
 export type Book = LocalFields & ForeignKeyFields;
 
+/**
+ * useful for getting a book cover with a configurable height; most pages can just use the default.
+ */
+export const posterUrlForHeight = (gbid: string, height: number): ExternalUrl =>
+  `https://books.google.com/books/content/images/frontcover/${gbid}?fife=h${height}`;
+
 const materialize = (bookRow: BookRecord): LocalFields => {
   const slug = slugify(bookRow[fields.title]);
   const item: LocalFields = {
@@ -69,9 +75,7 @@ const materialize = (bookRow: BookRecord): LocalFields => {
     permalink: `/books/${slug}/`,
     gbid: bookRow[fields.gbid],
     numberInSeries: bookRow[fields.numberInSeries],
-    posterUrl: `https://books.google.com/books/content/images/frontcover/${
-      bookRow[fields.gbid]
-    }?fife=h188`,
+    posterUrl: posterUrlForHeight(bookRow[fields.gbid], 188),
     award: buildAwardDetails(
       bookRow[fields.awardTier],
       bookRow[fields.awardYear],
