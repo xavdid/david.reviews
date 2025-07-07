@@ -104,29 +104,28 @@ export const GET: APIRoute = async () => {
     }),
   );
 
-  const reads: CompletedItem[] = (await loadReads())
-    .slice(0, 50)
-    .map(
-      ({
-        recordId,
-        dateFinished,
-        notes,
-        rating,
-        book: { permalink, posterUrl, title },
-      }) => ({
-        recordId,
-        permalink: `https://david.reviews${permalink}`,
-        ogImgUrl: posterUrl,
-        ogDescription: buildOgDesc(rating, notes, "reads"),
-        title,
-        titleCapitalized: title.toUpperCase(),
-        category: "book",
-        dateFinished,
-        shouldAutoPost: true,
-        notes,
-        rating,
-      }),
-    );
+  const reads: CompletedItem[] = (await loadReads()).slice(0, 50).map(
+    ({
+      recordId,
+      dateFinished,
+      notes,
+      rating,
+      shouldAutoPost, // defaults to true, but I can disable
+      book: { permalink, posterUrl, title },
+    }) => ({
+      recordId,
+      permalink: `https://david.reviews${permalink}`,
+      ogImgUrl: posterUrl,
+      ogDescription: buildOgDesc(rating, notes, "reads"),
+      title,
+      titleCapitalized: title.toUpperCase(),
+      category: "book",
+      dateFinished,
+      shouldAutoPost,
+      notes,
+      rating,
+    }),
+  );
 
   const result = {
     // zapier expects this key

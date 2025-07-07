@@ -15,6 +15,7 @@ const SCHEMA = {
     isReread: "fldp6jjlmJ5BP7P6w",
     medium: "fld00LRZuJkDXWMsg",
     book: "fldxbKcjUeeQG1e8G",
+    shouldAutoPost: "fldeMudyBqnwurhiI",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
@@ -24,9 +25,10 @@ export type ReadMedium = "Paper" | "Digital" | "Audio";
 type FieldIds = (typeof fields)[keyof typeof fields];
 type NonStringFields = {
   [fields.rating]: number;
-  [fields.isReread]: boolean;
+  [fields.isReread]?: true;
   [fields.medium]: ReadMedium;
   [fields.book]: [string];
+  [fields.shouldAutoPost]?: true;
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
@@ -40,6 +42,7 @@ type LocalFields = {
   isReread: boolean;
   medium: ReadMedium;
   recordId: string;
+  shouldAutoPost: boolean;
 };
 type ForeignKeyFields = {
   book: Book;
@@ -50,9 +53,10 @@ const materialize = (readRow: ReadRecord): LocalFields => ({
   rating: readRow[fields.rating],
   notes: readRow[fields.notes] ?? "",
   dateFinished: readRow[fields.dateFinished],
-  isReread: readRow[fields.isReread],
+  isReread: Boolean(readRow[fields.isReread]),
   medium: readRow[fields.medium],
   recordId: readRow[fields.recordId],
+  shouldAutoPost: Boolean(readRow[fields.shouldAutoPost]),
 });
 
 export const loadReads = async (): Promise<Read[]> =>
