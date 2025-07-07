@@ -55,6 +55,10 @@ trigger-build:
 get-build:
     curl -sS "{{ zap_url }}" | jq
 
+# install deps
+install:
+    npm install
+
 # do a production build
 [no-exit-message]
 build: clean typecheck test && set-build
