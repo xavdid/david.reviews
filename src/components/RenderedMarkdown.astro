@@ -1,4 +1,6 @@
 ---
+// these are custom styles I apply to all rendered markdown
+// that's article bodies, plus about/contact pages
 const proseStyles = [
   // basic styles
   "prose",
@@ -15,6 +17,7 @@ const proseStyles = [
   // h2
   // - colors
   "prose-h2:border-b",
+  "prose-h2:border-dashed", // dash the lines in bodies to soften them a little
   "prose-h2:border-blue-600",
   "dark:prose-h2:border-amber-300",
   // - spacing
@@ -30,6 +33,7 @@ const proseStyles = [
 
   // image
   "prose-img:border",
+  // "prose-img:border-dashed",
   // - border colors
   "prose-img:border-zinc-800",
   "dark:prose-img:border-amber-300",
