@@ -1,5 +1,5 @@
 ---
-import { getPlayForGame } from "../../airtable/data/plays";
+import { getFinishedPlayForGame } from "../../airtable/data/plays";
 import Rating from "../Rating.astro";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 
 const { slug, index } = Astro.props;
 
-const play = await getPlayForGame(slug, index);
+const play = await getFinishedPlayForGame(slug, { index });
 ---
 
 {

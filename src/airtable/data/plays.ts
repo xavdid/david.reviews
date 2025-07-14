@@ -94,9 +94,12 @@ export const loadPlays = async (): Promise<Play[]> =>
  * @param slug the slug of the game to load. May change, but the site will be loud about it
  * @param index All plays are sorted chronologically, earliest to latest. Unless I'm backfilling something, this should be a stable way to point to a play
  */
-export const getPlayForGame = async (
+export const getFinishedPlayForGame = async (
   slug: string,
-  index = 0,
+  {
+    index = 0,
+    throwForMissing = isProdBuild,
+  }: { index?: number; throwForMissing?: boolean },
 ): Promise<Play | null> => {
   const plays = await loadPlays();
   const playForGame = plays
@@ -105,8 +108,8 @@ export const getPlayForGame = async (
     .at(index);
 
   if (!playForGame) {
-    const message = `Tried to load review for igdbId: ${slug}, but it wasn't found`;
-    if (isProdBuild) {
+    const message = `Tried to load review for slug: ${slug}, but it wasn't found`;
+    if (throwForMissing) {
       throw new Error(message);
     } else {
       console.warn(message);

@@ -20,7 +20,7 @@ import OmniLink from "../../components/links/OmniLink.astro";
 import { buildStructuredReview } from "../../utils/structuredData";
 import MaybeOmniLink from "../../components/links/MaybeOmniLink.astro";
 import { loadGames } from "../../airtable/data/games";
-import { getPlayForGame } from "../../airtable/data/plays";
+import { getFinishedPlayForGame } from "../../airtable/data/plays";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -104,7 +104,9 @@ if (frontmatter.review) {
     throw new Error("Missing primary game slug for review");
   }
 
-  const play = await getPlayForGame(gameSlug);
+  const play = await getFinishedPlayForGame(gameSlug, {
+    throwForMissing: false,
+  });
 
   const o: Availability = {
     gameTitle,
