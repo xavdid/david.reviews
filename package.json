@@ -19,7 +19,7 @@
     "preact": "^10.19.2",
     "rehype-autolink-headings": "^7.1.0",
     "tailwindcss": "^4.1.6",
-    "typescript": "5.2.2"
+    "typescript": "5.8.3"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^6.11.0",
