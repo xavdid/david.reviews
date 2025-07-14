@@ -4,15 +4,18 @@
 
 // for making mp4s act like gifs, see: https://css-tricks.com/what-does-playsinline-mean-in-web-video/
 
+// use dotfile command `shrink-gif` to prepare these.
+
 type Props = {
+  // not actually typechecked
   src: `/${string}.mp4`;
 };
 
 const { src } = Astro.props;
 
-if (src.startsWith("/public")) {
+if (!src.startsWith("/videos/")) {
   throw new Error(
-    "Don't start a public asset with `/public/`; Use `/some-name.mp4` directly instead.",
+    "Videos should live in the `/public/vidoes` folder and be referenced as `/videos/game/some-name.mp4` directly.",
   );
 }
 ---
