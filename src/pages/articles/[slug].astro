@@ -20,6 +20,7 @@ import OmniLink from "../../components/links/OmniLink.astro";
 import { buildStructuredReview } from "../../utils/structuredData";
 import MaybeOmniLink from "../../components/links/MaybeOmniLink.astro";
 import { loadGames } from "../../airtable/data/games";
+import { getPlayForGame } from "../../airtable/data/plays";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -29,6 +30,7 @@ type Availability = {
   gameTitle: string;
   gameSlug: string;
   links: Array<{ text: string; href?: string }>;
+  finishedPlay: boolean;
 };
 
 export const getStaticPaths = async (): StaticPaths => {
@@ -67,6 +69,7 @@ if (frontmatter.ogImg) {
 let availability: Availability | undefined;
 
 let gameTitle = frontmatter.review?.gameInfo.title;
+let gameSlug: string | undefined;
 
 if (!gameTitle) {
   const reviewSteamId = frontmatter.review?.gameInfo.steamId;
@@ -81,6 +84,7 @@ if (!gameTitle) {
       );
     }
     gameTitle = game.title;
+    gameSlug = game.slug;
   }
 }
 
@@ -89,10 +93,24 @@ if (frontmatter.review) {
   if (!gameTitle) {
     throw new Error("no title");
   }
+
+  // these should mostly have slugs? Unless I magic it away with the steam id
+  if (!gameSlug) {
+    gameSlug = frontmatter.mentionedGameSlugs?.[0];
+  }
+
+  // this may not always hold if I have reviews of things that aren't steam games.
+  if (!gameSlug) {
+    throw new Error("Missing primary game slug for review");
+  }
+
+  const play = await getPlayForGame(gameSlug);
+
   const o: Availability = {
     gameTitle,
     gameSlug: frontmatter.mentionedGameSlugs?.[0] ?? "",
     links: [],
+    finishedPlay: !!play,
   };
 
   if (frontmatter.review.gameInfo.steamId) {
@@ -187,7 +205,7 @@ const components = {
     {
       availability && (
         <p class="text-center italic">
-          {availability.gameSlug ? (
+          {availability.gameSlug && availability.finishedPlay ? (
             <OmniLink href={gamePermalink(availability.gameSlug)}>
               {availability.gameTitle}
             </OmniLink>
