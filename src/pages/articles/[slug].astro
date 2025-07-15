@@ -176,11 +176,9 @@ const components = {
           },
         ],
         {
-          title: frontmatter.review.gameInfo.title,
+          title: gameTitle,
           articleTitle: frontmatter.title,
-          articleSubject: frontmatter.mentionedGameSlugs?.[0]
-            ? gamePermalink(frontmatter.mentionedGameSlugs?.[0])
-            : undefined,
+          articleSubject: gameSlug ? gamePermalink(gameSlug) : undefined,
           blurb: frontmatter.review.blurb,
           permalink: `/articles/${slug}/`,
           poster: frontmatter.ogImg?.src,
