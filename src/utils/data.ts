@@ -227,3 +227,13 @@ export const ordinal = (n: number): string => {
   const suffix = suffixes[category];
   return `${n}${suffix ?? ""}`;
 };
+
+export const isFakeFirstWatch = (
+  numWatch: number,
+  isFirstWatch: boolean,
+): boolean => numWatch === 1 && !isFirstWatch;
+
+export const fakeFirstWatchMarker = (
+  numWatch: number,
+  isFirstWatch: boolean,
+): string => (isFakeFirstWatch(numWatch, isFirstWatch) ? "*" : "");

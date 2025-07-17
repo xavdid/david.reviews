@@ -1,5 +1,11 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { maxIsoDate, numDaysAgo, ordinal, pluralize } from "./data";
+import {
+  isFakeFirstWatch,
+  maxIsoDate,
+  numDaysAgo,
+  ordinal,
+  pluralize,
+} from "./data";
 
 type PluralizeTestCase = [
   ...Parameters<typeof pluralize>,
@@ -112,3 +118,21 @@ const ordinalTests: OrdinalTestCase[] = [
 test.for(ordinalTests)("(%s) -> %s", ([input, expected]) => {
   expect(ordinal(input)).toBe(expected);
 });
+
+type FakeFirstWatchTestCase = [
+  ...Parameters<typeof isFakeFirstWatch>,
+  ReturnType<typeof isFakeFirstWatch>,
+];
+const fakeFirstWatchTests: FakeFirstWatchTestCase[] = [
+  [1, true, false],
+  [1, false, true],
+  [2, true, false],
+  [2, false, false],
+];
+
+test.for(fakeFirstWatchTests)(
+  "(%s, %s) -> %s",
+  ([numWatch, isFirstWatch, expected]) => {
+    expect(isFakeFirstWatch(numWatch, isFirstWatch)).toBe(expected);
+  },
+);

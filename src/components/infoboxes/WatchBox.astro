@@ -1,5 +1,6 @@
 ---
 import type { Watch } from "../../airtable/data/watches";
+import { fakeFirstWatchMarker } from "../../utils/data";
 import BaseBox from "./BaseBox.astro";
 
 type Props = {
@@ -16,7 +17,7 @@ const { watch, numWatch } = Astro.props;
   dataRows={[
     [watch.rating, watch.dateFinished],
     [
-      `Watch #${numWatch}${numWatch === 1 && !watch.isFirstWatch ? "*" : ""}`,
+      `Watch #${numWatch}${fakeFirstWatchMarker(numWatch, watch.isFirstWatch)}`,
       `Released: ${watch.movie.yearReleased}`,
     ],
   ]}

@@ -4,6 +4,7 @@ import { loadReads } from "../../airtable/data/reads";
 import { loadWatches } from "../../airtable/data/watches";
 import { getPublishedArticles } from "../../utils/content";
 import {
+  fakeFirstWatchMarker,
   isProdBuild,
   ordinal,
   slimReview,
@@ -91,6 +92,7 @@ export const GET: APIRoute = async () => {
         rating,
         // it's unlikely that a movie shows up in this list twice, but if it did, the later one will have the wrong watch num in the social post
         movie: { permalink, bigPosterUrl, title, numWatches },
+        isFirstWatch,
       }) => ({
         recordId,
         permalink: `https://david.reviews${permalink}`,
@@ -103,7 +105,10 @@ export const GET: APIRoute = async () => {
         shouldAutoPost: notes.length > 0,
         notes,
         rating,
-        watchNum: ordinal(numWatches),
+        watchNum: `${ordinal(numWatches)}${fakeFirstWatchMarker(
+          numWatches,
+          isFirstWatch,
+        )}`,
       }),
     );
 
