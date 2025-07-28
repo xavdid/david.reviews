@@ -142,6 +142,7 @@ export const GET: APIRoute = async () => {
     .filter(({ data: { review } }) => review)
     .map(({ slug, permalink, data: { publishedOn, review } }) => ({
       category: "article",
+      permalink: `https://david.reviews${permalink}`,
       // for deduplication
       recordId: slug,
       dateFinished: publishedOn ?? "2035-07-14", // default for testing, since we only have published things here in prod
@@ -154,7 +155,6 @@ export const GET: APIRoute = async () => {
       rating: 4,
       ogImgUrl: "",
       ogDescription: "",
-      permalink,
       title: "",
       titleCapitalized: "",
     }));
