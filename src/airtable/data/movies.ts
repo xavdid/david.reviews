@@ -7,9 +7,9 @@ import {
 } from "../../awards";
 import { materializeCollection } from "../../utils/data";
 import type {
+  AbsoluteUrl,
   AirtableBase,
   Collection,
-  ExternalUrl,
   Permalink,
   RecordBase,
 } from "../types";
@@ -56,8 +56,8 @@ export type Movie = {
   yearReleased: number;
   numWatches: number;
   collections?: Collection[];
-  posterUrl: ExternalUrl;
-  bigPosterUrl: ExternalUrl;
+  posterUrl: AbsoluteUrl;
+  bigPosterUrl: AbsoluteUrl;
   award?: AwardDetails;
 };
 

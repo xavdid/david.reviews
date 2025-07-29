@@ -1,7 +1,7 @@
-import type { ExternalUrl } from "../airtable/types";
+import type { AbsoluteUrl, RelativeUrl } from "../airtable/types";
 
 export type ImageInfo = {
-  url: ExternalUrl;
+  url: AbsoluteUrl | RelativeUrl;
   height: number;
   width: number;
   // https://en.wikipedia.org/wiki/Media_type#Common_examples

@@ -5,6 +5,7 @@ import Rating from "../Rating.astro";
 import TitleLink from "../links/TitleLink.astro";
 import OmniLink from "../links/OmniLink.astro";
 import { articlePermalink, getPublishedArticles } from "../../utils/content";
+import type { AbsoluteUrl, RelativeUrl } from "../../airtable/types";
 
 type Props = {
   type: Category;
@@ -21,7 +22,7 @@ type Props = {
   title: string;
   permalink: string;
   image: {
-    posterUrl: `https://${string}`;
+    posterUrl: AbsoluteUrl | RelativeUrl;
     height: number;
     width: number;
   };

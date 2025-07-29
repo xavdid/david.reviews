@@ -11,9 +11,9 @@ import {
   materializeCollection,
 } from "../../utils/data";
 import type {
+  AbsoluteUrl,
   AirtableBase,
   Collection,
-  ExternalUrl,
   Permalink,
   RecordBase,
 } from "../types";
@@ -67,8 +67,8 @@ export type Game = {
   slug: string;
   collection?: Collection;
   permalink: Permalink;
-  posterUrl: ExternalUrl;
-  bigPosterUrl: ExternalUrl;
+  posterUrl: AbsoluteUrl;
+  bigPosterUrl: AbsoluteUrl;
   award?: AwardDetails;
   steamId?: string;
   steamUrl?: string;

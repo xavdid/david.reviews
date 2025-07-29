@@ -82,7 +82,9 @@ const groupedSeo: SEOProps = {
     basic: {
       title: seoTitle ?? pageTitle,
       type: publishedOn ? "article" : "website",
-      image: ogImg.url,
+      image: ogImg.url.startsWith("/")
+        ? `https://david.reviews/${ogImg.url}`
+        : ogImg.url,
       // url could be defined here, but it gets a sensible default
     },
     optional: {

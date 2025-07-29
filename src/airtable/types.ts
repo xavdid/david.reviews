@@ -12,7 +12,8 @@ export type RecordBase = {
 // internal links should have a trailing slash to prevent browser redirects
 export type Permalink = `${string}/`;
 
-export type ExternalUrl = `https://${string}`;
+export type AbsoluteUrl = `https://${string}`;
+export type RelativeUrl = `/${string}`;
 
 export type Collection = {
   fullName: string; // "🔎 Murder Mystery"

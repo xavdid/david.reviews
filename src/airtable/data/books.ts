@@ -6,10 +6,11 @@ import {
   type AwardTier,
 } from "../../awards";
 import type {
+  AbsoluteUrl,
   AirtableBase,
-  ExternalUrl,
   Permalink,
   RecordBase,
+  RelativeUrl,
 } from "../types";
 import { loadAuthors, type Author } from "./authors";
 import { loadReferenceObjects } from "./common";
@@ -53,7 +54,7 @@ type LocalFields = {
   permalink: Permalink;
   award?: AwardDetails;
   numberInSeries?: number;
-  posterUrl: ExternalUrl;
+  posterUrl: AbsoluteUrl | RelativeUrl;
 };
 type ForeignKeyFields = {
   authors: Author[];
@@ -64,8 +65,13 @@ export type Book = LocalFields & ForeignKeyFields;
 /**
  * useful for getting a book cover with a configurable height; most pages can just use the default.
  */
-export const posterUrlForHeight = (gbid: string, height: number): ExternalUrl =>
-  `https://books.google.com/books/content/images/frontcover/${gbid}?fife=h${height}`;
+export const posterUrlForHeight = (
+  gbid: string,
+  height: number,
+): AbsoluteUrl | RelativeUrl =>
+  gbid.startsWith("custom;")
+    ? `/book-covers/${gbid.split(";")[1]}`
+    : `https://books.google.com/books/content/images/frontcover/${gbid}?fife=h${height}`;
 
 const materialize = (bookRow: BookRecord): LocalFields => {
   const slug = slugify(bookRow[fields.title]);
