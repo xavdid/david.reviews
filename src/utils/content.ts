@@ -26,6 +26,18 @@ export const getPublishedArticles = async (): Promise<
         sortableDateValue(b.data.publishedOn) -
         sortableDateValue(a.data.publishedOn),
     );
+type SteamIdToSlug = Record<string, string>;
+export const getArticlesBySteamId = async (): Promise<SteamIdToSlug> => {
+  const articles = await getPublishedArticles();
+
+  return articles.reduce<SteamIdToSlug>((result, article) => {
+    if (article.data.review?.gameInfo.steamId) {
+      result[article.data.review?.gameInfo.steamId] = article.slug;
+    }
+
+    return result;
+  }, {});
+};
 
 export type ArticleReference = {
   title: string;

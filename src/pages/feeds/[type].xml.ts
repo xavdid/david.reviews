@@ -142,7 +142,7 @@ export const GET: APIRoute = async (context) => {
                     item.fullReviewSlug
                       ? ` Read more in my <a href="${articlePermalink(
                           item.fullReviewSlug,
-                        )}">full review</a>.`
+                        )}">full review</a>!`
                       : ""
                   }`,
                 "<br /><hr />",

@@ -1,3 +1,4 @@
+import { getArticlesBySteamId } from "../../utils/content";
 import { isProdBuild } from "../../utils/data";
 import type { AirtableBase, RecordBase } from "../types";
 import { loadListedObjects } from "./common";
@@ -19,7 +20,6 @@ const SCHEMA = {
     beatIfBeatable: "fldadrp1vEG1npkRK",
     shouldAutoPost: "fldT2QUK5SYjopMz5",
     playedOnSteam: "fldi0LzrevBvRVAl9",
-    fullReviewSlug: "fld5JLtsPj4kcWt5r",
   },
 } as const satisfies AirtableBase;
 const fields = SCHEMA.fields;
@@ -43,7 +43,6 @@ type NonStringFields = {
   [fields.beatIfBeatable]: "True" | "False" | "N/A";
   [fields.shouldAutoPost]?: true;
   [fields.playedOnSteam]: 0 | 1;
-  [fields.fullReviewSlug]?: string;
 };
 type StringFields = {
   [fieldId in Exclude<FieldIds, keyof NonStringFields>]: string;
@@ -77,17 +76,26 @@ const materialize = (playRow: PlayRecord): LocalFields => ({
   didNotFinish: playRow[fields.beatIfBeatable] === "False",
   shouldAutoPost: Boolean(playRow[fields.shouldAutoPost]),
   playedOnSteam: Boolean(playRow[fields.playedOnSteam]),
-  fullReviewSlug: playRow[fields.fullReviewSlug],
 });
 
-export const loadPlays = async (): Promise<Play[]> =>
-  await loadListedObjects(SCHEMA, materialize, [
+const steamIdsToSlugs = await getArticlesBySteamId();
+
+export const loadPlays = async (): Promise<Play[]> => {
+  const plays: Play[] = await loadListedObjects(SCHEMA, materialize, [
     {
       key: "game",
       foreignItems: await loadGames(),
       keyGrabber: (watchRow) => watchRow[fields.game],
     },
   ]);
+  return plays.map((p) => {
+    if (p.playType === "First Time" && p.game.steamId) {
+      p.fullReviewSlug = steamIdsToSlugs[p.game.steamId];
+    }
+
+    return p;
+  });
+};
 
 /**
  * get data suitable for adding a playbox to an MDX document. ~~Should only compute data once; all other loads should be fast.~~ See below
