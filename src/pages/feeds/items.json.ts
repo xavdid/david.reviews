@@ -54,6 +54,17 @@ export const GET: APIRoute = async () => {
     CompletedItem & { playedOnSteam: boolean; steamUrl?: string }
   > = (await loadPlays())
     .slice(0, 50)
+    // plays that correspond to full reviews don't need to be in the items queue
+    // this means only a play OR a reivew will show (favoring the review)
+    .filter((r) => {
+      if (r.shouldAutoPost && r.fullReviewSlug) {
+        throw new Error(
+          `unexpected autopost for full review slug? ${r.game.title} (${r.recordId})`,
+        );
+      }
+
+      return !r.fullReviewSlug;
+    })
     .map(
       ({
         recordId,
@@ -135,29 +146,40 @@ export const GET: APIRoute = async () => {
     }),
   );
 
-  const articles: Array<CompletedItem & { steamId: string }> = (
+  const articles: Array<CompletedItem & { steamId?: string; blurb: string }> = (
     await getPublishedArticles()
   )
     .slice(0, 50)
     .filter(({ data: { review } }) => review)
-    .map(({ slug, permalink, data: { publishedOn, review } }) => ({
-      category: "article",
-      permalink: `https://david.reviews${permalink}`,
-      // for deduplication
-      recordId: slug,
-      dateFinished: publishedOn ?? "2035-07-14", // default for testing, since we only have published things here in prod
-      steamId: review?.gameInfo.steamId ?? "NON-STEAM",
-      // shouldn't autopost this is just so I can hook into it
-      shouldAutoPost: false,
+    .map(({ slug, permalink, data: { publishedOn, review } }) => {
+      if (!review) {
+        throw new Error(
+          `filter is busted when filtering articles. slug: ${slug}`,
+        );
+      }
+      return {
+        category: "article",
+        permalink: `https://david.reviews${permalink}`,
+        // for deduplication
+        recordId: slug,
+        dateFinished: publishedOn ?? "2035-07-14", // default for testing, since we only have published things here in prod
 
-      // not relevant
-      notes: "",
-      rating: 4,
-      ogImgUrl: "",
-      ogDescription: "",
-      title: "",
-      titleCapitalized: "",
-    }));
+        // used to find the play for this review
+        steamId: review.gameInfo.steamId,
+        // used in review text generation
+        blurb: review.blurb,
+        rating: review.rating,
+        // shouldn't autopost this is just so I can hook into it for steam reviews
+        shouldAutoPost: false,
+
+        // not relevant
+        notes: "",
+        ogImgUrl: "",
+        ogDescription: "",
+        title: "",
+        titleCapitalized: "",
+      };
+    });
 
   const result = {
     // zapier expects this key
