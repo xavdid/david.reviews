@@ -8,7 +8,7 @@ type Props = SearchItem;
 const config: Record<
   SearchItem["category"],
   {
-    icon: () => JSX.Element;
+    icon: ({}: any) => JSX.Element;
     border: string;
   }
 > = {

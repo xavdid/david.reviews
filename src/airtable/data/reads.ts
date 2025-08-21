@@ -43,6 +43,7 @@ type LocalFields = {
   medium: ReadMedium;
   recordId: string;
   shouldAutoPost: boolean;
+  category: "book";
 };
 type ForeignKeyFields = {
   book: Book;
@@ -57,6 +58,7 @@ const materialize = (readRow: ReadRecord): LocalFields => ({
   medium: readRow[fields.medium],
   recordId: readRow[fields.recordId],
   shouldAutoPost: Boolean(readRow[fields.shouldAutoPost]),
+  category: "book",
 });
 
 export const loadReads = async (): Promise<Read[]> =>

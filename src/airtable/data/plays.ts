@@ -60,6 +60,7 @@ type LocalFields = {
   shouldAutoPost: boolean;
   playedOnSteam: boolean;
   fullReviewSlug?: string;
+  category: "game";
 };
 type ForeignKeyFields = {
   game: Game;
@@ -76,6 +77,7 @@ const materialize = (playRow: PlayRecord): LocalFields => ({
   didNotFinish: playRow[fields.beatIfBeatable] === "False",
   shouldAutoPost: Boolean(playRow[fields.shouldAutoPost]),
   playedOnSteam: Boolean(playRow[fields.playedOnSteam]),
+  category: "game",
 });
 
 const steamIdsToSlugs = await getArticlesBySteamId();

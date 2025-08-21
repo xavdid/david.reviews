@@ -38,6 +38,7 @@ type LocalFields = {
   dateFinished: string;
   isFirstWatch: boolean;
   watchedInTheater: boolean;
+  category: "movie";
 };
 type ForeignKeyFields = {
   movie: Movie;
@@ -51,6 +52,7 @@ const materialize = (watchRow: WatchRecord): LocalFields => ({
   dateFinished: watchRow[fields.dateWatched],
   isFirstWatch: watchRow[fields.isFirstWatch] === 1,
   watchedInTheater: watchRow[fields.watchLocation] === "Theater",
+  category: "movie",
 });
 
 export const loadWatches = async (): Promise<Watch[]> =>

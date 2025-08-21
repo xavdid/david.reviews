@@ -6,9 +6,46 @@ import { loadInProgressReads } from "../airtable/data/inProgressReads";
 import SubtleLink from "../components/links/SubtleLink.astro";
 import Layout from "../layouts/Layout.astro";
 import { getPublishedArticles } from "../utils/content";
-import { seoTitle, sortableDateValue } from "../utils/data";
+import {
+  getMedia,
+  seoTitle,
+  sortableDateValue,
+  sortDateDescending,
+} from "../utils/data";
 import SubscribeBlurb from "../components/SubscribeBlurb.astro";
 import OmniLink from "../components/links/OmniLink.astro";
+import { loadReads } from "../airtable/data/reads";
+import { loadPlays } from "../airtable/data/plays";
+import { loadWatches } from "../airtable/data/watches";
+import Rating from "../components/Rating.astro";
+import {
+  BookIcon,
+  GameIcon,
+  MovieIcon,
+} from "../components/icons/inline-icons";
+
+// cool wing-shaped boxes
+const boxStyles = [
+  "flex",
+  "w-full",
+  "rounded-sm",
+  "border-t-2",
+  "border-l-2",
+  "p-2",
+];
+// section headers
+const titleStyles = ["pb-2", "pt-6", "text-center", "text-4xl", "font-bold"];
+
+const latestArticle = (await getPublishedArticles())[0];
+
+const reads = await loadReads();
+const plays = await loadPlays();
+const watches = await loadWatches();
+
+const NUM_RECENT_REVIEWS = 6;
+const recentReviews = [...reads, ...plays, ...watches]
+  .toSorted(sortDateDescending)
+  .slice(0, NUM_RECENT_REVIEWS);
 
 const inProgressPlays = (await loadInProgessPlays()).toSorted(
   (a, b) => sortableDateValue(b.dateStarted) - sortableDateValue(a.dateStarted),
@@ -17,9 +54,6 @@ const inProgressPlays = (await loadInProgessPlays()).toSorted(
 const inProgressReads = (await loadInProgressReads()).toSorted(
   (a, b) => sortableDateValue(b.dateStarted) - sortableDateValue(a.dateStarted),
 );
-
-const latestArticle = (await getPublishedArticles())[0];
-const boxStyles = "align-center flex w-full rounded-sm border-2 p-2";
 ---
 
 <Layout
@@ -32,21 +66,76 @@ const boxStyles = "align-center flex w-full rounded-sm border-2 p-2";
     Welcome to <strong>david.reviews</strong>, my small, independent media
     review site. I'm <OmniLink href="https://xavd.id">
       {"David"}
-    </OmniLink> and I've reviewing things and writing them down since 2016.
+    </OmniLink> and I've reviewing things since 2016.
   </p>
 
-  <SubscribeBlurb showSteamButton />
-
-  <h2 class="pb-2 pt-8 text-center text-3xl font-bold">Latest Article</h2>
-  <div class:list={[boxStyles, "border-purple-600"]}>
+  <h2 class:list={[titleStyles, "underline", "decoration-purple-600"]}>
+    Latest Article
+  </h2>
+  <div class:list={["text-center", "pt-2", "pb-6"]}>
     <SubtleLink href={latestArticle.permalink} classes={["text-xl"]}>
       {latestArticle.data.title}
     </SubtleLink>
   </div>
 
-  <!-- can include this, but /articles page does the same -->
+  <h2 class:list={titleStyles}>Recently Reviewed</h2>
+  <div class="flex flex-wrap justify-around">
+    {
+      recentReviews.map((r) => {
+        const Icon =
+          r.category === "book"
+            ? BookIcon
+            : r.category === "game"
+              ? GameIcon
+              : MovieIcon;
 
-  <h2 class="pb-2 pt-6 text-center text-3xl font-bold">Now Playing</h2>
+        return (
+          <a
+            class:list={[
+              "rounded-sm",
+              "border-2",
+              "px-2",
+              "py-1",
+              "flex",
+              "flex-col",
+              "justify-between",
+              "my-2",
+              {
+                "border-blue-600": r.category === "game",
+                "border-emerald-600": r.category === "book",
+                "border-red-600": r.category === "movie",
+              },
+            ]}
+            href={getMedia(r).permalink}
+          >
+            {/* image height doesn't matter, all images are constrained by their width */}
+            <Image
+              class="py-1"
+              src={getMedia(r).posterUrl}
+              alt={`poster for ${getMedia(r).title}`}
+              height={500}
+              width={130}
+            />
+            <div class="flex justify-between">
+              <Rating rating={r.rating} />
+              <Icon padding="px-0" />
+            </div>
+          </a>
+        );
+      })
+    }
+  </div>
+
+  <SubscribeBlurb classes={["pt-1", "pb-4", "text-center"]} showSteamButton />
+
+  <h2
+    class:list={[
+      titleStyles,
+      { "underline decoration-blue-600": inProgressPlays.length === 0 },
+    ]}
+  >
+    Now Playing
+  </h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
       inProgressPlays.length === 0 && (
@@ -85,7 +174,14 @@ const boxStyles = "align-center flex w-full rounded-sm border-2 p-2";
       )
     }
   </div>
-  <h2 class="pb-2 pt-6 text-center text-3xl font-bold">Now Reading</h2>
+  <h2
+    class:list={[
+      titleStyles,
+      { "underline decoration-emerald-600": inProgressReads.length === 0 },
+    ]}
+  >
+    Now Reading
+  </h2>
   <div class="flex flex-wrap justify-around gap-y-2">
     {
       inProgressReads.length === 0 && (
@@ -122,5 +218,3 @@ const boxStyles = "align-center flex w-full rounded-sm border-2 p-2";
     }
   </div>
 </Layout>
-
-<style></style>

@@ -1,5 +1,11 @@
 import slugify from "@sindresorhus/slugify";
 import childProcess from "node:child_process";
+import type { Book } from "../airtable/data/books";
+import type { Game } from "../airtable/data/games";
+import type { Movie } from "../airtable/data/movies";
+import type { Play } from "../airtable/data/plays";
+import type { Read } from "../airtable/data/reads";
+import type { Watch } from "../airtable/data/watches";
 import type { Collection, Permalink } from "../airtable/types";
 
 export type Category = "book" | "movie" | "game";
@@ -237,3 +243,12 @@ export const fakeFirstWatchMarker = (
   numWatch: number,
   isFirstWatch: boolean,
 ): string => (isFakeFirstWatch(numWatch, isFirstWatch) ? "*" : "");
+
+export const getMedia = <T extends Read | Play | Watch>(
+  r: T,
+): T extends Read ? Book : T extends Play ? Game : Movie =>
+  (r.category === "book"
+    ? r.book
+    : r.category === "game"
+      ? r.game
+      : r.movie) as any;
