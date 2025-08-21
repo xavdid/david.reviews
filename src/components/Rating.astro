@@ -9,7 +9,7 @@ type Props = {
 };
 
 const { rating, classes: componentClasses, starHeight = "h-4" } = Astro.props;
-const starClasses = ["mb-[0.25em] inline", starHeight];
+const starClasses = [starHeight, "mb-[0.25em]", "inline"];
 ---
 
 <div class:list={[componentClasses, "whitespace-nowrap"]}>
