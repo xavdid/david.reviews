@@ -61,9 +61,9 @@ const articles = defineCollection({
           .optional(),
       })
       .strict()
-      .refine(({ publishedOn, ogImg }) => {
-        return publishedOn ? ogImg : true;
-      }, "published posts must have OG images"),
+      .refine(({ publishedOn, ogImg, review }) => {
+        return publishedOn && review ? ogImg : true;
+      }, "published reviews must have OG images"),
 });
 
 export const collections = {
