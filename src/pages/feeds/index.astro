@@ -17,7 +17,8 @@ import OmniLink from "../../components/links/OmniLink.astro";
 
 // reuse the "all icons" group because they have inline styles appied already
 // this only partially defeats the point of the svg thing, but it's not the end of the world
-const icons: Record<(typeof feedTypes)[number], () => JSX.Element> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const icons: Record<(typeof feedTypes)[number], (_: any) => JSX.Element> = {
   games: GameIcon,
   movies: MovieIcon,
   books: BookIcon,

@@ -8,7 +8,8 @@ type Props = SearchItem;
 const config: Record<
   SearchItem["category"],
   {
-    icon: ({}: any) => JSX.Element;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    icon: (_: any) => JSX.Element;
     border: string;
   }
 > = {

@@ -251,4 +251,5 @@ export const getMedia = <T extends Read | Play | Watch>(
     ? r.book
     : r.category === "game"
       ? r.game
-      : r.movie) as any;
+      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        r.movie) as any;
