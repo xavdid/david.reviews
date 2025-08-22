@@ -96,10 +96,12 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
               "border-2",
               "px-2",
               "py-1",
+              "my-2",
               "flex",
               "flex-col",
               "justify-between",
-              "my-2",
+              "hover:bg-zinc-200",
+              "dark:hover:bg-zinc-600",
               {
                 "border-blue-600": r.category === "game",
                 "border-emerald-600": r.category === "book",
