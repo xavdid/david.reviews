@@ -55,7 +55,7 @@ ci_check := '[[ -n "${CI-""}" ]] && '
 
 # set auto-build to true
 [group("autobuild")]
-trigger-autobuild:
+queue-autobuild:
     # call just directly so that it skips the CI check
     just set-autobuild true
 

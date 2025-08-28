@@ -110,12 +110,12 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
             ]}
             href={getMedia(r).permalink}
           >
-            {/* image height doesn't matter, all images are constrained by their width */}
+            {/* height is only used for uncached pageloads. But, make it right-ish so stuff doesn't jump a ton. */}
             <Image
               class="py-1"
               src={getMedia(r).posterUrl}
               alt={`poster for ${getMedia(r).title}`}
-              height={500}
+              height={205}
               width={130}
             />
             <div class="flex justify-between">
