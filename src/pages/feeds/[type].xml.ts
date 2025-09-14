@@ -133,7 +133,7 @@ export const GET: APIRoute = async (context) => {
               content: [
                 slimReview(
                   item.rating,
-                  item.notes,
+                  item.notes.replaceAll("\n\n", "<br /><br />"),
                   ({ game: "plays", movie: "watches", book: "reads" } as const)[
                     item.type
                   ],

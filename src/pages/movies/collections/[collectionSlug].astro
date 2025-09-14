@@ -1,20 +1,18 @@
 ---
-import { Image } from "astro:assets";
 import type { Movie } from "../../../airtable/data/movies";
 import { loadWatches, type Watch } from "../../../airtable/data/watches";
 import type { Collection } from "../../../airtable/types";
 import OmniLink from "../../../components/links/OmniLink.astro";
-import TitleLink from "../../../components/links/TitleLink.astro";
 import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
   averageRating,
   collectionPermalink,
-  pluralize,
   ratingPage,
   seoTitle,
 } from "../../../utils/data";
+import SlimBox from "../../../components/infoboxes/SlimBox.astro";
 
 type Params = {
   collectionSlug: string;
@@ -74,7 +72,7 @@ export const getStaticPaths = async (): Result => {
 
 const { movies, collection } = Astro.props;
 const sortedMovies = movies
-  .map(({ movie: { title, permalink, posterUrl }, watches }) => ({
+  .map(({ movie: { title, permalink, posterUrl, award }, watches }) => ({
     title,
     avgRating: averageRating(watches),
     numWatches: watches.length,
@@ -84,6 +82,7 @@ const sortedMovies = movies
     blurb: watches.reduce<string>((result, { notes }) => {
       return result.length > notes.length ? result : notes;
     }, ""),
+    award,
   }))
   .toSorted((a, b) => b.numWatches - a.numWatches || b.avgRating - a.avgRating);
 ---
@@ -119,33 +118,6 @@ const sortedMovies = movies
     </p>
   </div>
   <div>
-    {
-      sortedMovies.map(
-        ({ title, avgRating, numWatches, permalink, posterUrl, blurb }) => (
-          <div class="mb-4 flex rounded-sm border-2 border-red-600 p-2 even:bg-red-50 dark:even:bg-zinc-700">
-            <a slot="image" href={permalink}>
-              <Image
-                class="max-w-[unset]"
-                src={posterUrl}
-                alt={`poster for ${title}`}
-                height={180}
-                width={120}
-              />
-            </a>
-            <div class="pl-4">
-              <TitleLink classes={["text-xl"]} href={permalink}>
-                {title}
-              </TitleLink>
-
-              <div>
-                Watched {numWatches} {pluralize(numWatches, "time")}.
-              </div>
-              <div>Avg Rating: {avgRating}/4⭐</div>
-              <p class="mt-2 border-l-2 border-red-600 pl-2 italic">{blurb}</p>
-            </div>
-          </div>
-        ),
-      )
-    }
+    {sortedMovies.map((movie) => <SlimBox {...movie} mediaType="movies" />)}
   </div>
 </Layout>

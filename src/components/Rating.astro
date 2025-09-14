@@ -3,7 +3,7 @@ import StarEmpty from "./icons/svgs/star-empty.svg";
 import StarFilled from "./icons/svgs/star-filled.svg";
 
 type Props = {
-  rating: number;
+  rating?: number;
   classes?: string[];
   starHeight?: string;
 };
@@ -12,14 +12,15 @@ const { rating, classes: componentClasses, starHeight = "h-4" } = Astro.props;
 const starClasses = [starHeight, "mb-[0.25em]", "inline"];
 ---
 
-<div class:list={[componentClasses, "whitespace-nowrap"]}>
-  {
-    Array.from({ length: rating }).map(() => (
-      <StarFilled class:list={[starClasses, "fill-amber-400"]} />
-    ))
-  }{
-    Array.from({ length: 4 - rating }).map(() => (
-      <StarEmpty class:list={[starClasses, "dark:fill-white"]} />
-    ))
-  }
-</div>
+{
+  rating != null ? (
+    <div class:list={[componentClasses, "whitespace-nowrap"]}>
+      {Array.from({ length: rating }).map(() => (
+        <StarFilled class:list={[starClasses, "fill-amber-400"]} />
+      ))}
+      {Array.from({ length: 4 - rating }).map(() => (
+        <StarEmpty class:list={[starClasses, "dark:fill-white"]} />
+      ))}
+    </div>
+  ) : null
+}

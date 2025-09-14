@@ -1,0 +1,19 @@
+---
+type Props = {
+  text: string;
+};
+
+const { text } = Astro.props;
+
+// text could have \n\n characters, plus leading/trailing whitespace.
+// in the default case, it's just a `<p>`. But, it'll be multiple if there are breaks.
+// Interior single newlines are ignored.
+
+const chunks = text
+  .trim()
+  .split("\n\n")
+  .map((c) => c.trim())
+  .filter(Boolean);
+---
+
+<>{chunks.map((c) => <div class="not-first:pt-3">{c}</div>)}</>

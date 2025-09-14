@@ -8,8 +8,8 @@ _default:
 
 # run the dev server
 [group("development")]
-dev:
-    astro dev
+dev *args:
+    astro dev {{ args }}
 
 # general purpose handler for anstro commands
 [no-exit-message]

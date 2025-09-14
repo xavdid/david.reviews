@@ -5,6 +5,7 @@ import TitleLink from "../links/TitleLink.astro";
 import type { Category } from "../../utils/data";
 import Rating from "../Rating.astro";
 import type { AwardDetails } from "../../awards";
+import MultiLineText from "../MultiLineText.astro";
 
 type Props = {
   permalink: Permalink;
@@ -12,7 +13,7 @@ type Props = {
   title: string;
   blurb: string;
   mediaType: `${Category}s`;
-  rating: number;
+  rating?: number;
   award?: AwardDetails;
 };
 
@@ -62,7 +63,9 @@ const borderColors = {
       <div class="pt-1">
         <Rating rating={rating} />
       </div>
-      <p class:list={["mt-2 border-l-2 pl-2 italic", borderColors]}>{blurb}</p>
+      <div class:list={["mt-2 border-l-2 pl-2 italic", borderColors]}>
+        <MultiLineText text={blurb} />
+      </div>
     </div>
   </div>
 
@@ -91,6 +94,8 @@ const borderColors = {
     </div>
 
     {/* bottom row layout */}
-    <p class:list={["pt-1", "border-t-2", "italic", borderColors]}>{blurb}</p>
+    <div class:list={["pt-1", "border-t-2", "italic", borderColors]}>
+      <MultiLineText text={blurb} />
+    </div>
   </div>
 </div>

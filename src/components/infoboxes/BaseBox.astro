@@ -6,6 +6,7 @@ import TitleLink from "../links/TitleLink.astro";
 import OmniLink from "../links/OmniLink.astro";
 import { articlePermalink, getPublishedArticles } from "../../utils/content";
 import type { AbsoluteUrl, RelativeUrl } from "../../airtable/types";
+import MultiLineText from "../MultiLineText.astro";
 
 type Props = {
   type: Category;
@@ -138,7 +139,8 @@ if (fullReviewSlug) {
       >
         <slot name="desktop-info" />
         <div class="px-4 py-2">
-          {notes || <em>{noReview(verb)}</em>}
+          {notes ? <MultiLineText text={notes} /> : <em>{noReview(verb)}</em>}
+
           {
             fullReviewSlug ? (
               /* prettier-ignore */ <span>
@@ -248,7 +250,7 @@ if (fullReviewSlug) {
 
     {/* text row */}
     <div class:list={["p-2", "border-t-2", borderColor]}>
-      {notes || <em>{noReview(verb)}</em>}
+      {notes ? <MultiLineText text={notes} /> : <em>{noReview(verb)}</em>}
       {
         fullReviewSlug ? (
           /* prettier-ignore */ <span>

@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import {
   COLLECTION_DESCRIPTIONS,
   type Game,
@@ -8,16 +7,15 @@ import { isEtcPlay, loadPlays, type Play } from "../../../airtable/data/plays";
 import type { Collection } from "../../../airtable/types";
 import PageTitle from "../../../components/PageTitle.astro";
 import RoundedText from "../../../components/RoundedText.astro";
-import TitleLink from "../../../components/links/TitleLink.astro";
 import Layout from "../../../layouts/Layout.astro";
 import {
-  noReview,
   averageRating,
   collectionPermalink,
   ratingPage,
   seoTitle,
 } from "../../../utils/data";
 import OmniLink from "../../../components/links/OmniLink.astro";
+import SlimBox from "../../../components/infoboxes/SlimBox.astro";
 
 type Params = {
   collectionSlug: string;
@@ -77,18 +75,21 @@ export const getStaticPaths = async (): Result => {
 
 const { games, collection } = Astro.props;
 const sortedGames = games
-  .map(({ game: { permalink, title, posterUrl }, plays }) => ({
-    title,
-    avgRating: averageRating(plays),
-    permalink,
-    posterUrl,
-    // the longest review is probably the best one?
-    blurb:
-      plays.reduce<string>(
-        (result, { notes }) => (result.length > notes.length ? result : notes),
-        "",
-      ) || noReview("plays"),
-  }))
+  .map(({ game: { permalink, title, posterUrl, award }, plays }) => {
+    // i'm going to show info about the most relevant play, which is probably the one I had the most to say about
+    const bestPlay = plays.reduce((result, item) =>
+      result.notes.length > item.notes.length ? result : item,
+    );
+    return {
+      title,
+      avgRating: averageRating(plays),
+      permalink,
+      posterUrl,
+      // the longest review is probably the best one?
+      blurb: bestPlay.notes,
+      award,
+    };
+  })
   .toSorted(
     (a, b) => b.avgRating - a.avgRating || (a.title > b.title ? 1 : -1),
   );
@@ -131,28 +132,6 @@ const sortedGames = games
     </p>
   </div>
   <div>
-    {
-      sortedGames.map(({ title, avgRating, permalink, posterUrl, blurb }) => (
-        <div class="mb-4 flex rounded-sm border-2 border-blue-600 p-2 even:bg-blue-50 dark:even:bg-zinc-700">
-          <a slot="image" href={permalink}>
-            <Image
-              class="max-w-[unset]"
-              src={posterUrl}
-              alt={`poster for ${title}`}
-              height={187.5}
-              width={125}
-            />
-          </a>
-          <div class="pl-4">
-            <TitleLink classes={["text-xl"]} href={permalink}>
-              {title}
-            </TitleLink>
-
-            <div>Avg Rating: {avgRating}/4⭐</div>
-            <p class="mt-2 border-l-2 border-blue-600 pl-2 italic">{blurb}</p>
-          </div>
-        </div>
-      ))
-    }
+    {sortedGames.map((game) => <SlimBox {...game} mediaType="games" />)}
   </div>
 </Layout>
