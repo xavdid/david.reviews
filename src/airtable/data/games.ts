@@ -136,6 +136,8 @@ export const GENRE_DESCRIPTIONS: Record<string, `${string}.`> = {
   "base-building":
     "building structures and being able to customize the layout of your home area.",
   "bullet-hell": "having to avoid flying projectices.",
+  fighting:
+    "using a complex series of button combos to whittle down the health of your opponent(s).",
   "management-sim": "managing resources and expanding capabilities over time.",
   metroidvania:
     "large, interconnected maps and progression blocked by ability acquisition.",
