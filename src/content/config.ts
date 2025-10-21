@@ -56,6 +56,8 @@ const articles = defineCollection({
             plusses: z.array(z.string()).default([]),
             minuses: z.array(z.string()).default([]),
             gotPressKey: z.boolean().default(false),
+            // for simul-posted reviews
+            thinkyUrl: z.string().startsWith("https://").optional(),
           })
           .strict()
           .optional(),

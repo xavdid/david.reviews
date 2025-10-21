@@ -276,6 +276,21 @@ const components = {
         </>
       )
     }
+    {
+      frontmatter?.review?.thinkyUrl && (
+        <>
+          <hr />
+          <p>
+            This review also appeared the{" "}
+            <MaybeOmniLink
+              href="https://thinkygames.com/"
+              text="Thinky Games"
+            />{" "}
+            website.
+          </p>
+        </>
+      )
+    }
   </RenderedMarkdown>
 
   <!-- <hr class="my-6" />
