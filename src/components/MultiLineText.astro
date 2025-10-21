@@ -16,4 +16,12 @@ const chunks = text
   .filter(Boolean);
 ---
 
-<>{chunks.map((c) => <div class="not-first:pt-3">{c}</div>)}</>
+<>
+  {
+    chunks.map((c, index) => (
+      <div class="not-first:pt-3">
+        {c} {index === chunks.length - 1 ? <slot /> : null}
+      </div>
+    ))
+  }
+</>

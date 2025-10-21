@@ -139,17 +139,21 @@ if (fullReviewSlug) {
       >
         <slot name="desktop-info" />
         <div class="px-4 py-2">
-          {notes ? <MultiLineText text={notes} /> : <em>{noReview(verb)}</em>}
-
           {
-            fullReviewSlug ? (
-              /* prettier-ignore */ <span>
+            notes ? (
+              <MultiLineText text={notes}>
+                {fullReviewSlug ? (
+                  /* prettier-ignore */ <span>
                 Read more in my{" "}
                 <OmniLink href={articlePermalink(fullReviewSlug)}>
                   {"full review"}
                 </OmniLink>!
               </span>
-            ) : null
+                ) : null}
+              </MultiLineText>
+            ) : (
+              <em>{noReview(verb)}</em>
+            )
           }
         </div>
       </div>
@@ -250,16 +254,21 @@ if (fullReviewSlug) {
 
     {/* text row */}
     <div class:list={["p-2", "border-t-2", borderColor]}>
-      {notes ? <MultiLineText text={notes} /> : <em>{noReview(verb)}</em>}
       {
-        fullReviewSlug ? (
-          /* prettier-ignore */ <span>
-            Read more in my{" "}
-            <OmniLink href={articlePermalink(fullReviewSlug)}>
-              {"full review"}
-            </OmniLink>!
-          </span>
-        ) : null
+        notes ? (
+          <MultiLineText text={notes}>
+            {fullReviewSlug ? (
+              /* prettier-ignore */ <span>
+                Read more in my{" "}
+                <OmniLink href={articlePermalink(fullReviewSlug)}>
+                  {"full review"}
+                </OmniLink>!
+              </span>
+            ) : null}
+          </MultiLineText>
+        ) : (
+          <em>{noReview(verb)}</em>
+        )
       }
     </div>
   </div>
