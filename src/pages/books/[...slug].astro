@@ -9,7 +9,13 @@ import OmniLink from "../../components/links/OmniLink.astro";
 import Layout from "../../layouts/Layout.astro";
 import { ratingPage, seoTitle } from "../../utils/data";
 
-type Subpaths = "awarded" | "all" | "recommended" | "recent" | "unrecommended";
+type Subpaths =
+  | "awarded"
+  | "all"
+  | "recommended"
+  | "recent"
+  | "unrecommended"
+  | "audio";
 type WatchFilter = (read: Read) => boolean;
 const DEFAULT_FILTER: WatchFilter = () => true;
 
@@ -17,7 +23,14 @@ const DEFAULT_FILTER: WatchFilter = () => true;
 type Result = Array<{ params: { slug: Subpaths | undefined } }>;
 export const getStaticPaths = (): Result =>
   (
-    [undefined, "all", "awarded", "recommended", "unrecommended"] as Subpaths[]
+    [
+      undefined,
+      "all",
+      "audio",
+      "awarded",
+      "recommended",
+      "unrecommended",
+    ] as Subpaths[]
   ).map((slug: Subpaths | undefined) => ({
     params: { slug },
   }));
@@ -44,6 +57,14 @@ const subPages: Array<{
     tabTitle: "Recent Books",
     limit: 100,
     introText: "Showing the 100 most recent reviews.",
+  },
+  {
+    subpath: "audio",
+    buttonLabel: "🔈 Audio",
+    pageTitle: "Audiobook Reads",
+    tabTitle: "Audiobooks",
+    introText: "Showing all audiobook reviews.",
+    filter: (read) => read.medium === "Audio",
   },
   {
     subpath: "awarded",
