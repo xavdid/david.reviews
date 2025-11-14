@@ -72,7 +72,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
   <h2 class:list={[titleStyles, "underline", "decoration-purple-600"]}>
     Latest Article
   </h2>
-  <div class:list={["text-center", "pt-2", "pb-6"]}>
+  <div class:list={["text-center", "pt-2", "pb-6", "text-balance"]}>
     <SubtleLink href={latestArticle.permalink} classes={["text-xl"]}>
       {latestArticle.data.title}
     </SubtleLink>
