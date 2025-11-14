@@ -1,6 +1,4 @@
 ---
-import Steam from "../icons/steam.astro";
-
 type Props = {
   steamId: string;
   /**
@@ -11,31 +9,15 @@ type Props = {
    * whether to add a leading `<hr />` element; false by default
    */
   addHr?: boolean;
-
-  /**
-   * show a simple buy button on mobile probably not needed on big reviews, but useful otherwise. True by default.
-   */
-  showMobileFallback?: boolean;
-
-  /**
-   * whether or not the game is always free; changes the mobile fallback button text. False by default (and ignored if showMobileFallback is `false`).
-   */
-  isFree?: boolean;
 };
 
-const {
-  steamId,
-  description,
-  addHr,
-  showMobileFallback = true,
-  isFree = false,
-} = Astro.props;
+const { steamId, description, addHr } = Astro.props;
 
 // I don't love the UTM, but the widget adds one anyway so I might as well get credit
 ---
 
 <!-- make an extra block that's mobile-only? that describes where to get it? Have to balance that --><!-- maybe add param thats: platforms?: Array<string | {name: string, url: string}> which I can smartly join --><!-- that probably always goes after the embed, since I can use that in full reviews too --><!-- this doesn't look good on mobile, unfortunately -->
-<div class="hidden md:block">
+<div>
   {addHr && <hr />}
 
   <iframe
@@ -47,27 +29,7 @@ const {
       "my-4",
       "border-none",
       "focus-visible:outline-hidden",
-      "w-[646px]",
+      "w-full md:w-[646px]",
       "h-[190px]",
     ]}></iframe>
 </div>
-{
-  showMobileFallback && (
-    <div class="text-center">
-      <a
-        href={`https://store.steampowered.com/app/${steamId}/`}
-        target="_blank"
-        rel="noopener"
-        class:list={[
-          "rounded",
-          "p-3",
-          "bg-[#75b022]",
-          "no-underline",
-          "md:hidden",
-        ]}
-      >
-        <Steam /> {isFree ? "Free" : "Buy it"} on Steam
-      </a>
-    </div>
-  )
-}

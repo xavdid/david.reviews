@@ -203,48 +203,51 @@ const components = {
 
     <!-- Text for 1, 2, and 3+ items. -->
     {
-      availability && (
-        <p class="text-center italic">
-          {availability.gameSlug && availability.finishedPlay ? (
-            <OmniLink href={gamePermalink(availability.gameSlug)}>
-              {availability.gameTitle}
-            </OmniLink>
-          ) : (
-            <span class="font-bold not-italic">{availability.gameTitle}</span>
-          )}{" "}
-          is avaiable on{" "}
-          {availability.links.length === 1 ? (
-            <>
-              <MaybeOmniLink {...availability.links[0]} />.
-            </>
-          ) : availability.links.length === 2 ? (
-            <>
-              <MaybeOmniLink {...availability.links[0]} /> and{" "}
-              <MaybeOmniLink {...availability.links[1]} />.
-            </>
-          ) : (
-            <>
-              {availability.links.slice(0, -1).map((o) => (
+      availability ? (
+        // replace the text with the steam review if there's only one availability
+        availability.links.length === 1 &&
+        frontmatter.review?.gameInfo.steamId ? (
+          <SteamGame steamId={frontmatter.review.gameInfo.steamId} />
+        ) : (
+          <>
+            <p class="text-balance text-center italic">
+              {availability.gameSlug && availability.finishedPlay ? (
+                <OmniLink href={gamePermalink(availability.gameSlug)}>
+                  {availability.gameTitle}
+                </OmniLink>
+              ) : (
+                <span class="font-bold not-italic">
+                  {availability.gameTitle}
+                </span>
+              )}{" "}
+              is avaiable on{" "}
+              {availability.links.length === 1 ? (
                 <>
-                  <MaybeOmniLink {...o} />,{" "}
+                  <MaybeOmniLink {...availability.links[0]} />.
                 </>
-              ))}
-              {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-              and <MaybeOmniLink {...availability.links.at(-1)!} />.
-            </>
-          )}
-        </p>
-      )
-    }
-
-    {
-      frontmatter.review?.gameInfo.steamId && (
-        <SteamGame
-          steamId={frontmatter.review.gameInfo.steamId}
-          addHr
-          showMobileFallback={false}
-        />
-      )
+              ) : availability.links.length === 2 ? (
+                <>
+                  <MaybeOmniLink {...availability.links[0]} /> and{" "}
+                  <MaybeOmniLink {...availability.links[1]} />.
+                </>
+              ) : (
+                <>
+                  {availability.links.slice(0, -1).map((o) => (
+                    <>
+                      <MaybeOmniLink {...o} />,{" "}
+                    </>
+                  ))}
+                  {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+                  and <MaybeOmniLink {...availability.links.at(-1)!} />.
+                </>
+              )}
+            </p>
+            {frontmatter.review?.gameInfo.steamId && (
+              <SteamGame steamId={frontmatter.review.gameInfo.steamId} />
+            )}
+          </>
+        )
+      ) : null
     }
 
     {
