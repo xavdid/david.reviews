@@ -61,6 +61,7 @@ export type Genre = {
 };
 
 export type Game = {
+  type: "game";
   title: string;
   genre: Genre;
   igdbId: string;
@@ -85,6 +86,7 @@ const materialize = (gameRow: GameRecord): Game => {
   const genreSlug = slugify(genre);
 
   const item: Game = {
+    type: "game",
     title: gameRow[fields.title],
     genre: {
       name: genre,

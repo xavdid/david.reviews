@@ -48,6 +48,7 @@ type StringFields = {
 type BookRecord = StringFields & NonStringFields & RecordBase;
 
 type LocalFields = {
+  type: "book";
   title: string;
   gbid: string;
   slug: string;
@@ -76,6 +77,7 @@ export const posterUrlForHeight = (
 const materialize = (bookRow: BookRecord): LocalFields => {
   const slug = slugify(bookRow[fields.title]);
   const item: LocalFields = {
+    type: "book",
     title: bookRow[fields.title],
     slug,
     permalink: `/books/${slug}/`,

@@ -127,7 +127,11 @@ export const GET: APIRoute = async (context) => {
           : {
               title: `david.reviews: ${
                 isEverythingFeed ? `the ${item.type} ` : ""
-              }"${item.media.title}"`,
+              }"${item.media.title}"${
+                item.media.type === "book"
+                  ? ` by ${item.media.authors.map((a) => a.name).join(", ")}`
+                  : ""
+              }`,
               link: item.media.permalink,
               pubDate,
               content: [

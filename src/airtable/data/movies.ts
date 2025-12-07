@@ -49,6 +49,7 @@ type StringFields = {
 type MovieRecord = StringFields & NonStringFields & RecordBase;
 
 export type Movie = {
+  type: "movie";
   tmdbId: string;
   title: string;
   slug: string;
@@ -66,6 +67,7 @@ const materialize = (movieRow: MovieRecord): Movie => {
     `${movieRow[fields.title]} ${movieRow[fields.yearReleased]}`,
   );
   const item: Movie = {
+    type: "movie",
     tmdbId: movieRow[fields.tmdbId],
     title: movieRow[fields.title],
     slug,
