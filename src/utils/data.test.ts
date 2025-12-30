@@ -5,6 +5,7 @@ import {
   numDaysAgo,
   ordinal,
   pluralize,
+  slugify,
 } from "./data";
 
 type PluralizeTestCase = [
@@ -136,3 +137,18 @@ test.for(fakeFirstWatchTests)(
     expect(isFakeFirstWatch(numWatch, isFirstWatch)).toBe(expected);
   },
 );
+
+type SlugifyTestCase = [
+  ...Parameters<typeof slugify>,
+  ReturnType<typeof slugify>,
+];
+const slugifyTests: SlugifyTestCase[] = [
+  ["david", "david"],
+  ["Öoo", "ooo"],
+  ["God of War Ragnarök", "god-of-war-ragnarok"],
+  ["Frugal Wizard's Handbook", "frugal-wizards-handbook"],
+];
+
+test.for(slugifyTests)("(%s) -> %s", ([input, expected]) => {
+  expect(slugify(input)).toBe(expected);
+});

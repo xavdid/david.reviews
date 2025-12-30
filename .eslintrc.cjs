@@ -22,6 +22,11 @@ module.exports = {
             message:
               "This import is almost certainly in error. You use `undefined` directly unless you're describing a Zod schema.",
           },
+          {
+            name: "@sindresorhus/slugify",
+            message:
+              "Use slugify from `utils/data` instead, since that handles character markings like I want.",
+          },
         ],
       },
     ],

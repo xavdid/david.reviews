@@ -1,4 +1,6 @@
-import slugify from "@sindresorhus/slugify";
+// eslint-disable-next-line no-restricted-imports
+import externalSlugify from "@sindresorhus/slugify";
+
 import childProcess from "node:child_process";
 import type { Book } from "../airtable/data/books";
 import type { Game } from "../airtable/data/games";
@@ -52,6 +54,10 @@ export const collectionPermalink = (
   category: `${Category}s`,
   slug: string,
 ): Permalink => `/${category}/collections${slug === "" ? "" : `/${slug}`}/`;
+
+// strip diacritics instead of transliterating them
+export const slugify = (s: string): string =>
+  externalSlugify(s, { locale: "sv" });
 
 export const materializeCollection = (
   collection: string,

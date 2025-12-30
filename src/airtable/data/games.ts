@@ -1,5 +1,3 @@
-import slugify from "@sindresorhus/slugify";
-
 import {
   buildAwardDetails,
   type AwardDetails,
@@ -9,6 +7,7 @@ import {
   gamePermalink,
   genrePermalink,
   materializeCollection,
+  slugify,
 } from "../../utils/data";
 import type {
   AbsoluteUrl,

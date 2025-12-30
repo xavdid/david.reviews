@@ -1,4 +1,4 @@
-import slugify from "@sindresorhus/slugify";
+import { slugify } from "../../utils/data";
 import type { AirtableBase, Permalink, RecordBase } from "../types";
 import { loadReferenceObjects } from "./common";
 

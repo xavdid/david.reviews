@@ -7,3 +7,20 @@ command = "mise use -g just@latest && just --version && just build"
 publish = "dist"
 
 # also, can't set node version here - it uses .node-version
+
+# 2025-12-30 - fixed the way slugs pulled diacritics, so some routes changed
+[[redirects]]
+from = "/books/the-frugal-wizard-s-handbook-for-surviving-medieval-england/"
+to = "/books/the-frugal-wizards-handbook-for-surviving-medieval-england/"
+
+[[redirects]]
+from = "/games/god-of-war-ragnaroek/"
+to = "/games/god-of-war-ragnarok/"
+
+[[redirects]]
+from = "/games/oeoo/"
+to = "/games/ooo/"
+
+[[redirects]]
+from = "/movies/nausicaae-of-the-valley-of-the-wind-2005/"
+to = "/movies/nausicaa-of-the-valley-of-the-wind-2005/"

@@ -1,11 +1,9 @@
-import slugify from "@sindresorhus/slugify";
-
 import {
   buildAwardDetails,
   type AwardDetails,
   type AwardTier,
 } from "../../awards";
-import { materializeCollection } from "../../utils/data";
+import { materializeCollection, slugify } from "../../utils/data";
 import type {
   AbsoluteUrl,
   AirtableBase,
