@@ -22,7 +22,6 @@ import { buildStructuredReview } from "../../utils/structuredData";
 import MaybeOmniLink from "../../components/links/MaybeOmniLink.astro";
 import { loadGames } from "../../airtable/data/games";
 import { getFinishedPlayForGame } from "../../airtable/data/plays";
-import ThinkyImpression from "../../components/mdx/ThinkyImpression.astro";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -155,7 +154,6 @@ const components = {
   Details,
   EmbeddedPlay,
   EmbeddedArticle,
-  ThinkyImpression,
   SubscribeBlurb,
   Video,
 };
