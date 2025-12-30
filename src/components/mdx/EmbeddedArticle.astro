@@ -1,0 +1,31 @@
+---
+import { getPublishedArticles } from "../../utils/content";
+import OmniLink from "../links/OmniLink.astro";
+import ReviewSummary from "./ReviewSummary.astro";
+
+type Props = {
+  slug: string;
+};
+
+const { slug } = Astro.props;
+
+const article = (await getPublishedArticles()).find(
+  // not sure why this is the filename, but that's what it is!
+  (a) => a.id === `${slug}/index.mdx`,
+);
+
+if (!article) {
+  throw new Error(`Unable to embed article w/ slug "${slug}"`);
+}
+if (!article.data.review) {
+  throw new Error(`Unable to embed non-review article "${slug}"`);
+}
+---
+
+<p>
+  In my article <OmniLink href={article.permalink}>
+    {article.data.title}
+  </OmniLink>, I concluded:
+</p>
+
+<ReviewSummary review={article.data.review} />

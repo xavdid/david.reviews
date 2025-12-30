@@ -12,6 +12,7 @@ import SteamGame from "../../components/mdx/SteamGame.astro";
 import ItchGame from "../../components/mdx/ItchGame.astro";
 import Details from "../../components/mdx/Details.astro";
 import EmbeddedPlay from "../../components/mdx/EmbeddedPlay.astro";
+import EmbeddedArticle from "../../components/mdx/EmbeddedArticle.astro";
 import Video from "../../components/mdx/Video.astro";
 
 import Config from "../../../astro.config.mjs";
@@ -21,6 +22,7 @@ import { buildStructuredReview } from "../../utils/structuredData";
 import MaybeOmniLink from "../../components/links/MaybeOmniLink.astro";
 import { loadGames } from "../../airtable/data/games";
 import { getFinishedPlayForGame } from "../../airtable/data/plays";
+import ThinkyImpression from "../../components/mdx/ThinkyImpression.astro";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -152,6 +154,8 @@ const components = {
   ItchGame,
   Details,
   EmbeddedPlay,
+  EmbeddedArticle,
+  ThinkyImpression,
   SubscribeBlurb,
   Video,
 };

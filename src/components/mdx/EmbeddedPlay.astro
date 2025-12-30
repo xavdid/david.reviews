@@ -1,5 +1,6 @@
 ---
 import { getFinishedPlayForGame } from "../../airtable/data/plays";
+import MultiLineText from "../MultiLineText.astro";
 import Rating from "../Rating.astro";
 
 type Props = {
@@ -20,7 +21,7 @@ const play = await getFinishedPlayForGame(slug, { index });
   ) : (
     <blockquote class="not-italic">
       <Rating rating={play.rating} />
-      {play.notes}
+      <MultiLineText text={play.notes} />
     </blockquote>
   )
 }

@@ -126,6 +126,7 @@ export const slimReview = (
     notes || noReview(verbNoun)
   }`.trim();
 
+// https://docs.astro.build/en/guides/environment-variables/#default-environment-variables
 export const isProdBuild = import.meta.env.PROD;
 
 // rough approximation, but it works well enough
