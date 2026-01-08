@@ -9,10 +9,25 @@ type Props = {
 const { summary } = Astro.props;
 ---
 
+<style is:global>
+  details ul li::marker {
+    color: var(--color-blue-600);
+  }
+  @media (prefers-color-scheme: dark) {
+    details ul li::marker {
+      color: var(--color-amber-300);
+    }
+  }
+</style>
+
 <details
   class="cursor-pointer rounded-md bg-zinc-200 px-2 py-2 dark:bg-zinc-700 [&>p]:my-1"
 >
-  <summary>{summary} (click to reveal)</summary>
+  <summary
+    >{summary} (<span class="md:hidden">tap</span><span class="hidden md:inline"
+      >click</span
+    > to reveal)</summary
+  >
 
   <slot />
 </details>
