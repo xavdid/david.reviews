@@ -73,7 +73,28 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     Latest Article
   </h2>
   <div class:list={["text-center", "pt-2", "pb-6", "text-balance"]}>
-    <SubtleLink href={latestArticle.permalink} classes={["text-xl"]}>
+    {
+      latestArticle?.data.ogImg ? (
+        <a href={latestArticle.permalink}>
+          <Image
+            class:list={[
+              "m-auto",
+              "w-3/4",
+              "mb-2",
+              // "md:w-1/2",
+              "border",
+              "border-purple-600",
+            ]}
+            src={latestArticle.data.ogImg}
+            alt="The cover image for this article."
+          />
+        </a>
+      ) : null
+    }
+    <SubtleLink
+      href={latestArticle.permalink}
+      classes={["text-xl", "decoration-purple-600"]}
+    >
       {latestArticle.data.title}
     </SubtleLink>
   </div>
