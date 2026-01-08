@@ -1,4 +1,5 @@
 import { defineCollection, z } from "astro:content";
+import { ARTICLE_TYPES } from "../utils/content";
 
 const articles = defineCollection({
   type: "content",
@@ -14,6 +15,7 @@ const articles = defineCollection({
           ),
         ogImg: image().optional(),
         publishedOn: z.string().date().optional(),
+        category: z.enum(ARTICLE_TYPES),
         mentionedGameSlugs: z
           .array(
             z.string().refine(

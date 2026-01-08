@@ -1,0 +1,37 @@
+---
+import type { GetStaticPaths } from "astro";
+import ArticleList from "../../../components/ArticleList.astro";
+import { ARTICLE_TYPES, getPublishedArticles } from "../../../utils/content";
+import { slugify } from "../../../utils/data";
+import SubscribeBlurb from "../../../components/SubscribeBlurb.astro";
+import Layout from "../../../layouts/Layout.astro";
+import PageTitle from "../../../components/PageTitle.astro";
+
+export const getStaticPaths = (() =>
+  ARTICLE_TYPES.map((category) => ({
+    params: { category: slugify(category) },
+    props: { category },
+  }))) satisfies GetStaticPaths;
+
+const { category } = Astro.props;
+const articles = (await getPublishedArticles()).filter(
+  ({ data: { category: articleCategory } }) => articleCategory === category,
+);
+---
+
+<Layout
+  pageTitle={`${category} Articles`}
+  pageDescription={`All ${articles.length} articles I've written under the category "${category}".`}
+  activeTab="articles"
+>
+  <PageTitle>"{category}" Articles</PageTitle>
+  <p class="pb-3 pt-1">
+    I've published {articles.length} article(s) categorized as "{category}".
+  </p>
+
+  <SubscribeBlurb mediaType="article" />
+
+  <hr class="my-3" />
+
+  <ArticleList showCategory={false} articles={articles} />
+</Layout>

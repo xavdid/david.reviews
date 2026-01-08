@@ -2,9 +2,10 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
 import CalendarIcon from "../../components/icons/svgs/calendar.svg";
+import FolderIcon from "../../components/icons/svgs/folder.svg";
 import Layout from "../../layouts/Layout.astro";
 import type { ImageInfo } from "../../utils/images";
-import { gamePermalink } from "../../utils/data";
+import { gamePermalink, slugify } from "../../utils/data";
 import SubscribeBlurb from "../../components/SubscribeBlurb.astro";
 import YoutubeEmbed from "../../components/mdx/YoutubeEmbed.astro";
 import ReviewSummary from "../../components/mdx/ReviewSummary.astro";
@@ -22,6 +23,11 @@ import { buildStructuredReview } from "../../utils/structuredData";
 import MaybeOmniLink from "../../components/links/MaybeOmniLink.astro";
 import { loadGames } from "../../airtable/data/games";
 import { getFinishedPlayForGame } from "../../airtable/data/plays";
+import MediaYearLink from "../../components/mdx/MediaYearLink.astro";
+import TightList from "../../components/mdx/TightList.astro";
+import SubtleLink from "../../components/links/SubtleLink.astro";
+import SteamFollowButton from "../../components/SteamFollowButton.astro";
+import type { GetStaticPaths } from "astro";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["slug"] };
@@ -34,13 +40,13 @@ type Availability = {
   finishedPlay: boolean;
 };
 
-export const getStaticPaths = async (): StaticPaths => {
+export const getStaticPaths = (async (): StaticPaths => {
   const articles = await getCollection("articles");
   return articles.map((entry) => ({
     params: { slug: entry.slug },
     props: { entry },
   }));
-};
+}) satisfies GetStaticPaths;
 
 const { slug } = Astro.params;
 const { entry } = Astro.props;
@@ -156,6 +162,10 @@ const components = {
   EmbeddedArticle,
   SubscribeBlurb,
   Video,
+  MediaYearLink,
+  TightList,
+  SubtleLink,
+  SteamFollowButton,
 };
 ---
 
@@ -196,6 +206,11 @@ const components = {
     <CalendarIcon class:list={["mb-1 inline h-4 pr-2", "dark:fill-white"]} />{
       frontmatter.publishedOn ?? "TBD"
     }
+
+    <FolderIcon class:list={["inline h-5 pl-3", "dark:fill-white"]} />
+    <OmniLink href={`/articles/category/${slugify(frontmatter.category)}/`}>
+      {frontmatter.category}
+    </OmniLink>
   </p>
   <RenderedMarkdown>
     <!-- https://github.com/withastro/astro/issues/12057 -->

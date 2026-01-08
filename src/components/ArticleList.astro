@@ -1,0 +1,48 @@
+---
+import { type getPublishedArticles } from "../utils/content";
+import { slugify } from "../utils/data";
+import SubtleLink from "./links/SubtleLink.astro";
+import Rating from "./Rating.astro";
+
+type Props = {
+  articles: Awaited<ReturnType<typeof getPublishedArticles>>;
+  showCategory?: boolean;
+};
+
+const { articles, showCategory = true } = Astro.props;
+---
+
+{
+  articles.map((article) => (
+    <div class="py-3">
+      <div class="text-sm text-zinc-400">
+        {article.data.publishedOn ?? "TBD"}
+        {/* reviews have stars, so they don't need to be named explicitly */}
+        {showCategory ? (
+          <>
+            |{" "}
+            <SubtleLink
+              href={`/articles/category/${slugify(article.data.category)}/`}
+              classes={["decoration-dashed"]}
+            >
+              {article.data.category}
+            </SubtleLink>
+          </>
+        ) : null}
+        {article.data.review?.rating === undefined ? null : (
+          <>
+            |{" "}
+            <Rating
+              rating={article.data.review?.rating}
+              classes={["inline"]}
+              starHeight="h-3 mb-[0.20em]!"
+            />
+          </>
+        )}
+      </div>
+      <SubtleLink href={article.permalink} classes={["text-xl"]}>
+        {article.data.title}
+      </SubtleLink>
+    </div>
+  ))
+}
