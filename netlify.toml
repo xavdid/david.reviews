@@ -24,3 +24,7 @@ to = "/games/ooo/"
 [[redirects]]
 from = "/movies/nausicaae-of-the-valley-of-the-wind-2005/"
 to = "/movies/nausicaa-of-the-valley-of-the-wind-2005/"
+
+[[redirects]]
+from = "/movies/glass-onion-a-knives-out-mystery-2022/"
+to = "/movies/glass-onion-2022/"
