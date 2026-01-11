@@ -1,6 +1,6 @@
 export type AwardTier = "Gold" | "Silver" | "Bronze";
 
-export const lookbackLinks: Record<number, string> = {
+const lookbackLinks: Record<number, string> = {
   2016: "https://xavd.id/blog/post/a-few-of-my-favorite-things/",
   2017: "https://xavd.id/blog/post/a-few-more-favorites/",
   2018: "https://xavd.id/blog/post/my-favorite-media-2018-edition/",
@@ -10,6 +10,7 @@ export const lookbackLinks: Record<number, string> = {
   2022: "https://xavd.id/blog/post/favorite-media-2022/",
   2023: "https://xavd.id/blog/post/favorite-media-2023/",
   2024: "https://xavd.id/blog/post/favorite-media-2024/",
+  2025: "/articles/favorite-media-2025/",
 } as const;
 export const awardYears = Object.keys(lookbackLinks).map((y) => parseInt(y));
 

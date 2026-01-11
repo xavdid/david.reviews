@@ -29,7 +29,7 @@ lint-check:
 [group("checks")]
 lint:
     eslint src --fix
-    prettier src --write
+    prettier src --write --log-level warn
 
 # run pre-reqs for building
 [no-exit-message]

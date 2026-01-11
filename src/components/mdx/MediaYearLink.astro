@@ -1,0 +1,21 @@
+---
+import OmniLink from "../links/OmniLink.astro";
+
+type Props = {
+  items: string;
+  verbed: string;
+  year: string;
+};
+
+const { items, verbed, year } = Astro.props;
+---
+
+<hr />
+<p style={{ textAlign: "center" }}>
+  <em>
+    See all the {items} I
+    <OmniLink href={`/${items}/years/${year}/`}>
+      {verbed} in {year}
+    </OmniLink>.
+  </em>
+</p>

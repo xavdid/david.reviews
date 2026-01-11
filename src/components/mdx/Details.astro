@@ -1,7 +1,7 @@
 ---
 type Props = {
   /**
-   * `(click to reveal)` will be appended
+   * `(click/tap to reveal)` will be appended
    */
   summary: string;
 };
@@ -21,7 +21,7 @@ const { summary } = Astro.props;
 </style>
 
 <details
-  class="cursor-pointer rounded-md bg-zinc-200 px-2 py-2 dark:bg-zinc-700 [&>p]:my-1"
+  class="details-content:cursor-auto cursor-pointer rounded-md bg-zinc-200 px-2 py-2 dark:bg-zinc-700 [&>p]:my-1"
 >
   <summary
     >{summary} (<span class="md:hidden">tap</span><span class="hidden md:inline"

@@ -238,8 +238,13 @@ const allPlaysSorted = [...plays, ...etcPlays].toSorted(sortDateDescending);
         <h2 class="pb-0 text-xl">Mentioned In</h2>
         <ul class="list-disc pl-8">
           {award && (
+            // starting with 2025, awards are no longer external links, but do get special treatment when listed
             <li class="py-1">
-              <SubtleLink external href={award.url} classes={["text-lg"]}>
+              <SubtleLink
+                external={award.year < 2025}
+                href={award.url}
+                classes={["text-lg"]}
+              >
                 Favorite Media of {award.year}
               </SubtleLink>{" "}
               ({award.emoji}

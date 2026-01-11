@@ -69,9 +69,7 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     </OmniLink> and I've reviewing things since 2016.
   </p>
 
-  <h2 class:list={[titleStyles, "underline", "decoration-purple-600"]}>
-    Latest Article
-  </h2>
+  <h2 class:list={[titleStyles]}>Latest Article</h2>
   <div class:list={["text-center", "pt-2", "pb-6", "text-balance"]}>
     {
       latestArticle?.data.ogImg ? (
