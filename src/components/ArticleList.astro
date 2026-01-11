@@ -10,39 +10,54 @@ type Props = {
 };
 
 const { articles, showCategory = true } = Astro.props;
+
+// JS sets keep insertion order - who knew!
+const years = [
+  ...new Set(articles.map((a) => a.data.publishedOn?.slice(0, 4) ?? "TBD")),
+];
 ---
 
 {
-  articles.map((article) => (
-    <div class="py-3">
-      <div class="text-sm text-zinc-400">
-        {article.data.publishedOn ?? "TBD"}
-        {/* reviews have stars, so they don't need to be named explicitly */}
-        {showCategory ? (
-          <>
-            |{" "}
-            <SubtleLink
-              href={`/articles/category/${slugify(article.data.category)}/`}
-              classes={["decoration-dashed"]}
-            >
-              {article.data.category}
+  years.map((year) => (
+    <>
+      <h2 class:list={["pt-6", "text-4xl", "font-bold"]}>{year}</h2>
+
+      {articles
+        .filter((a) => (a.data.publishedOn ?? "TBD").startsWith(year))
+        .map((article) => (
+          <div class="py-3 pl-4">
+            <div class="text-sm text-zinc-400">
+              {article.data.publishedOn ?? "TBD"}
+              {/* reviews have stars, so they don't need to be named explicitly */}
+              {showCategory ? (
+                <>
+                  |{" "}
+                  <SubtleLink
+                    href={`/articles/category/${slugify(
+                      article.data.category,
+                    )}/`}
+                    classes={["decoration-dashed"]}
+                  >
+                    {article.data.category}
+                  </SubtleLink>
+                </>
+              ) : null}
+              {article.data.review?.rating === undefined ? null : (
+                <>
+                  |{" "}
+                  <Rating
+                    rating={article.data.review?.rating}
+                    classes={["inline"]}
+                    starHeight="h-3 mb-[0.20em]!"
+                  />
+                </>
+              )}
+            </div>
+            <SubtleLink href={article.permalink} classes={["text-xl"]}>
+              {article.data.title}
             </SubtleLink>
-          </>
-        ) : null}
-        {article.data.review?.rating === undefined ? null : (
-          <>
-            |{" "}
-            <Rating
-              rating={article.data.review?.rating}
-              classes={["inline"]}
-              starHeight="h-3 mb-[0.20em]!"
-            />
-          </>
-        )}
-      </div>
-      <SubtleLink href={article.permalink} classes={["text-xl"]}>
-        {article.data.title}
-      </SubtleLink>
-    </div>
+          </div>
+        ))}
+    </>
   ))
 }
