@@ -83,6 +83,9 @@ export const getStaticPaths = async (): Result => {
     (isEtcPlay(play.playType) ? gameRecord.etcPlays : gameRecord.plays).push(
       play,
     );
+
+    // NOTE: I used to be more truthful about the published / updated dates, but masto shows the original publish date and all the more recent OG information
+    // so I prioritize updated if it exists
     if (play.playType === "First Time") {
       gameRecord.publishedOn = play.dateFinished;
     } else {
@@ -170,8 +173,7 @@ const allPlaysSorted = [...plays, ...etcPlays].toSorted(sortDateDescending);
     width: 528,
     type: "jpeg",
   }}
-  publishedOn={publishedOn}
-  updatedOn={updatedOn}
+  publishedOn={updatedOn ?? publishedOn}
   structuredData={buildStructuredReview("VideoGame", allPlaysSorted, {
     title,
     permalink,

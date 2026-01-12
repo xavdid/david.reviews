@@ -46,6 +46,8 @@ export const getStaticPaths = async (): Result => {
     };
     result[gbid].reads.push(read);
 
+    // NOTE: I used to be more truthful about the published / updated dates, but masto shows the original publish date and all the more recent OG information
+    // so I prioritize updated if it exists
     if (read.isReread) {
       result[gbid].updatedOn = maxIsoDate(
         result[gbid].updatedOn,
@@ -95,8 +97,7 @@ const authorsStr = authors.map((a) => a.name).join(", ");
     width: 461,
     type: "jpeg",
   }}
-  publishedOn={publishedOn}
-  updatedOn={updatedOn}
+  publishedOn={updatedOn ?? publishedOn}
   structuredData={buildStructuredReview("Book", reads, {
     title,
     permalink,
