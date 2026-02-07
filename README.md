@@ -18,3 +18,4 @@ I wrote a [custom typed ORM](https://xavd.id/blog/post/static-review-site-with-a
 ## Misc
 
 - I shrink images using https://compresspng.com/
+- Brand icons are sourced from https://simpleicons.org/
