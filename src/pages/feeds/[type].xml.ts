@@ -68,7 +68,7 @@ const reviews: Record<
     title: article.data.title,
     blurb: article.data.ogDesc,
     dateFinished: article.data.publishedOn ?? new Date().toISOString(),
-    permalink: article.permalink,
+    permalink: `https://david.reviews${article.permalink}`,
   })),
 };
 

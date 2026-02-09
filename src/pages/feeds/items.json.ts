@@ -134,7 +134,10 @@ export const GET: APIRoute = async () => {
     }) => ({
       recordId,
       permalink: `https://david.reviews${permalink}`,
-      ogImgUrl: posterUrl,
+      // custom art is only a relative link
+      ogImgUrl: posterUrl.startsWith("/")
+        ? `https://david.reviews${posterUrl}`
+        : posterUrl,
       ogDescription: buildOgDesc(rating, notes, "reads"),
       title,
       titleCapitalized: title.toUpperCase(),
