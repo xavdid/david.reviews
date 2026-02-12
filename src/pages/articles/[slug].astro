@@ -283,7 +283,7 @@ const components = {
     }
 
     {
-      frontmatter?.review?.gotPressKey && (
+      frontmatter.review?.gotPressKey && (
         <>
           <hr />
           <p>
@@ -297,7 +297,18 @@ const components = {
       )
     }
     {
-      frontmatter?.review?.thinkyUrl && (
+      frontmatter.review?.progressAtReview && (
+        <>
+          <hr />
+          <p>
+            <span class="font-bold">Game progress at review time</span>:{" "}
+            {frontmatter.review.progressAtReview}
+          </p>
+        </>
+      )
+    }
+    {
+      frontmatter.review?.thinkyUrl && (
         <>
           <hr />
           <p>

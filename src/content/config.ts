@@ -63,6 +63,7 @@ const articles = defineCollection({
               .string()
               .startsWith("https://thinkygames.com/")
               .optional(),
+            progressAtReview: z.string().endsWith(".").optional(),
           })
           .strict()
           .optional(),
