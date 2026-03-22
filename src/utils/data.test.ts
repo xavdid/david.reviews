@@ -147,6 +147,7 @@ const slugifyTests: SlugifyTestCase[] = [
   ["Öoo", "ooo"],
   ["God of War Ragnarök", "god-of-war-ragnarok"],
   ["Frugal Wizard's Handbook", "frugal-wizards-handbook"],
+  ["Thank goodness you're here", "thank-goodness-youre-here"],
 ];
 
 test.for(slugifyTests)("(%s) -> %s", ([input, expected]) => {

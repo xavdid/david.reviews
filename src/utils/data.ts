@@ -55,9 +55,13 @@ export const collectionPermalink = (
   slug: string,
 ): Permalink => `/${category}/collections${slug === "" ? "" : `/${slug}`}/`;
 
-// strip diacritics instead of transliterating them
 export const slugify = (s: string): string =>
-  externalSlugify(s, { locale: "sv" });
+  externalSlugify(s, {
+    // strip diacritics instead of transliterating them
+    locale: "sv",
+    // don't slugify "you're" as "you-re"
+    customReplacements: [["'", ""]],
+  });
 
 export const materializeCollection = (
   collection: string,

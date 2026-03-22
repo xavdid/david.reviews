@@ -28,3 +28,16 @@ to = "/movies/nausicaa-of-the-valley-of-the-wind-2005/"
 [[redirects]]
 from = "/movies/glass-onion-a-knives-out-mystery-2022/"
 to = "/movies/glass-onion-2022/"
+
+# 2026-03-22 - removed apostrophe before slugifying for better urls
+[[redirects]]
+from = "/games/thank-goodness-you-re-here/"
+to = "/games/thank-goodness-youre-here/"
+
+[[redirects]]
+from = "/movies/to-all-the-boys-i-ve-loved-before-2018/"
+to = "/movies/to-all-the-boys-ive-loved-before-2018/"
+
+[[redirects]]
+from = "/movies/you-ve-got-mail-1998"
+to = "/movies/youve-got-mail-1998"
