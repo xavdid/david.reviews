@@ -6,6 +6,8 @@ import type { Category } from "../../utils/data";
 import Rating from "../Rating.astro";
 import type { AwardDetails } from "../../awards";
 import MultiLineText from "../MultiLineText.astro";
+import { articlePermalink, getPublishedArticles } from "../../utils/content";
+import OmniLink from "../links/OmniLink.astro";
 
 type Props = {
   permalink: Permalink;
@@ -15,10 +17,20 @@ type Props = {
   mediaType: `${Category}s`;
   rating?: number;
   award?: AwardDetails;
+  // article slug for more info, if applicable
+  fullReviewSlug?: string;
 };
 
-const { permalink, posterUrl, title, blurb, mediaType, rating, award } =
-  Astro.props;
+const {
+  permalink,
+  posterUrl,
+  title,
+  blurb,
+  mediaType,
+  rating,
+  award,
+  fullReviewSlug,
+} = Astro.props;
 
 const { height, width } = {
   games: { width: 135, height: 192 }, // original *= 3/4
@@ -31,6 +43,21 @@ const borderColors = {
   "border-emerald-600": mediaType === "books",
   "border-red-600": mediaType === "movies",
 };
+
+if (fullReviewSlug) {
+  if (fullReviewSlug.startsWith("/") || fullReviewSlug.endsWith("/")) {
+    throw new Error(
+      `Article slugs must be _only_ the slug (no leading or trailing slashes (got ${fullReviewSlug})`,
+    );
+  }
+
+  const articles = await getPublishedArticles();
+  if (!articles.find(({ slug }) => fullReviewSlug === slug)) {
+    throw new Error(
+      `Unable to find article for play w/ slug: "${fullReviewSlug}"`,
+    );
+  }
+}
 ---
 
 <div
@@ -64,7 +91,18 @@ const borderColors = {
         <Rating rating={rating} />
       </div>
       <div class:list={["mt-2 border-l-2 pl-2 italic", borderColors]}>
-        <MultiLineText text={blurb} />
+        <MultiLineText text={blurb}>
+          {
+            fullReviewSlug ? (
+              /* prettier-ignore */ <span>
+                Read more in my{" "}
+                <OmniLink href={articlePermalink(fullReviewSlug)}>
+                  {"full review"}
+                </OmniLink>!
+              </span>
+            ) : null
+          }
+        </MultiLineText>
       </div>
     </div>
   </div>
@@ -95,7 +133,18 @@ const borderColors = {
 
     {/* bottom row layout */}
     <div class:list={["pt-1", "border-t-2", "italic", borderColors]}>
-      <MultiLineText text={blurb} />
+      <MultiLineText text={blurb}>
+        {
+          fullReviewSlug ? (
+            /* prettier-ignore */ <span>
+                Read more in my{" "}
+                <OmniLink href={articlePermalink(fullReviewSlug)}>
+                  {"full review"}
+                </OmniLink>!
+              </span>
+          ) : null
+        }
+      </MultiLineText>
     </div>
   </div>
 </div>

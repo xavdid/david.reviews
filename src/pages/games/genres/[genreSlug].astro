@@ -81,19 +81,25 @@ const { games, genre } = Astro.props;
 const processedGames = games
   .map(({ game, plays }) => {
     // i'm going to show info about the most relevant play, which is probably the one I had the most to say about
-    const bestPlay = plays.reduce((result, item) =>
+    const {
+      rating,
+      dateFinished,
+      notes: blurb,
+      fullReviewSlug,
+    } = plays.reduce((result, item) =>
       result.notes.length > item.notes.length ? result : item,
     );
 
     return {
       title: game.title,
-      rating: bestPlay.rating,
+      rating,
       permalink: game.permalink,
       posterUrl: game.posterUrl,
-      dateFinished: bestPlay.dateFinished,
+      dateFinished,
       // the longest review is probably the best one?
-      blurb: bestPlay.notes,
+      blurb,
       award: game.award,
+      fullReviewSlug,
     };
   })
   // if someone is reading this page, we can assume they'd sort by score
