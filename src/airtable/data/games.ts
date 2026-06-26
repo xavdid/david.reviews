@@ -167,4 +167,6 @@ export const COLLECTION_DESCRIPTIONS: Record<string, `${string}.`> = {
     "there's only one controller, but all players feel engaged in the story, puzzle solving, and/or decision making.",
   "co-op":
     "2+ players play at the same time using their own controller, working together to accomplish a goal.",
+  "co-op-campaign":
+    "a group of dedicated gamers can play together for months at a time.",
 };
