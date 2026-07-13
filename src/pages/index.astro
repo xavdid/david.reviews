@@ -176,8 +176,9 @@ const inProgressReads = (await loadInProgressReads()).toSorted(
     }
     {
       inProgressPlays.map(
-        ({ playType, dateStarted, game: { title, posterUrl } }) => (
-          <div class:list={[boxStyles, "border-blue-600"]}>
+        ({ playType, dateStarted, game: { title, posterUrl, slug } }) => (
+          // slug is useful for getting the play slug of a game I haven't finished yet
+          <div class:list={[boxStyles, "border-blue-600"]} data-slug={slug}>
             <Image
               class="max-w-[unset] py-1"
               src={posterUrl}
