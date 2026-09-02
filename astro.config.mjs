@@ -13,6 +13,7 @@ export default defineConfig({
     preact(),
     sitemap(),
     mdx({
+      smartypants: false,
       rehypePlugins: [
         // the IDs get generated without this, but the autolinking doesn't work?
         rehypeHeadingIds,
