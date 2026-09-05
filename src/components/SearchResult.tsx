@@ -1,7 +1,12 @@
 import { type JSX } from "preact";
 
 import type { SearchItem } from "../utils/search";
-import { BookIcon, GameIcon, MovieIcon } from "./icons/inline-icons";
+import {
+  ArticleIcon,
+  BookIcon,
+  GameIcon,
+  MovieIcon,
+} from "./icons/inline-icons";
 
 type Props = SearchItem;
 
@@ -16,6 +21,7 @@ const config: Record<
   game: { border: "border-blue-600", icon: GameIcon },
   movie: { border: "border-red-600", icon: MovieIcon },
   book: { border: "border-emerald-600", icon: BookIcon },
+  article: { border: "border-purple-600", icon: ArticleIcon },
 };
 
 export const SearchResult = ({

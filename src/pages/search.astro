@@ -10,6 +10,7 @@ import PageTitle from "../components/PageTitle.astro";
 import { SearchBar } from "../components/SearchBar";
 import Layout from "../layouts/Layout.astro";
 import { type SearchItem } from "../utils/search";
+import { getPublishedArticles } from "../utils/content";
 
 const list: SearchItem[] = [
   // movies
@@ -23,25 +24,25 @@ const list: SearchItem[] = [
   // games
   ...Object.values(await loadGames()).map(({ title, permalink }) => ({
     title,
-    category: "game" as SearchItem["category"],
+    category: "game" as const,
     permalink,
   })),
   // books
   ...Object.values(await loadBooks()).map(({ title, permalink }) => ({
     title,
-    category: "book" as SearchItem["category"],
+    category: "book" as const,
     permalink,
   })),
   // series
   ...Object.values(await loadSeries()).map(({ name, permalink }) => ({
     title: `${name} (Series)`,
-    category: "book" as SearchItem["category"],
+    category: "book" as const,
     permalink,
   })),
   // authors
   ...Object.values(await loadAuthors()).map(({ name, permalink }) => ({
     title: `${name} (Author)`,
-    category: "book" as SearchItem["category"],
+    category: "book" as const,
     permalink,
   })),
   // game genres
@@ -58,6 +59,14 @@ const list: SearchItem[] = [
       },
       {},
     ),
+  ),
+  // articles
+  ...Object.values(await getPublishedArticles()).map(
+    ({ data: { title }, permalink }) => ({
+      title,
+      category: "article" as const,
+      permalink,
+    }),
   ),
 ];
 const index = Fuse.createIndex(["title"], list);
