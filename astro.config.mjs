@@ -8,6 +8,11 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 // https://astro.build/config
 export default defineConfig({
+  // doesn't do much in firefox, but makes chrome snappier
+  // https://github.com/withastro/astro/issues/10464
+  prefetch: {
+    prefetchAll: true,
+  },
   site: "https://david.reviews",
   integrations: [
     preact(),
