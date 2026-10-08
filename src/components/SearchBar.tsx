@@ -35,7 +35,7 @@ export const SearchBar = ({ items, index }: Props): JSX.Element => {
           className="w-full rounded-sm bg-zinc-200 p-2 text-lg dark:bg-zinc-500"
           type="text"
           value={searchTerm}
-          placeholder="🔍 Enter a title or person..."
+          placeholder="🔍 Enter a title, author, book series, or game genre..."
           onInput={(e) => {
             setSearchTerm((e.target as HTMLInputElement).value);
           }}
