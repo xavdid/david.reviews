@@ -144,7 +144,6 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   <div>
     {
       reads
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         .sort((a, b) => a.book.numberInSeries! - b.book.numberInSeries!)
         .map((read) => (
           <ReadBox

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import type { Author } from "../airtable/data/authors";
 import type { Permalink } from "../airtable/types";
 import { averageRating, last, seoTitle } from "./data";
@@ -44,7 +43,6 @@ export const buildStructuredReview = (
       "@id": permalink,
     },
     "@type": "Review",
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     headline: articleTitle ?? seoTitle(title!),
     description: blurb,
     url: permalink,
