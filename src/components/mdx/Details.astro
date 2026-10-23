@@ -20,14 +20,11 @@ const { summary } = Astro.props;
   }
 </style>
 
-<details
-  class="details-content:cursor-auto cursor-pointer rounded-md bg-zinc-200 px-2 py-2 dark:bg-zinc-700 [&>p]:my-1"
->
-  <summary
-    >{summary} (<span class="md:hidden">tap</span><span class="hidden md:inline"
-      >click</span
-    > to reveal)</summary
-  >
+<details class="details-content:cursor-auto cursor-pointer rounded-md bg-zinc-200 px-2 py-2 dark:bg-zinc-700 [&>p]:my-1">
+  <summary>
+    {summary} (<span class="md:hidden">tap</span>
+    <span class="hidden md:inline">click</span> to reveal)
+  </summary>
 
   <slot />
 </details>

@@ -32,13 +32,11 @@ const intersperse = (arr: string[], sep: string): string[] => {
 };
 ---
 
-<span class:list={[classes]}
-  >{
-    intersperse(
-      authors.map((author) => (
-        <LinkComponent href={author.permalink}>{author.name}</LinkComponent>
-      )),
-      ", ",
-    )
-  }</span
->
+<span class:list={[classes]}>
+  {intersperse(
+    authors.map((author) => (
+      <LinkComponent href={author.permalink}>{author.name}</LinkComponent>
+    )),
+    ", ",
+  )}
+</span>

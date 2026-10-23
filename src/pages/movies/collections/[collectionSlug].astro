@@ -100,24 +100,26 @@ const sortedMovies = movies
     <p class="py-2">
       The {movies.length} movies below are some of my favories in this genre.
       Whenever this season or mood arrives, items from this list are my go-to
-      comfort food. To qualify, a movie must be solidly in-genre <em
-        >and be highly rated (or purposefully bad)</em
-      >. Either way, these are the cream of their respective crop.
+      comfort food. To qualify, a movie must be solidly in-genre{" "}
+      <em>and be highly rated (or purposefully bad)</em>. Either way, these are
+      the cream of their respective crop.
     </p>
     <p class="py-2">
-      Each movie is scored on my <OmniLink href={ratingPage("movies")}>
-        {"4-point rating system"}
-      </OmniLink>. Please <OmniLink href="/contact/">
-        {"let me know"}
-      </OmniLink> if you'd like to nominate an addition!
+      Each movie is scored on my{" "}
+      <OmniLink href={ratingPage("movies")}>{"4-point rating system"}</OmniLink>
+      . Please <OmniLink href="/contact/">{"let me know"}</OmniLink> if you'd
+      like to nominate an addition!
     </p>
     <p class="py-2">
-      ⬅️ Or, head back to <OmniLink href={collectionPermalink("movies", "")}>
+      ⬅️ Or, head back to{" "}
+      <OmniLink href={collectionPermalink("movies", "")}>
         {"All Collections"}
       </OmniLink>
     </p>
   </div>
   <div>
-    {sortedMovies.map((movie) => <SlimBox {...movie} mediaType="movies" />)}
+    {sortedMovies.map((movie) => (
+      <SlimBox {...movie} mediaType="movies" />
+    ))}
   </div>
 </Layout>

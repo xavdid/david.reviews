@@ -135,16 +135,14 @@ const groupedSeo: SEOProps = {
     <link rel="me" href="https://mastodon.social/@xavdid" />
     <meta name="fediverse:creator" content="@xavdid@mastodon.social" />
     <!-- advertise the feeds -->
-    {
-      feedTypes.map((type) => (
-        <link
-          rel="alternate"
-          type="application/rss+xml"
-          title={`david.reviews: ${type}`}
-          href={`/feeds/${type}.xml`}
-        />
-      ))
-    }
+    {feedTypes.map((type) => (
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title={`david.reviews: ${type}`}
+        href={`/feeds/${type}.xml`}
+      />
+    ))}
 
     <meta name="generator" content={Astro.generator} />
     <meta name="revision" content={getGitSha()} />
@@ -152,17 +150,15 @@ const groupedSeo: SEOProps = {
       is:inline
       data-goatcounter="https://david-reviews.goatcounter.com/count"
       async
-      src="https://gc.zgo.at/count.js"></script>
-
-    {
-      structuredData && (
-        <script
-          is:inline
-          type="application/ld+json"
-          set:html={JSON.stringify(structuredData)}
-        />
-      )
-    }
+      src="https://gc.zgo.at/count.js"
+    ></script>
+    {structuredData && (
+      <script
+        is:inline
+        type="application/ld+json"
+        set:html={JSON.stringify(structuredData)}
+      />
+    )}
 
     <SEO {...groupedSeo} />
   </head>

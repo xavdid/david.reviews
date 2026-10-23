@@ -17,11 +17,9 @@ const chunks = text
 ---
 
 <>
-  {
-    chunks.map((c, index) => (
-      <div class="not-first:pt-3">
-        {c} {index === chunks.length - 1 ? <slot /> : null}
-      </div>
-    ))
-  }
+  {chunks.map((c, index) => (
+    <div class="not-first:pt-3">
+      {c} {index === chunks.length - 1 ? <slot /> : null}
+    </div>
+  ))}
 </>

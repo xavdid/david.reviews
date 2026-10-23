@@ -40,18 +40,14 @@ const collections = Object.values(movies).reduce<
     </p>
   </div>
   <ul class="list-disc pl-4">
-    {
-      Object.values(collections)
-        .toSorted((a, b) => b.movies.size - a.movies.size)
-        .map(({ collection, movies }) => (
-          <li class="py-2">
-            <OmniLink href={collection.permalink}>
-              {collection.fullName}
-            </OmniLink>
-            {/* these counts may not match the page in dev, since it tracks watches and this tracks movies */}
-            - {movies.size} movies
-          </li>
-        ))
-    }
+    {Object.values(collections)
+      .toSorted((a, b) => b.movies.size - a.movies.size)
+      .map(({ collection, movies }) => (
+        <li class="py-2">
+          <OmniLink href={collection.permalink}>{collection.fullName}</OmniLink>{" "}
+          {/* these counts may not match the page in dev, since it tracks watches and this tracks movies */}
+          - {movies.size} movies
+        </li>
+      ))}
   </ul>
 </Layout>

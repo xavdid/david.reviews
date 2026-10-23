@@ -15,17 +15,13 @@ const {
 } = Astro.props;
 ---
 
-<ul
-  class="mb-3 rounded-sm bg-red-50 p-2 dark:bg-red-950 dark:ring-1 dark:ring-white"
->
-  {
-    showFirstTimeAsterisk && (
-      <li class="py-1">
-        <code>*</code> - this is my first <em>logged</em> watch, but I had seen
-        the movie before.
-      </li>
-    )
-  }
+<ul class="mb-3 rounded-sm bg-red-50 p-2 dark:bg-red-950 dark:ring-1 dark:ring-white">
+  {showFirstTimeAsterisk && (
+    <li class="py-1">
+      <code>*</code> - this is my first <em>logged</em> watch, but I had seen
+      the movie before.
+    </li>
+  )}
   <li class="py-1">🍿 - watched in a theater.</li>
   {
     /* prettier-ignore */
@@ -35,11 +31,12 @@ const {
       </li>
   }
   <li class="py-1">
-    🥇 / 🥈 / 🥉 -
+    🥇 / 🥈 / 🥉 -{" "}
     <OmniLink
       href={specificAwardUrl ?? "https://xavd.id/blog/tags/yearly-review"}
     >
       {"Favorite of the Year"}
-    </OmniLink> honoree.
+    </OmniLink>{" "}
+    honoree.
   </li>
 </ul>

@@ -105,37 +105,32 @@ const collectionEmoji = new Set<string>(
 
 <Layout
   pageTitle={tabTitle}
-  pageDescription={subpath == null
-    ? `Detailed reviews of recently played games.`
-    : `A filtered subset of all the games I've played.`}
+  pageDescription={
+    subpath == null
+      ? `Detailed reviews of recently played games.`
+      : `A filtered subset of all the games I've played.`
+  }
   seoTitle={seoTitle(`Games!${subpath ? ` (${subpath})` : ""}`)}
   activeTab="games"
 >
   <PageTitle>{pageTitle}</PageTitle>
   <p class="pb-3">
-    {
-      slug === "all"
-        ? `Showing every single review (${filteredPlays.length} reviews for ${numUniqueGames} games).`
-        : introText
-    } Each review is scored on my <OmniLink href={ratingPage("games")}>
-      {"4-point rating system"}
-    </OmniLink>.
+    {slug === "all"
+      ? `Showing every single review (${filteredPlays.length} reviews for ${numUniqueGames} games).`
+      : introText}{" "}
+    Each review is scored on my{" "}
+    <OmniLink href={ratingPage("games")}>{"4-point rating system"}</OmniLink>.
   </p>
-   Each game notes its:
+  Each game notes its:
   <ul class="list-disc pb-2 pl-8">
     <li class="py-1">Play type (first time, replays, DLC, etc.)</li>
     <li class="py-1">
-      <OmniLink href={genrePermalink("")}>
-        {"genre"}
-      </OmniLink>, and you can click through to see all the others games from
-      that genre I've played.
+      <OmniLink href={genrePermalink("")}>{"genre"}</OmniLink>, and you can
+      click through to see all the others games from that genre I've played.
     </li>
   </ul>
-
   <SubscribeBlurb showSteamButton mediaType="game" />
-
   <hr class="mb-5 mt-6" />
-
   <ButtonGroup
     pathRoot="games"
     currentSubpath={slug ?? null}
@@ -144,13 +139,12 @@ const collectionEmoji = new Set<string>(
       label,
     }))}
   />
-
   <GameLegend collectionEmoji={collectionEmoji} />
-
   <div>
-    {filteredPlays.map((play) => <PlayBox play={play} />)}
+    {filteredPlays.map((play) => (
+      <PlayBox play={play} />
+    ))}
   </div>
-
   <SubscribeBlurb
     classes="mb-2"
     centered

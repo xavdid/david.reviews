@@ -9,10 +9,7 @@ type Props = {
 
 const { slug } = Astro.props;
 
-const article = (await getPublishedArticles()).find(
-  // not sure why this is the filename, but that's what it is!
-  (a) => a.id === `${slug}/index.mdx`,
-);
+const article = (await getPublishedArticles()).find((a) => a.id === slug);
 
 if (!article) {
   throw new Error(`Unable to embed article w/ slug "${slug}"`);
@@ -23,9 +20,9 @@ if (!article.data.review) {
 ---
 
 <p>
-  In my article <OmniLink href={article.permalink}>
-    {article.data.title}
-  </OmniLink>, I concluded:
+  In my article{" "}
+  <OmniLink href={article.permalink}>{article.data.title}</OmniLink>, I
+  concluded:
 </p>
 
 <ReviewSummary review={article.data.review} />

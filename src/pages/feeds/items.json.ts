@@ -154,17 +154,17 @@ export const GET: APIRoute = async () => {
   )
     .slice(0, 50)
     .filter(({ data: { review } }) => review)
-    .map(({ slug, permalink, data: { publishedOn, review } }) => {
+    .map(({ id, permalink, data: { publishedOn, review } }) => {
       if (!review) {
         throw new Error(
-          `filter is busted when filtering articles. slug: ${slug}`,
+          `filter is busted when filtering articles. slug: ${id}`,
         );
       }
       return {
         category: "article",
         permalink: `https://david.reviews${permalink}`,
         // for deduplication
-        recordId: slug,
+        recordId: id,
         dateFinished: publishedOn ?? "2035-07-14", // default for testing, since we only have published things here in prod
 
         // used to find the play for this review

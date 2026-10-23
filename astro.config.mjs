@@ -1,4 +1,4 @@
-import { rehypeHeadingIds } from "@astrojs/markdown-remark";
+import { rehypeHeadingIds, unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
 import sitemap from "@astrojs/sitemap";
@@ -18,21 +18,23 @@ export default defineConfig({
     preact(),
     sitemap(),
     mdx({
-      smartypants: false,
-      rehypePlugins: [
-        // the IDs get generated without this, but the autolinking doesn't work?
-        rehypeHeadingIds,
-        [
-          rehypeAutolinkHeadings,
-          {
-            behavior: "wrap",
-            properties: {
-              // passed as a prop to OmniLink
-              isHeading: true,
+      processor: unified({
+        rehypePlugins: [
+          // the IDs get generated without this, but the autolinking doesn't work?
+          rehypeHeadingIds,
+          [
+            rehypeAutolinkHeadings,
+            {
+              behavior: "wrap",
+              properties: {
+                // passed as a prop to OmniLink
+                isHeading: true,
+              },
             },
-          },
+          ],
         ],
-      ],
+      }),
+      smartypants: false,
     }),
   ],
 

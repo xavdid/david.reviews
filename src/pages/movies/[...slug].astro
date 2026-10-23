@@ -110,9 +110,11 @@ const collectionEmoji = new Set<string>(
 
 <Layout
   pageTitle={tabTitle}
-  pageDescription={subpath == null
-    ? `Detailed reviews of recently watched movies.`
-    : `A filtered subset of all the movies I've seen.`}
+  pageDescription={
+    subpath == null
+      ? `Detailed reviews of recently watched movies.`
+      : `A filtered subset of all the movies I've seen.`
+  }
   seoTitle={seoTitle(`Movies!${subpath ? ` (${subpath})` : ""}`)}
   activeTab="movies"
 >
@@ -120,16 +122,13 @@ const collectionEmoji = new Set<string>(
   <!-- fixed-height box so content doesn't jump around -->
   <!-- <p class="min-h-[5rem]"> -->
   <p class="mb-3">
-    {
-      slug === "all"
-        ? `Showing every single review (${filteredWatches.length} reviews for ${
-            Object.keys(watchCounts).length
-          } movies).`
-        : introText
-    }
-     Each review is scored on my <OmniLink href={ratingPage("movies")}>
-      {"4-point rating system"}
-    </OmniLink>.
+    {slug === "all"
+      ? `Showing every single review (${filteredWatches.length} reviews for ${
+          Object.keys(watchCounts).length
+        } movies).`
+      : introText}{" "}
+    Each review is scored on my{" "}
+    <OmniLink href={ratingPage("movies")}>{"4-point rating system"}</OmniLink>.
   </p>
   <SubscribeBlurb mediaType="movie" />
 
@@ -144,10 +143,8 @@ const collectionEmoji = new Set<string>(
 
   <MovieLegend collectionEmoji={collectionEmoji} />
   <div>
-    {
-      filteredWatches.map(({ watch, numWatch }) => (
-        <WatchBox watch={watch} numWatch={numWatch} />
-      ))
-    }
+    {filteredWatches.map(({ watch, numWatch }) => (
+      <WatchBox watch={watch} numWatch={numWatch} />
+    ))}
   </div>
 </Layout>

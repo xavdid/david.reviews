@@ -44,31 +44,25 @@ const icons: Record<(typeof feedTypes)[number], (_: any) => JSX.Element> = {
       {"JSON"}
     </ExternalLink> varieties. -->
   <ul class="list-disc pl-4">
-    {
-      feedTypes.map((type) => {
-        const Icon = icons[type];
-        return (
-          <li class="py-1">
-            <Icon />
-            {capitalize(type)}:{" "}
-            <OmniLink
-              href={`/feeds/${type.toLowerCase()}.xml`}
-            >{`https://david.reviews/feeds/${type.toLowerCase()}.xml`}</OmniLink>
-          </li>
-        );
-      })
-    }
+    {feedTypes.map((type) => {
+      const Icon = icons[type];
+      return (
+        <li class="py-1">
+          <Icon /> {capitalize(type)}:{" "}
+          <OmniLink
+            href={`/feeds/${type.toLowerCase()}.xml`}
+          >{`https://david.reviews/feeds/${type.toLowerCase()}.xml`}</OmniLink>
+        </li>
+      );
+    })}
   </ul>
 
   <p class="py-2">
-    Additionally, I post most reviews to a dedicated <BlueskyIcon /><OmniLink
-      href="https://bsky.app/profile/david.reviews"
-    >
+    Additionally, I post most reviews to a dedicated <BlueskyIcon />
+    <OmniLink href="https://bsky.app/profile/david.reviews">
       {"Bluesky account"}
-    </OmniLink>, as well as to my personal account on <MastodonIcon /><OmniLink
-      href="https://mastodon.social/@xavdid"
-    >
-      {"Mastodon"}
-    </OmniLink>.
+    </OmniLink>
+    , as well as to my personal account on <MastodonIcon />
+    <OmniLink href="https://mastodon.social/@xavdid">{"Mastodon"}</OmniLink>.
   </p>
 </Layout>

@@ -34,20 +34,18 @@ buttons.forEach(({ subpath }) => {
 
 <div class="mb-6 mt-3 text-center">
   <div class="inline-flex rounded-md">
-    {
-      buttons.map(({ label, subpath }) => (
-        <a
-          href={`/${pathRoot}${subpath ? `/${subpath}` : ""}/`}
-          class:list={[
-            "border-r border-gray-400 px-4 py-2 text-sm first:rounded-s-lg first:border last:rounded-e-lg last:border last:border-l-0",
-            hoverColor,
-            "dark:border-white [&:not(:first-child):not(:last-child)]:border-y",
-            subpath === currentSubpath && [activeColor, " text-white"],
-          ]}
-        >
-          {label}
-        </a>
-      ))
-    }
+    {buttons.map(({ label, subpath }) => (
+      <a
+        href={`/${pathRoot}${subpath ? `/${subpath}` : ""}/`}
+        class:list={[
+          "border-r border-gray-400 px-4 py-2 text-sm first:rounded-s-lg first:border last:rounded-e-lg last:border last:border-l-0",
+          hoverColor,
+          "dark:border-white [&:not(:first-child):not(:last-child)]:border-y",
+          subpath === currentSubpath && [activeColor, " text-white"],
+        ]}
+      >
+        {label}
+      </a>
+    ))}
   </div>
 </div>

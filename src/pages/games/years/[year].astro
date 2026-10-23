@@ -41,21 +41,20 @@ const collectionEmoji = new Set<string>(
 >
   <PageTitle>Every Game I Played in {year}</PageTitle>
   <p class="py-2">
-    I played {filteredPlays.length} new-to-me games in {year}. I <OmniLink
-      href={awardUrl}
-    >
-      {"wrote in more detail"}
-    </OmniLink> about my favorites.
+    I played {filteredPlays.length} new-to-me games in {year}. I{" "}
+    <OmniLink href={awardUrl}>{"wrote in more detail"}</OmniLink> about my
+    favorites.
   </p>
   <p class="py-2">
-    Each game notes its <OmniLink href={genrePermalink("")}>
-      {"genre"}
-    </OmniLink>, and you can click through to see all the others games from that
-    genre I've played.
+    Each game notes its <OmniLink href={genrePermalink("")}>{"genre"}</OmniLink>
+    , and you can click through to see all the others games from that genre I've
+    played.
   </p>
   <SubscribeBlurb mediaType="game" classes="pb-3" />
   <GameLegend collectionEmoji={collectionEmoji} specificAwardUrl={awardUrl} />
   <div>
-    {filteredPlays.map((play) => <PlayBox play={play} />)}
+    {filteredPlays.map((play) => (
+      <PlayBox play={play} />
+    ))}
   </div>
 </Layout>

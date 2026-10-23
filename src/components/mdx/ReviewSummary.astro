@@ -25,17 +25,20 @@ const {
 
     <div class="flex flex-col pl-4 md:flex-row">
       <ul class="mt-4 list-['+__'] text-lg md:w-[45%]">
-        {plusses.map((p) => <li class="py-1.5 md:py-2">{p}</li>)}
+        {plusses.map((p) => (
+          <li class="py-1.5 md:py-2">{p}</li>
+        ))}
       </ul>
       <div class="w-[10%]"></div>
       <ul class="mt-4 list-['-__'] text-lg md:w-[45%]">
-        {minuses.map((p) => <li class="py-1.5 md:py-2">{p}</li>)}
+        {minuses.map((p) => (
+          <li class="py-1.5 md:py-2">{p}</li>
+        ))}
       </ul>
     </div>
     <div class="pt-2 text-center text-sm italic">
-      Score based on my <OmniLink href={ratingPage("games")}>
-        {"4-point rating scale"}
-      </OmniLink>.
+      Score based on my{" "}
+      <OmniLink href={ratingPage("games")}>{"4-point rating scale"}</OmniLink>.
     </div>
   </div>
 </blockquote>

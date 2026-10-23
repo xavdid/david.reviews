@@ -42,28 +42,29 @@ const {
 
 <div class:list={[{ "text-center italic": centered }, classes]}>
   <p class:list={pClasses}>
-    {
-      blurb ??
-        `To be notified of new ${
-          mediaType === "article"
-            ? "articles"
-            : `${mediaType ? `${mediaType} ` : ""}reviews`
-        }, consider subscribing via`
-    }
-    <span class="whitespace-nowrap"
-      ><RssIcon /><OmniLink href="/feeds/">
-        {"RSS Feeds"}
-      </OmniLink></span
-    >, <span class="whitespace-nowrap"
-      ><BlueskyIcon /><OmniLink href="https://bsky.app/profile/david.reviews">
+    {blurb ??
+      `To be notified of new ${
+        mediaType === "article"
+          ? "articles"
+          : `${mediaType ? `${mediaType} ` : ""}reviews`
+      }, consider subscribing via`}{" "}
+    <span class="whitespace-nowrap">
+      <RssIcon />
+      <OmniLink href="/feeds/">{"RSS Feeds"}</OmniLink>
+    </span>
+    ,{" "}
+    <span class="whitespace-nowrap">
+      <BlueskyIcon />
+      <OmniLink href="https://bsky.app/profile/david.reviews">
         {"Bluesky"}
-      </OmniLink></span
-    >, {showSteamButton ? "" : "or"}
-    <span class="whitespace-nowrap"
-      ><MastodonIcon /><OmniLink href="https://mastodon.social/@xavdid">
-        {"Mastodon"}
-      </OmniLink></span
-    >{showSteamButton ? ", or:" : "!"}
+      </OmniLink>
+    </span>
+    , {showSteamButton ? "" : "or"}{" "}
+    <span class="whitespace-nowrap">
+      <MastodonIcon />
+      <OmniLink href="https://mastodon.social/@xavdid">{"Mastodon"}</OmniLink>
+    </span>
+    {showSteamButton ? ", or:" : "!"}
   </p>
   {showSteamButton && <SteamFollowButton />}
 </div>

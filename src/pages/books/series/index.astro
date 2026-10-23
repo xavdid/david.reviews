@@ -35,11 +35,8 @@ const series = Object.values(books).reduce<
   <PageTitle>All Series</PageTitle>
   <p class="py-2">
     I've read at least one book in {Object.keys(series).length} different
-    series. Completed series are rated using my <OmniLink
-      href={ratingPage("books")}
-    >
-      {"4-point rating system"}
-    </OmniLink>.
+    series. Completed series are rated using my{" "}
+    <OmniLink href={ratingPage("books")}>{"4-point rating system"}</OmniLink>.
   </p>
   <p class="pb-3">See also:</p>
   <ul class="list-disc pb-1 pl-8">

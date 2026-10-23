@@ -49,75 +49,63 @@ const borderColor = "border-emerald-600";
   verb="reads"
 >
   <div slot="title">
-    <TitleLink href={read.book.permalink}>
-      {read.book.title}
-    </TitleLink>{" "}
-    {
-      authors.length > 0 && (
-        <span>
-          {Number(omitAuthorIds?.length) ? "with" : "by"}{" "}
-          <AuthorList authors={authors} style="subtle" />
-        </span>
-      )
-    }
-  </div>
-
-  <Fragment slot="mobile-info">
-    {
-      authors.length > 0 && (
-        <span>
-          {Number(omitAuthorIds?.length) ? "with" : "by"}{" "}
-          <AuthorList authors={authors} style="subtle" />
-        </span>
-      )
-    }
-    {
-      read.book.series && (
-        <span class="pt-2">
-          {linkToSeries ? (
-            <SubtleLink href={read.book.series.permalink}>
-              Book #{read.book.numberInSeries}
-            </SubtleLink>
-          ) : (
-            <span>Book #{read.book.numberInSeries}</span>
-          )}
-          {nameSeries && `in ${read.book.series.name}`}
-        </span>
-      )
-    }
-  </Fragment>
-
-  {
-    authors.length > 0 && (
-      <span slot="desktop-authors">
+    <TitleLink href={read.book.permalink}>{read.book.title}</TitleLink>{" "}
+    {authors.length > 0 && (
+      <span>
         {Number(omitAuthorIds?.length) ? "with" : "by"}{" "}
         <AuthorList authors={authors} style="subtle" />
       </span>
-    )
-  }
+    )}
+  </div>
 
-  {
-    read.book.series && (
-      <div slot="desktop-info" class="float-right pb-1 pl-3">
-        <span
-          class:list={[
-            "inline-block",
-            "rounded-bl",
-            "border-b-2",
-            "border-l-2",
-            "px-1",
-            borderColor,
-          ]}
-        >
-          {linkToSeries ? (
-            <SubtleLink href={read.book.series.permalink}>
-              Book #{read.book.numberInSeries}
-            </SubtleLink>
-          ) : (
-            <span>Book #{read.book.numberInSeries}</span>
-          )}
-        </span>
-      </div>
-    )
-  }
+  <Fragment slot="mobile-info">
+    {authors.length > 0 && (
+      <span>
+        {Number(omitAuthorIds?.length) ? "with" : "by"}{" "}
+        <AuthorList authors={authors} style="subtle" />
+      </span>
+    )}
+    {read.book.series && (
+      <span class="pt-2">
+        {linkToSeries ? (
+          <SubtleLink href={read.book.series.permalink}>
+            Book #{read.book.numberInSeries}
+          </SubtleLink>
+        ) : (
+          <span>Book #{read.book.numberInSeries}</span>
+        )}
+        {nameSeries && `in ${read.book.series.name}`}
+      </span>
+    )}
+  </Fragment>
+
+  {authors.length > 0 && (
+    <span slot="desktop-authors">
+      {Number(omitAuthorIds?.length) ? "with" : "by"}{" "}
+      <AuthorList authors={authors} style="subtle" />
+    </span>
+  )}
+
+  {read.book.series && (
+    <div slot="desktop-info" class="float-right pb-1 pl-3">
+      <span
+        class:list={[
+          "inline-block",
+          "rounded-bl",
+          "border-b-2",
+          "border-l-2",
+          "px-1",
+          borderColor,
+        ]}
+      >
+        {linkToSeries ? (
+          <SubtleLink href={read.book.series.permalink}>
+            Book #{read.book.numberInSeries}
+          </SubtleLink>
+        ) : (
+          <span>Book #{read.book.numberInSeries}</span>
+        )}
+      </span>
+    </div>
+  )}
 </BaseBox>

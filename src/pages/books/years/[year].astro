@@ -34,13 +34,15 @@ const awardUrl = buildAwardUrl(parseInt(year), "books");
 >
   <PageTitle>Every Book I Read in {year}</PageTitle>
   <p class="pb-3">
-    I read {filteredReads.length} books in {year}. I <OmniLink href={awardUrl}>
-      {"wrote in more detail"}
-    </OmniLink> about my favorites.
+    I read {filteredReads.length} books in {year}. I{" "}
+    <OmniLink href={awardUrl}>{"wrote in more detail"}</OmniLink> about my
+    favorites.
   </p>
   <SubscribeBlurb mediaType="book" classes="pb-3" />
   <BookLegend awardUrl={awardUrl} showRereads={false} />
   <div>
-    {filteredReads.map((read) => <ReadBox read={read} />)}
+    {filteredReads.map((read) => (
+      <ReadBox read={read} />
+    ))}
   </div>
 </Layout>

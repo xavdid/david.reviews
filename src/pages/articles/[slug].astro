@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, type CollectionEntry, render } from "astro:content";
 import RenderedMarkdown from "../../components/RenderedMarkdown.astro";
 import CalendarIcon from "../../components/icons/svgs/calendar.svg";
 import FolderIcon from "../../components/icons/svgs/folder.svg";
@@ -30,7 +30,7 @@ import SteamFollowButton from "../../components/SteamFollowButton.astro";
 import type { GetStaticPaths } from "astro";
 
 type Props = { entry: CollectionEntry<"articles"> };
-type Params = { slug: CollectionEntry<"articles">["slug"] };
+type Params = { slug: CollectionEntry<"articles">["id"] };
 type StaticPaths = Promise<Array<{ params: Params; props: Props }>>;
 
 type Availability = {
@@ -43,14 +43,14 @@ type Availability = {
 export const getStaticPaths = (async (): StaticPaths => {
   const articles = await getCollection("articles");
   return articles.map((entry) => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: { entry },
   }));
 }) satisfies GetStaticPaths;
 
 const { slug } = Astro.params;
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 
 const frontmatter = entry.data;
 let ogImg: ImageInfo | undefined;
@@ -177,37 +177,35 @@ const components = {
   wide
   ogImg={ogImg}
   publishedOn={frontmatter.publishedOn}
-  structuredData={frontmatter.review
-    ? buildStructuredReview(
-        // TODO: change if I write a non-game article
-        "VideoGame",
-        [
+  structuredData={
+    frontmatter.review
+      ? buildStructuredReview(
+          // TODO: change if I write a non-game article
+          "VideoGame",
+          [
+            {
+              rating: frontmatter.review.rating,
+              dateFinished: frontmatter.publishedOn ?? "",
+            },
+          ],
           {
-            rating: frontmatter.review.rating,
-            dateFinished: frontmatter.publishedOn ?? "",
+            title: gameTitle,
+            articleTitle: frontmatter.title,
+            articleSubject: gameSlug ? gamePermalink(gameSlug) : undefined,
+            blurb: frontmatter.review.blurb,
+            permalink: `/articles/${slug}/`,
+            poster: frontmatter.ogImg?.src,
           },
-        ],
-        {
-          title: gameTitle,
-          articleTitle: frontmatter.title,
-          articleSubject: gameSlug ? gamePermalink(gameSlug) : undefined,
-          blurb: frontmatter.review.blurb,
-          permalink: `/articles/${slug}/`,
-          poster: frontmatter.ogImg?.src,
-        },
-      )
-    : undefined}
+        )
+      : undefined
+  }
 >
-  <h1 class:list={h1Styles}>
-    {frontmatter.title}
-  </h1>
+  <h1 class:list={h1Styles}>{frontmatter.title}</h1>
 
   <p class="pb-4 pt-2">
-    <CalendarIcon class:list={["mb-1 inline h-4 pr-2", "dark:fill-white"]} />{
-      frontmatter.publishedOn ?? "TBD"
-    }
-
-    <FolderIcon class:list={["inline h-5 pl-3", "dark:fill-white"]} />
+    <CalendarIcon class:list={["mb-1 inline h-4 pr-2", "dark:fill-white"]} />
+    {frontmatter.publishedOn ?? "TBD"}{" "}
+    <FolderIcon class:list={["inline h-5 pl-3", "dark:fill-white"]} />{" "}
     <OmniLink href={`/articles/category/${slugify(frontmatter.category)}/`}>
       {frontmatter.category}
     </OmniLink>
@@ -219,108 +217,96 @@ const components = {
     {frontmatter.review && <ReviewSummary review={frontmatter.review} />}
 
     <!-- Text for 1, 2, and 3+ items. -->
-    {
-      availability ? (
-        // replace the text with the steam review if there's only one availability
-        availability.links.length === 1 &&
-        frontmatter.review?.gameInfo.steamId ? (
-          <SteamGame steamId={frontmatter.review.gameInfo.steamId} />
-        ) : (
-          <>
-            <p class="text-balance text-center italic">
-              {availability.gameSlug && availability.finishedPlay ? (
-                <OmniLink href={gamePermalink(availability.gameSlug)}>
-                  {availability.gameTitle}
-                </OmniLink>
-              ) : (
-                <span class="font-bold not-italic">
-                  {availability.gameTitle}
-                </span>
-              )}{" "}
-              is avaiable on{" "}
-              {availability.links.length === 1 ? (
-                <>
-                  <MaybeOmniLink {...availability.links[0]} />.
-                </>
-              ) : availability.links.length === 2 ? (
-                <>
-                  <MaybeOmniLink {...availability.links[0]} /> and{" "}
-                  <MaybeOmniLink {...availability.links[1]} />.
-                </>
-              ) : (
-                <>
-                  {availability.links.slice(0, -1).map((o) => (
-                    <>
-                      <MaybeOmniLink {...o} />,{" "}
-                    </>
-                  ))}
-                  and <MaybeOmniLink {...availability.links.at(-1)!} />.
-                </>
-              )}
-            </p>
-            {frontmatter.review?.gameInfo.steamId && (
-              <SteamGame steamId={frontmatter.review.gameInfo.steamId} />
+    {availability ? (
+      // replace the text with the steam review if there's only one availability
+      availability.links.length === 1 &&
+      frontmatter.review?.gameInfo.steamId ? (
+        <SteamGame steamId={frontmatter.review.gameInfo.steamId} />
+      ) : (
+        <>
+          <p class="text-balance text-center italic">
+            {availability.gameSlug && availability.finishedPlay ? (
+              <OmniLink href={gamePermalink(availability.gameSlug)}>
+                {availability.gameTitle}
+              </OmniLink>
+            ) : (
+              <span class="font-bold not-italic">{availability.gameTitle}</span>
+            )}{" "}
+            is avaiable on{" "}
+            {availability.links.length === 1 ? (
+              <>
+                <MaybeOmniLink {...availability.links[0]} />.
+              </>
+            ) : availability.links.length === 2 ? (
+              <>
+                <MaybeOmniLink {...availability.links[0]} /> and{" "}
+                <MaybeOmniLink {...availability.links[1]} />.
+              </>
+            ) : (
+              <>
+                {availability.links.slice(0, -1).map((o) => (
+                  <>
+                    <MaybeOmniLink {...o} />,{" "}
+                  </>
+                ))}
+                and <MaybeOmniLink {...availability.links.at(-1)!} />.
+              </>
             )}
-          </>
-        )
-      ) : null
-    }
+          </p>
+          {frontmatter.review?.gameInfo.steamId && (
+            <SteamGame steamId={frontmatter.review.gameInfo.steamId} />
+          )}
+        </>
+      )
+    ) : null}
 
-    {
-      frontmatter.review && (
-        <>
-          <hr />
-          <SubscribeBlurb
-            classes={["pb-1"]}
-            pClasses={["!my-2"]}
-            centered
-            showSteamButton
-            blurb="If you liked this review and want to read more like it, subscribe via"
-          />
-        </>
-      )
-    }
+    {frontmatter.review && (
+      <>
+        <hr />
+        <SubscribeBlurb
+          classes={["pb-1"]}
+          pClasses={["!my-2"]}
+          centered
+          showSteamButton
+          blurb="If you liked this review and want to read more like it, subscribe via"
+        />
+      </>
+    )}
 
-    {
-      frontmatter.review?.gotPressKey && (
-        <>
-          <hr />
-          <p>
-            <em>
-              This review was written using a free code provided by the
-              developer/publisher. The free nature of that code didn’t influence
-              the conclusions of this review in any way.
-            </em>
-          </p>
-        </>
-      )
-    }
-    {
-      frontmatter.review?.progressAtReview && (
-        <>
-          <hr />
-          <p>
-            <span class="font-bold">Game progress at review time</span>:{" "}
-            {frontmatter.review.progressAtReview}
-          </p>
-        </>
-      )
-    }
-    {
-      frontmatter.review?.thinkyUrl && (
-        <>
-          <hr />
-          <p>
-            This review also appeared the{" "}
-            <MaybeOmniLink
-              href={frontmatter.review.thinkyUrl}
-              text="Thinky Games"
-            />{" "}
-            website.
-          </p>
-        </>
-      )
-    }
+    {frontmatter.review?.gotPressKey && (
+      <>
+        <hr />
+        <p>
+          <em>
+            This review was written using a free code provided by the
+            developer/publisher. The free nature of that code didn’t influence
+            the conclusions of this review in any way.
+          </em>
+        </p>
+      </>
+    )}
+    {frontmatter.review?.progressAtReview && (
+      <>
+        <hr />
+        <p>
+          <span class="font-bold">Game progress at review time</span>:{" "}
+          {frontmatter.review.progressAtReview}
+        </p>
+      </>
+    )}
+    {frontmatter.review?.thinkyUrl && (
+      <>
+        <hr />
+        <p>
+          This review also appeared the{" "}
+          <MaybeOmniLink
+            href={frontmatter.review.thinkyUrl}
+            text="Thinky Games"
+          />{" "}
+          website.
+        </p>
+      </>
+    )}
   </RenderedMarkdown>
 
   <!-- <hr class="my-6" />

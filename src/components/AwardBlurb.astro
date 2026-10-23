@@ -8,6 +8,6 @@ export type Props = AwardDetails & { category: Category };
 const { year, tier, category, emoji, url } = Astro.props;
 ---
 
-This {category} won the {emoji}{tier} medal in my <OmniLink href={url}>
-  {`${year} Yearly Media Review`}
-</OmniLink>.
+This {category} won the {emoji}
+{tier} medal in my{" "}
+<OmniLink href={url}>{`${year} Yearly Media Review`}</OmniLink>.

@@ -10,12 +10,7 @@ import Layout from "../../layouts/Layout.astro";
 import { ratingPage, seoTitle } from "../../utils/data";
 
 type Subpaths =
-  | "awarded"
-  | "all"
-  | "recommended"
-  | "recent"
-  | "unrecommended"
-  | "audio";
+  "awarded" | "all" | "recommended" | "recent" | "unrecommended" | "audio";
 type WatchFilter = (read: Read) => boolean;
 const DEFAULT_FILTER: WatchFilter = () => true;
 
@@ -116,22 +111,22 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 
 <Layout
   pageTitle={tabTitle}
-  pageDescription={subpath == null
-    ? `Detailed reviews of recent reads.`
-    : `A filtered subset of all the books I've read.`}
+  pageDescription={
+    subpath == null
+      ? `Detailed reviews of recent reads.`
+      : `A filtered subset of all the books I've read.`
+  }
   seoTitle={seoTitle(`Books!${subpath ? ` (${subpath})` : ""}`)}
   activeTab="books"
 >
   <PageTitle>{pageTitle}</PageTitle>
 
   <p class="pb-3">
-    {
-      slug === "all"
-        ? `Showing every single review (${reads.length} reviews for ${numUniqueBooks} books).`
-        : introText
-    } Each review is scored on my <OmniLink href={ratingPage("books")}>
-      {"4-point rating system"}
-    </OmniLink>.
+    {slug === "all"
+      ? `Showing every single review (${reads.length} reviews for ${numUniqueBooks} books).`
+      : introText}{" "}
+    Each review is scored on my{" "}
+    <OmniLink href={ratingPage("books")}>{"4-point rating system"}</OmniLink>.
   </p>
   <p class="pb-3">You can also see lists of:</p>
   <ul class="list-disc pl-8">
@@ -156,6 +151,8 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
 
   <BookLegend />
   <div>
-    {filteredReads.map((read) => <ReadBox read={read} />)}
+    {filteredReads.map((read) => (
+      <ReadBox read={read} />
+    ))}
   </div>
 </Layout>

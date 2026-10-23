@@ -33,22 +33,20 @@ if (mode === "external") {
 }
 ---
 
-{
-  href.startsWith("#") && isHeading ? (
-    // heading anchors are basically unstyled
-    <a
-      class:list={[
-        "not-prose",
-        // works on mobile while the element is the last selected one!
-        "hover:after:content-['_#']",
-      ]}
-      href={href}
-    >
-      <slot />
-    </a>
-  ) : (
-    <LinkComponent href={href}>
-      <slot />
-    </LinkComponent>
-  )
-}
+{href.startsWith("#") && isHeading ? (
+  // heading anchors are basically unstyled
+  <a
+    class:list={[
+      "not-prose",
+      // works on mobile while the element is the last selected one!
+      "hover:after:content-['_#']",
+    ]}
+    href={href}
+  >
+    <slot />
+  </a>
+) : (
+  <LinkComponent href={href}>
+    <slot />
+  </LinkComponent>
+)}

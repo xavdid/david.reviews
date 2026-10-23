@@ -122,26 +122,26 @@ const processedGames = games
       <RoundedText text={genre.name} /> Games I've Played
     </PageTitle>
     <p class="pt-3">
-      {genre.name} games are categorized by a primary gameplay loop of {
-        GENRE_DESCRIPTIONS[genre.slug] ??
-          (() => {
-            throw new Error("MISSING GENRE DESCRIPTION!");
-          })()
-      } I've played {games.length}
-      {pluralize(games, "game")} in this genre so far.
+      {genre.name} games are categorized by a primary gameplay loop of{" "}
+      {GENRE_DESCRIPTIONS[genre.slug] ??
+        (() => {
+          throw new Error("MISSING GENRE DESCRIPTION!");
+        })()}{" "}
+      I've played {games.length} {pluralize(games, "game")} in this genre so
+      far.
     </p>
     <p class="py-3">
-      Each game is scored on my <OmniLink href={ratingPage("games")}>
-        {"4-point rating system"}
-      </OmniLink>.
+      Each game is scored on my{" "}
+      <OmniLink href={ratingPage("games")}>{"4-point rating system"}</OmniLink>.
     </p>
     <p class="pt-2">
-      ⬅️ You can also go back to <OmniLink href={genrePermalink("")}>
-        {"all genres"}
-      </OmniLink>
+      ⬅️ You can also go back to{" "}
+      <OmniLink href={genrePermalink("")}>{"all genres"}</OmniLink>
     </p>
   </div>
   <div>
-    {processedGames.map((game) => <SlimBox {...game} mediaType="games" />)}
+    {processedGames.map((game) => (
+      <SlimBox {...game} mediaType="games" />
+    ))}
   </div>
 </Layout>

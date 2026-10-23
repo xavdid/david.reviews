@@ -84,18 +84,17 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
     Reviews for <RoundedText text={name} />
   </PageTitle>
   <p class="pb-3">
-    There {pluralize(reads, "is", "are", true)}
-    {reads.length}
-    {pluralize(reads, "review")} of {numUniqueBooks}
-    {pluralize(numUniqueBooks, "book")} with an average score of {
-      averageRating(reads)
-    } (<OmniLink href={ratingPage("books")}>
-      {"out of 4"}
-    </OmniLink>).
+    There {pluralize(reads, "is", "are", true)} {reads.length}{" "}
+    {pluralize(reads, "review")} of {numUniqueBooks}{" "}
+    {pluralize(numUniqueBooks, "book")} with an average score of{" "}
+    {averageRating(reads)} (
+    <OmniLink href={ratingPage("books")}>{"out of 4"}</OmniLink>).
   </p>
   <BookLegend />
   <div>
-    {reads.map((read) => <ReadBox read={read} omitAuthorIds={[authorId]} />)}
+    {reads.map((read) => (
+      <ReadBox read={read} omitAuthorIds={[authorId]} />
+    ))}
   </div>
   <SubscribeBlurb centered mediaType="book" />
 </Layout>

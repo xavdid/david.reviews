@@ -13,15 +13,13 @@ const { slug, index } = Astro.props;
 const play = await getFinishedPlayForGame(slug, { index });
 ---
 
-{
-  play === null ? (
-    <p class="bg-yellow-300 p-2 text-black">
-      WARN: Unable to embed play for slug: "{slug}".
-    </p>
-  ) : (
-    <blockquote class="not-italic">
-      <Rating rating={play.rating} />
-      <MultiLineText text={play.notes} />
-    </blockquote>
-  )
-}
+{play === null ? (
+  <p class="bg-yellow-300 p-2 text-black">
+    WARN: Unable to embed play for slug: "{slug}".
+  </p>
+) : (
+  <blockquote class="not-italic">
+    <Rating rating={play.rating} />
+    <MultiLineText text={play.notes} />
+  </blockquote>
+)}

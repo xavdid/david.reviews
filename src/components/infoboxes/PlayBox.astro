@@ -58,15 +58,14 @@ const borderColor = "border-blue-600";
         "px-1",
         borderColor,
       ]}
-      ><SubtleLink href={play.game.genre.permalink}>
-        {play.game.genre.name}
-      </SubtleLink></span
     >
+      <SubtleLink href={play.game.genre.permalink}>
+        {play.game.genre.name}
+      </SubtleLink>
+    </span>
   </div>
 
   <div slot="mobile-info" class="pt-2">
-    <OmniLink href={play.game.genre.permalink}>
-      {play.game.genre.name}
-    </OmniLink>
+    <OmniLink href={play.game.genre.permalink}>{play.game.genre.name}</OmniLink>
   </div>
 </BaseBox>

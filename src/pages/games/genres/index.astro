@@ -44,22 +44,16 @@ const genres = Object.values(games).reduce<Record<string, GenreRecord>>(
     </p>
   </div>
   <ul class="list-disc pl-4">
-    {
-      Object.values(genres)
-        .toSorted((a, b) =>
-          a.genre.name > b.genre.name
-            ? 1
-            : b.genre.name > a.genre.name
-              ? -1
-              : 0,
-        )
-        .map(({ genre, games }) => (
-          <li class="py-2">
-            <OmniLink href={genrePermalink(genre.slug)}>{genre.name}</OmniLink>
-            games ({games.size} {pluralize(games.size, "play")}) are categorized
-            by {GENRE_DESCRIPTIONS[genre.slug] ?? "MISSING GENRE DESCRIPTION!"}
-          </li>
-        ))
-    }
+    {Object.values(genres)
+      .toSorted((a, b) =>
+        a.genre.name > b.genre.name ? 1 : b.genre.name > a.genre.name ? -1 : 0,
+      )
+      .map(({ genre, games }) => (
+        <li class="py-2">
+          <OmniLink href={genrePermalink(genre.slug)}>{genre.name}</OmniLink>{" "}
+          games ({games.size} {pluralize(games.size, "play")}) are categorized
+          by {GENRE_DESCRIPTIONS[genre.slug] ?? "MISSING GENRE DESCRIPTION!"}
+        </li>
+      ))}
   </ul>
 </Layout>

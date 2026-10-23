@@ -70,7 +70,7 @@ if (fullReviewSlug) {
   }
 
   const articles = await getPublishedArticles();
-  if (!articles.find(({ slug }) => fullReviewSlug === slug)) {
+  if (!articles.find(({ id }) => fullReviewSlug === id)) {
     throw new Error(
       `Unable to find article for play w/ slug: "${fullReviewSlug}"`,
     );
@@ -97,8 +97,8 @@ if (fullReviewSlug) {
           alt={`poster for ${title}`}
           height={image.height}
           width={image.width}
-        /></a
-      >
+        />
+      </a>
     </div>
 
     {/* info column */}
@@ -112,21 +112,19 @@ if (fullReviewSlug) {
       >
         {/* title */}
         <span>
-          <TitleLink href={permalink}>{title}</TitleLink>
-          <slot name="desktop-authors" /></span
-        >
+          <TitleLink href={permalink}>{title}</TitleLink>{" "}
+          <slot name="desktop-authors" />
+        </span>
 
         {/* icons */}
         <div class="whitespace-nowrap pl-1">
-          {
-            icons
-              .filter(({ visible }) => visible)
-              .map(({ title, icon }) => (
-                <div title={title} class="inline cursor-help px-1">
-                  {icon}
-                </div>
-              ))
-          }
+          {icons
+            .filter(({ visible }) => visible)
+            .map(({ title, icon }) => (
+              <div title={title} class="inline cursor-help px-1">
+                {icon}
+              </div>
+            ))}
         </div>
       </div>
 
@@ -139,22 +137,20 @@ if (fullReviewSlug) {
       >
         <slot name="desktop-info" />
         <div class="px-4 py-2">
-          {
-            notes ? (
-              <MultiLineText text={notes}>
-                {fullReviewSlug ? (
-                  /* prettier-ignore */ <span>
+          {notes ? (
+            <MultiLineText text={notes}>
+              {fullReviewSlug ? (
+                /* prettier-ignore */ <span>
                 Read more in my{" "}
                 <OmniLink href={articlePermalink(fullReviewSlug)}>
                   {"full review"}
                 </OmniLink>!
               </span>
-                ) : null}
-              </MultiLineText>
-            ) : (
-              <em>{noReview(verb)}</em>
-            )
-          }
+              ) : null}
+            </MultiLineText>
+          ) : (
+            <em>{noReview(verb)}</em>
+          )}
         </div>
       </div>
 
@@ -195,8 +191,8 @@ if (fullReviewSlug) {
           alt={`poster for ${title}`}
           height={image.height}
           width={image.width}
-        /></a
-      >
+        />
+      </a>
       {/* info column row */}
       <div
         class:list={[
@@ -221,55 +217,49 @@ if (fullReviewSlug) {
 
         {/* icon section */}
         <ul>
-          {
-            icons.length &&
-              icons
-                .filter(({ visible }) => visible)
-                .map(({ title, icon }) => (
-                  <li>
-                    {icon} {title}
-                  </li>
-                ))
-          }
+          {icons.length &&
+            icons
+              .filter(({ visible }) => visible)
+              .map(({ title, icon }) => (
+                <li>
+                  {icon} {title}
+                </li>
+              ))}
         </ul>
 
         {/* info section */}
         <div class="flex w-full flex-col">
-          {
-            dataRows.map((row) => (
-              <div class:list={["flex w-full", "justify-between"]}>
-                {row.map((item) =>
-                  typeof item === "number" ? (
-                    <Rating rating={item} />
-                  ) : (
-                    <div>{item}</div>
-                  ),
-                )}
-              </div>
-            ))
-          }
+          {dataRows.map((row) => (
+            <div class:list={["flex w-full", "justify-between"]}>
+              {row.map((item) =>
+                typeof item === "number" ? (
+                  <Rating rating={item} />
+                ) : (
+                  <div>{item}</div>
+                ),
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>
 
     {/* text row */}
     <div class:list={["p-2", "border-t-2", borderColor]}>
-      {
-        notes ? (
-          <MultiLineText text={notes}>
-            {fullReviewSlug ? (
-              /* prettier-ignore */ <span>
+      {notes ? (
+        <MultiLineText text={notes}>
+          {fullReviewSlug ? (
+            /* prettier-ignore */ <span>
                 Read more in my{" "}
                 <OmniLink href={articlePermalink(fullReviewSlug)}>
                   {"full review"}
                 </OmniLink>!
               </span>
-            ) : null}
-          </MultiLineText>
-        ) : (
-          <em>{noReview(verb)}</em>
-        )
-      }
+          ) : null}
+        </MultiLineText>
+      ) : (
+        <em>{noReview(verb)}</em>
+      )}
     </div>
   </div>
 </div>

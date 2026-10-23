@@ -110,11 +110,11 @@ export const getStaticPaths = async (): Result => {
 
     const issues: string[] = [];
 
-    allArticles.forEach(({ data: { mentionedGameSlugs }, slug }) => {
+    allArticles.forEach(({ data: { mentionedGameSlugs }, id }) => {
       mentionedGameSlugs?.forEach((gameSlug) => {
         if (!allGameSlugs.has(gameSlug)) {
           issues.push(
-            `! article "${slug}" has a game slug "${gameSlug}" that's not found in any games`,
+            `! article "${id}" has a game slug "${gameSlug}" that's not found in any games`,
           );
         }
       });
@@ -191,95 +191,80 @@ const allPlaysSorted = [...plays, ...etcPlays].toSorted(sortDateDescending);
     <div class="pl-3">
       <MediaTitle>{title}</MediaTitle>
       <p class="pt-2">
-        Genre: <OmniLink href={genre.permalink}>
-          {genre.name}
-        </OmniLink>
+        Genre: <OmniLink href={genre.permalink}>{genre.name}</OmniLink>
       </p>
       <p class="pr-2 pt-2">
-        I've played the main story {plays.length}
-        {pluralize(plays, "time")} and given it an average score of {
-          averageRating(plays)
-        } (<OmniLink href={`${ratingPage("games")}`}>
-          {"out of 4"}
-        </OmniLink>).
+        I've played the main story {plays.length} {pluralize(plays, "time")} and
+        given it an average score of {averageRating(plays)} (
+        <OmniLink href={`${ratingPage("games")}`}>{"out of 4"}</OmniLink>).
       </p>
-      {
-        steamUrl && (
-          <div class="pt-2">
-            <SteamIcon />
-            <OmniLink href={steamUrl}>Steam</OmniLink>
-          </div>
-        )
-      }
-      {
-        dekuDealsUrl && (
-          <div class="pt-1">
-            <DekuDealsIcon />
-            <OmniLink href={dekuDealsUrl}>Deku Deals</OmniLink>
-          </div>
-        )
-      }
-      {
-        collection && (
-          <div class="pt-2">
-            <p>
-              This game is part of the{" "}
-              <OmniLink href={collection.permalink}>
-                {collection.fullName}
-              </OmniLink>{" "}
-              collection.
-            </p>
-          </div>
-        )
-      }
+      {steamUrl && (
+        <div class="pt-2">
+          <SteamIcon /> <OmniLink href={steamUrl}>Steam</OmniLink>
+        </div>
+      )}
+      {dekuDealsUrl && (
+        <div class="pt-1">
+          <DekuDealsIcon /> <OmniLink href={dekuDealsUrl}>Deku Deals</OmniLink>
+        </div>
+      )}
+      {collection && (
+        <div class="pt-2">
+          <p>
+            This game is part of the{" "}
+            <OmniLink href={collection.permalink}>
+              {collection.fullName}
+            </OmniLink>{" "}
+            collection.
+          </p>
+        </div>
+      )}
     </div>
   </div>
-  {
-    hasArticleSection ? (
-      <div class="pb-4">
-        <h2 class="pb-0 text-xl">Mentioned In</h2>
-        <ul class="list-disc pl-8">
-          {award && (
-            // starting with 2025, awards are no longer external links, but do get special treatment when listed
-            <li class="py-1">
-              <SubtleLink
-                external={award.year < 2025}
-                href={award.url}
-                classes={["text-lg"]}
-              >
-                Favorite Media of {award.year}
-              </SubtleLink>{" "}
-              ({award.emoji}
-              {award.tier} medal winner)
-            </li>
-          )}
-          {articles.map(({ permalink, title }) => (
-            <li class="py-1">
-              <SubtleLink href={permalink} classes={["text-lg"]}>
-                {title}
-              </SubtleLink>
-            </li>
-          ))}
-        </ul>
-      </div>
-    ) : null
-  }
+  {hasArticleSection ? (
+    <div class="pb-4">
+      <h2 class="pb-0 text-xl">Mentioned In</h2>
+      <ul class="list-disc pl-8">
+        {award && (
+          // starting with 2025, awards are no longer external links, but do get special treatment when listed
+          <li class="py-1">
+            <SubtleLink
+              external={award.year < 2025}
+              href={award.url}
+              classes={["text-lg"]}
+            >
+              Favorite Media of {award.year}
+            </SubtleLink>{" "}
+            ({award.emoji}
+            {award.tier} medal winner)
+          </li>
+        )}
+        {articles.map(({ permalink, title }) => (
+          <li class="py-1">
+            <SubtleLink href={permalink} classes={["text-lg"]}>
+              {title}
+            </SubtleLink>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ) : null}
   <div>
     {hasArticleSection ? <h2 class="pb-2 text-xl">Full Plays</h2> : null}
-    {plays.map((play) => <PlaySummary play={play} />)}
+    {plays.map((play) => (
+      <PlaySummary play={play} />
+    ))}
   </div>
-  {
-    etcPlays.length > 0 && (
-      <>
-        <h2 class="pb-0 text-xl">DLC, etc.</h2>
-        <div class="pt-2">
-          {etcPlays.map((play) => (
-            <PlaySummary play={play} />
-          ))}
-        </div>
-      </>
-    )
-  }
+  {etcPlays.length > 0 && (
+    <>
+      <h2 class="pb-0 text-xl">DLC, etc.</h2>
+      <div class="pt-2">
+        {etcPlays.map((play) => (
+          <PlaySummary play={play} />
+        ))}
+      </div>
+    </>
+  )}
 
   <SubscribeBlurb
     blurb="If you liked this review and want to read more like it, subscribe via"

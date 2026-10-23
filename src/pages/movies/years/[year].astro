@@ -44,11 +44,9 @@ const awardUrl = buildAwardUrl(parseInt(year), "movies");
 >
   <PageTitle>Every Movie I Watched in {year}</PageTitle>
   <p class="pb-3">
-    I watched {watchesWithCounts.length} new-to-me movies in {year}. I <OmniLink
-      href={awardUrl}
-    >
-      {"wrote in more detail"}
-    </OmniLink> about my favorites.
+    I watched {watchesWithCounts.length} new-to-me movies in {year}. I{" "}
+    <OmniLink href={awardUrl}>{"wrote in more detail"}</OmniLink> about my
+    favorites.
   </p>
   <SubscribeBlurb mediaType="movie" classes="pb-3" />
   <MovieLegend
@@ -57,6 +55,8 @@ const awardUrl = buildAwardUrl(parseInt(year), "movies");
     showFirstTimeAsterisk={false}
   />
   <div>
-    {watchesWithCounts.map((watch) => <WatchBox watch={watch} numWatch={1} />)}
+    {watchesWithCounts.map((watch) => (
+      <WatchBox watch={watch} numWatch={1} />
+    ))}
   </div>
 </Layout>

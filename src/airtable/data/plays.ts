@@ -25,11 +25,7 @@ const SCHEMA = {
 const fields = SCHEMA.fields;
 
 export type PlayTypes =
-  | "First Time"
-  | "Replay"
-  | "DLC"
-  | "Platinum"
-  | "New Edition";
+  "First Time" | "Replay" | "DLC" | "Platinum" | "New Edition";
 
 const ETCPlayTypes: PlayTypes[] = ["DLC", "Platinum"];
 export const isEtcPlay = (s: PlayTypes): boolean => ETCPlayTypes.includes(s);

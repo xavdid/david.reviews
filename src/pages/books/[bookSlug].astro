@@ -119,51 +119,40 @@ const authorsStr = authors.map((a) => a.name).join(", ");
         by <AuthorList authors={authors} style="rounded" />
       </p>
       <p class="pb-2">
-        I've read this book {reads.length}
-        {pluralize(reads, "time")} and given it an average score of {
-          reads.reduce((total, { rating }) => rating + total, 0) / reads.length
-        }
-         (<OmniLink href={`${ratingPage("books")}`}>
-          {"out of 4"}
-        </OmniLink>).
+        I've read this book {reads.length} {pluralize(reads, "time")} and given
+        it an average score of{" "}
+        {reads.reduce((total, { rating }) => rating + total, 0) / reads.length}{" "}
+        (<OmniLink href={`${ratingPage("books")}`}>{"out of 4"}</OmniLink>).
       </p>
-      {
-        series && (
-          <div class="py-2">
-            <p>
-              This is book #{numberInSeries} in the
-              <OmniLink href={series.permalink}>{series.name}</OmniLink> series.
-            </p>
-          </div>
-        )
-      }
+      {series && (
+        <div class="py-2">
+          <p>
+            This is book #{numberInSeries} in the{" "}
+            <OmniLink href={series.permalink}>{series.name}</OmniLink> series.
+          </p>
+        </div>
+      )}
       {award && <AwardBlurb {...award} category="book" />}
     </div>
   </div>
 
-  {
-    reads.map(({ rating, medium, notes, dateFinished }) => (
-      <div
-        id={dateFinished}
-        class="mb-4 rounded-sm border-2 border-emerald-600 even:bg-emerald-50 dark:even:bg-zinc-700"
-      >
-        <div class="flex justify-between border-b-2 border-emerald-600 px-2">
-          <span>{dateFinished}</span>
-          {medium === "Audio" && <span>🔈 Audiobook</span>}
-          <div>
-            <Rating rating={rating} />
-          </div>
-        </div>
-        <div class="p-2">
-          {notes ? (
-            <MultiLineText text={notes} />
-          ) : (
-            <em>{noReview("reads")}</em>
-          )}
+  {reads.map(({ rating, medium, notes, dateFinished }) => (
+    <div
+      id={dateFinished}
+      class="mb-4 rounded-sm border-2 border-emerald-600 even:bg-emerald-50 dark:even:bg-zinc-700"
+    >
+      <div class="flex justify-between border-b-2 border-emerald-600 px-2">
+        <span>{dateFinished}</span>
+        {medium === "Audio" && <span>🔈 Audiobook</span>}
+        <div>
+          <Rating rating={rating} />
         </div>
       </div>
-    ))
-  }
+      <div class="p-2">
+        {notes ? <MultiLineText text={notes} /> : <em>{noReview("reads")}</em>}
+      </div>
+    </div>
+  ))}
 
   <SubscribeBlurb centered mediaType="book" />
 </Layout>

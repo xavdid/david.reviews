@@ -117,96 +117,82 @@ const {
     />
     <div class="pl-3">
       <MediaTitle>{title}</MediaTitle>
-      <p class="pt-2">
-        Originally released in {yearReleased}.
-      </p>
+      <p class="pt-2">Originally released in {yearReleased}.</p>
       <p class="pr-2 pt-2">
-        I've watched this movie {watches.length}
-        {pluralize(watches, "time")} and given it an average score of {
-          averageRating(watches)
-        }⭐ (<OmniLink href={ratingPage("movies")}>
-          {"out of 4"}
-        </OmniLink>).
+        I've watched this movie {watches.length} {pluralize(watches, "time")}{" "}
+        and given it an average score of {averageRating(watches)}⭐ (
+        <OmniLink href={ratingPage("movies")}>{"out of 4"}</OmniLink>).
       </p>
-      {
-        award && (
-          <div class="pt-2">
-            <AwardBlurb {...award} category="movie" />
-          </div>
-        )
-      }
-      {
-        collections && (
-          <div class="pt-2">
-            <p>
-              This movie is part of the following{" "}
-              {pluralize(collections, "collection")}:
-            </p>
-            <ul class="pt-2">
-              {collections.map((collection) => (
-                <li class="pb-2 pl-4">
-                  <OmniLink href={collection.permalink}>
-                    {collection.fullName}
-                  </OmniLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )
-      }
+      {award && (
+        <div class="pt-2">
+          <AwardBlurb {...award} category="movie" />
+        </div>
+      )}
+      {collections && (
+        <div class="pt-2">
+          <p>
+            This movie is part of the following{" "}
+            {pluralize(collections, "collection")}:
+          </p>
+          <ul class="pt-2">
+            {collections.map((collection) => (
+              <li class="pb-2 pl-4">
+                <OmniLink href={collection.permalink}>
+                  {collection.fullName}
+                </OmniLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   </div>
   <div>
-    {
-      watches.map(
-        (
-          { dateFinished, rating, notes, isFirstWatch, watchedInTheater },
-          index,
-        ) => {
-          const watchNumber = numWatches - index;
+    {watches.map(
+      (
+        { dateFinished, rating, notes, isFirstWatch, watchedInTheater },
+        index,
+      ) => {
+        const watchNumber = numWatches - index;
 
-          return (
-            <div
-              id={dateFinished}
-              class="mb-4 rounded-sm border-2 border-red-600 even:bg-red-50 dark:even:bg-zinc-700"
-            >
-              <div class="flex justify-between border-b-2 border-red-600 px-2">
-                <span>{dateFinished}</span>
-                <span>
-                  {`Watch ${watchNumber}${fakeFirstWatchMarker(
-                    watchNumber,
-                    isFirstWatch,
-                  )}`}
-                </span>
-                <div>
-                  <Rating rating={rating} />
-                </div>
-              </div>
-              <div class="p-2">
-                {notes ? (
-                  <MultiLineText text={notes} />
-                ) : (
-                  <em>{noReview("watches")}</em>
-                )}
-                {watchedInTheater && (
-                  <div class="pt-3">🍿 Watched in a theater.</div>
-                )}
+        return (
+          <div
+            id={dateFinished}
+            class="mb-4 rounded-sm border-2 border-red-600 even:bg-red-50 dark:even:bg-zinc-700"
+          >
+            <div class="flex justify-between border-b-2 border-red-600 px-2">
+              <span>{dateFinished}</span>
+              <span>
+                {`Watch ${watchNumber}${fakeFirstWatchMarker(
+                  watchNumber,
+                  isFirstWatch,
+                )}`}
+              </span>
+              <div>
+                <Rating rating={rating} />
               </div>
             </div>
-          );
-        },
-      )
-    }
+            <div class="p-2">
+              {notes ? (
+                <MultiLineText text={notes} />
+              ) : (
+                <em>{noReview("watches")}</em>
+              )}
+              {watchedInTheater && (
+                <div class="pt-3">🍿 Watched in a theater.</div>
+              )}
+            </div>
+          </div>
+        );
+      },
+    )}
   </div>
 
-  {
-    !watches[watches.length - 1].isFirstWatch && (
-      <p class="pb-4">
-        * this is my first <em>logged</em> watch, but I had seen the movie
-        before.
-      </p>
-    )
-  }
+  {!watches[watches.length - 1].isFirstWatch && (
+    <p class="pb-4">
+      * this is my first <em>logged</em> watch, but I had seen the movie before.
+    </p>
+  )}
 
   <SubscribeBlurb mediaType="movie" centered />
 </Layout>

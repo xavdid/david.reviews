@@ -100,60 +100,51 @@ const numUniqueBooks = new Set(reads.map((r) => r.book.gbid)).size;
   </PageTitle>
   <p class="py-3">
     {/* all series are by a single set of authors, for now */}
-     by <AuthorList authors={reads[0].book.authors} style="rounded" />
+    by <AuthorList authors={reads[0].book.authors} style="rounded" />
   </p>
   <p class="pb-3 pt-2">
-    {
-      seriesComplete && numBooksInSeries != null ? (
-        <>
-          I've read {readAll ? "all" : numUniqueBooks} of the {numBooksInSeries}{" "}
-          {pluralize(numBooksInSeries, "book")} in this series.
-        </>
-      ) : (
-        <>
-          I've read {numUniqueBooks} {pluralize(numUniqueBooks, "book")} in this
-          series so far.
-        </>
-      )
-    } There {pluralize(reads, "is", "are", true)}
-    {reads.length}
-    {pluralize(reads, "review")} of {numUniqueBooks > 1 ? "those" : "that"}
-    {pluralize(numUniqueBooks, "book")} for an average score of {
-      averageRating(reads)
-    }
-     (<OmniLink href={`${ratingPage("books")}`}>
-      {"out of 4"}
-    </OmniLink>).
+    {seriesComplete && numBooksInSeries != null ? (
+      <>
+        I've read {readAll ? "all" : numUniqueBooks} of the {numBooksInSeries}{" "}
+        {pluralize(numBooksInSeries, "book")} in this series.
+      </>
+    ) : (
+      <>
+        I've read {numUniqueBooks} {pluralize(numUniqueBooks, "book")} in this
+        series so far.
+      </>
+    )}{" "}
+    There {pluralize(reads, "is", "are", true)} {reads.length}{" "}
+    {pluralize(reads, "review")} of {numUniqueBooks > 1 ? "those" : "that"}{" "}
+    {pluralize(numUniqueBooks, "book")} for an average score of{" "}
+    {averageRating(reads)} (
+    <OmniLink href={`${ratingPage("books")}`}>{"out of 4"}</OmniLink>).
   </p>
-  {
-    remarks && (
-      <div class="pb-4">
-        {/* stack everything inline to get nice star ratings */}
-        <p class="inline">
-          I rated this series{" "}
-          <Rating rating={remarks.rating} classes={["inline"]} /> overall and
-          said:
-        </p>
-        <p class="mt-2 border-s-4 border-emerald-950 pl-4 italic dark:border-emerald-50">
-          {remarks.notes}
-        </p>
-      </div>
-    )
-  }
+  {remarks && (
+    <div class="pb-4">
+      {/* stack everything inline to get nice star ratings */}
+      <p class="inline">
+        I rated this series{" "}
+        <Rating rating={remarks.rating} classes={["inline"]} /> overall and
+        said:
+      </p>
+      <p class="mt-2 border-s-4 border-emerald-950 pl-4 italic dark:border-emerald-50">
+        {remarks.notes}
+      </p>
+    </div>
+  )}
   <BookLegend />
   <div>
-    {
-      reads
-        .sort((a, b) => a.book.numberInSeries! - b.book.numberInSeries!)
-        .map((read) => (
-          <ReadBox
-            read={read}
-            omitAuthorIds={read.book.authors.map((a) => a.recordId)}
-            linkToSeries={false}
-            nameSeries={false}
-          />
-        ))
-    }
+    {reads
+      .sort((a, b) => a.book.numberInSeries! - b.book.numberInSeries!)
+      .map((read) => (
+        <ReadBox
+          read={read}
+          omitAuthorIds={read.book.authors.map((a) => a.recordId)}
+          linkToSeries={false}
+          nameSeries={false}
+        />
+      ))}
   </div>
   <SubscribeBlurb centered mediaType="book" />
 </Layout>

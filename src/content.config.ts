@@ -1,8 +1,11 @@
-import { defineCollection, z } from "astro:content";
-import { ARTICLE_TYPES } from "../utils/content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
+import { defineCollection } from "astro:content";
+import { ARTICLE_TYPES } from "./utils/content";
 
 const articles = defineCollection({
-  type: "content",
+  // type: "content",
+  loader: glob({ base: "./src/content/articles", pattern: "**/*.mdx" }),
   schema: ({ image }) =>
     z
       .object({
@@ -14,16 +17,16 @@ const articles = defineCollection({
             "ogDesc must end with punctuation.",
           ),
         ogImg: image().optional(),
-        publishedOn: z.string().date().optional(),
+        publishedOn: z.iso.date().optional(),
         category: z.enum(ARTICLE_TYPES),
         mentionedGameSlugs: z
           .array(
-            z.string().refine(
-              (val) => !val.endsWith("/"),
-              (val) => ({
+            z
+              .string()
+              .refine((val) => !val.endsWith("/"))
+              .refine((val) => ({
                 message: `Slug "${val}" should not end with a slash`,
-              }),
-            ),
+              })),
           )
           .optional(),
         review: z
@@ -74,6 +77,4 @@ const articles = defineCollection({
       }, "published reviews must have OG images"),
 });
 
-export const collections = {
-  articles,
-};
+export const collections = { articles };

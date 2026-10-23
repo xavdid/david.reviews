@@ -24,7 +24,7 @@ export const getPublishedArticles = async (): Promise<Article[]> =>
   )
     .map((article) => ({
       ...article,
-      permalink: articlePermalink(article.slug),
+      permalink: articlePermalink(article.id),
     }))
     .toSorted(
       (a, b) =>
@@ -37,7 +37,7 @@ export const getArticlesBySteamId = async (): Promise<SteamIdToSlug> => {
 
   return articles.reduce<SteamIdToSlug>((result, article) => {
     if (article.data.review?.gameInfo.steamId) {
-      result[article.data.review?.gameInfo.steamId] = article.slug;
+      result[article.data.review?.gameInfo.steamId] = article.id;
     }
 
     return result;
