@@ -135,6 +135,10 @@ export const GET: APIRoute = async (context) => {
               link: item.media.permalink,
               pubDate,
               content: [
+                item.media.posterUrl.startsWith("/")
+                  ? `<img src="${import.meta.env.SITE}/${item.media.posterUrl}" />`
+                  : `<img src="${item.media.posterUrl}" />`,
+                "<br /><br />",
                 slimReview(
                   item.rating,
                   item.notes.replaceAll("\n\n", "<br /><br />"),
