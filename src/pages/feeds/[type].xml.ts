@@ -154,10 +154,10 @@ export const GET: APIRoute = async (context) => {
                       : ""
                   }`,
                 "<br /><hr />",
-                `FYI: My reviews are scored <a href="${ratingPage(
+                `Thoughts, questions, comments? <a href="mailto:hello@david.reviews?subject=Comment%20on%20your%20${encodeURIComponent(item.media.title)}%20Review">Reply to this review</a>.<br><br>Note that my reviews are scored <a href="${ratingPage(
                   // @ts-expect-error - this is correct, i'm just lax with some string types
                   item.type + "s",
-                )}">out of 4</a>. Also, thanks for subscribing to my RSS feed and supporting the indie web!`,
+                )}">out of 4</a>. And thanks for subscribing to my RSS feed and supporting the indie web!`,
               ].join("\n"),
             };
       }),
