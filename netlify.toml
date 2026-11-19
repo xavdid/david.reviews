@@ -41,3 +41,8 @@ to = "/movies/to-all-the-boys-ive-loved-before-2018/"
 [[redirects]]
 from = "/movies/you-ve-got-mail-1998"
 to = "/movies/youve-got-mail-1998"
+
+# 2026-11-18 the old one has numerals
+[[redirects]]
+from = "/movies/oceans-eleven-1960"
+to = "/movies/oceans-11-1960/"
