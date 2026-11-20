@@ -28,6 +28,7 @@ import TightList from "../../components/mdx/TightList.astro";
 import SubtleLink from "../../components/links/SubtleLink.astro";
 import SteamFollowButton from "../../components/SteamFollowButton.astro";
 import type { GetStaticPaths } from "astro";
+import ThinkyImpression from "../../components/ThinkyImpression.astro";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["id"] };
@@ -156,6 +157,7 @@ const components = {
   YoutubeEmbed,
   ReviewSummary,
   SteamGame,
+  ThinkyImpression,
   ItchGame,
   Details,
   EmbeddedPlay,

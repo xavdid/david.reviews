@@ -19,3 +19,4 @@ I wrote a [custom typed ORM](https://xavd.id/blog/post/static-review-site-with-a
 
 - I shrink images using https://compresspng.com/
 - Brand icons are sourced from https://simpleicons.org/
+- The thinky games font is [Prompt](https://fonts.google.com/specimen/Prompt?preview.script=Latn&preview.lang=en_Latn) (weight 800, extra bold)

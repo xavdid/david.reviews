@@ -1,12 +1,10 @@
 ---
-import { slugify } from "../utils/data";
 import EmbeddedArticle from "./mdx/EmbeddedArticle.astro";
 import EmbeddedPlay from "./mdx/EmbeddedPlay.astro";
 import ItchGame from "./mdx/ItchGame.astro";
 import SteamGame from "./mdx/SteamGame.astro";
 
 type Props = {
-  name: string;
   verdict?: string;
   playSlug?: string;
   articleSlug?: string;
@@ -14,30 +12,20 @@ type Props = {
   itchId?: string;
 };
 
-const { name, verdict, steamId, itchId, playSlug, articleSlug } = Astro.props;
+const { verdict, steamId, itchId, playSlug, articleSlug } = Astro.props;
 
 if (itchId && steamId) {
   throw new Error("Only supply one of steamId & itchId");
 }
 
 if (articleSlug && playSlug) {
-  throw new Error("Only supply one of embeddedArticleSlug & embeddedPlaySlug");
+  throw new Error("Only supply one of articleSlug & playSlug");
 }
 
 if (!(verdict || articleSlug || playSlug)) {
-  throw new Error(
-    "One of verdict, embeddedArticleSlug, or embeddedPlaySlug is required",
-  );
+  throw new Error("One of verdict, articleSlug, or playSlug is required");
 }
-const slug = slugify(name);
 ---
-
-<!-- copy of what unified's plugin creates -->
-<h2 id={slug}>
-  <a class="not-prose hover:after:content-['_#']" href={`#${slug}`}>
-    {name}
-  </a>
-</h2>
 
 <div class="md:hidden">
   <slot name="image" />
@@ -48,9 +36,14 @@ const slug = slugify(name);
 {playSlug && <EmbeddedPlay slug={playSlug} />}
 {articleSlug && <EmbeddedArticle slug={articleSlug} />}
 
+<slot name="post-embed" />
+
 {verdict && (
   <p>
     Verdict: <strong>{verdict}</strong>
+    {verdict.endsWith(".") || verdict.endsWith("?") || verdict.endsWith("!")
+      ? ""
+      : "."}
   </p>
 )}
 
