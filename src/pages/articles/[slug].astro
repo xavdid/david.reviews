@@ -29,6 +29,7 @@ import SubtleLink from "../../components/links/SubtleLink.astro";
 import SteamFollowButton from "../../components/SteamFollowButton.astro";
 import type { GetStaticPaths } from "astro";
 import ThinkyImpression from "../../components/ThinkyImpression.astro";
+import { getImage } from "astro:assets";
 
 type Props = { entry: CollectionEntry<"articles"> };
 type Params = { slug: CollectionEntry<"articles">["id"] };
@@ -66,11 +67,16 @@ if (!Config.site?.startsWith("https://")) {
 }
 
 if (frontmatter.ogImg) {
+  const og = await getImage({
+    src: frontmatter.ogImg,
+    format: frontmatter.ogImg.format,
+  });
   ogImg = {
-    url: `${Config.site}${frontmatter.ogImg.src}` as AbsoluteUrl,
+    url: `${Config.site}${og.src}` as AbsoluteUrl,
     width: frontmatter.ogImg.width,
     height: frontmatter.ogImg.height,
-    type: frontmatter.ogImg.format,
+    type:
+      frontmatter.ogImg.format === "jpg" ? "jpeg" : frontmatter.ogImg.format,
   };
 }
 
